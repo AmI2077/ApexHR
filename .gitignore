@@ -1,0 +1,46 @@
+# --- Артефакты сборки Android и Gradle ---
+build/
+.gradle/
+/captures/
+*.apk
+*.aar
+*.ap_
+*. those
+
+# --- Локальные настройки (СЕКРЕТНО и ИНДИВИДУАЛЬНО) ---
+# Содержит пути к вашему локальному Android SDK и личные ключи
+local.properties
+.navigation/
+
+# Ключи подписи приложения (никогда не заливайте в Git!)
+*.jks
+*.keystore
+*.p12
+
+# Файлы секретов (если используете плагин secrets-gradle-plugin)
+secrets.properties
+
+# --- Настройки Android Studio / IntelliJ IDEA ---
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries
+.idea/libraries
+.idea/caches
+.idea/modules.xml
+.idea/deploymentTargetSelector.xml
+.idea/kotlinDoc.xml
+*.iml
+*.ipr
+*.iws
+
+# --- Логи и временные файлы ---
+*.log
+.DS_Store
+Thumbs.db
+
+# --- Профайлинг и тесты ---
+.externalNativeBuild/
+.cxx/
+/sinks/

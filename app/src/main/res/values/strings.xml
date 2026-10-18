@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ApexHR</string>
+
+    <string name="home">Главная</string>
+    <string name="profile">Профиль</string>
+    <string name="activities">Активности</string>
+    <string name="shop">Магазин</string>
+</resources>
