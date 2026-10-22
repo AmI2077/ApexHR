@@ -30,7 +30,7 @@ class Navigator(
             currentTopLevelRoute to mutableStateListOf(startRoute as NavKey)
         )
 
-    fun getCurrentTopLevelRoute(): TopLevelRoute = currentTopLevelRoute
+    fun getTopLevelRoute(): TopLevelRoute = currentTopLevelRoute
 
     fun navigate(route: NavKey) {
         val isTopLevelRoute = route is TopLevelRoute
@@ -64,7 +64,7 @@ class Navigator(
     }
 
     private fun switchTopLevelRoute(route: TopLevelRoute) {
-        val isExist = topLevelBackStacks[currentTopLevelRoute] != null
+        val isExist = topLevelBackStacks[route] != null
 
         if (isExist) {
             currentTopLevelRoute = route

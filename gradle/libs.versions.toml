@@ -8,6 +8,8 @@ espressoCore = "3.7.0"
 kotlinxSerializationJson = "1.11.0"
 kotlinxSerializationPlugin = "2.4.21"
 
+ktorClientAndroid = "3.6.0"
+ktorClientCore = "3.6.0"
 lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
 kotlin = "2.3.20"
@@ -34,6 +36,8 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientAndroid" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -7,7 +7,7 @@ plugins {
 android {
     namespace = "com.example.apexhr"
     compileSdk {
-        version = release(36) {
+        version = release(37) {
             minorApiLevel = 1
         }
     }
@@ -39,6 +39,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.core)
+
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)

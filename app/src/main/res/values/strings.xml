@@ -5,4 +5,60 @@
     <string name="profile">Профиль</string>
     <string name="activities">Активности</string>
     <string name="shop">Магазин</string>
+
+    <string name="apex_brand">АПЕКС</string>
+    <string name="points_diamond">◆</string>
+    <string name="search">Поиск</string>
+    <string name="back">Назад</string>
+    <string name="popular">ПОПУЛЯРНОЕ</string>
+    <string name="get">Получить</string>
+    <string name="participate">Участвовать</string>
+    <string name="cart">Корзина</string>
+    <string name="history">История</string>
+
+    <string name="home_greeting">Доброе утро, %1$s!</string>
+    <string name="home_subtitle">Достигаем целей вместе</string>
+    <string name="home_active_challenges">Активные вызовы</string>
+    <string name="home_challenge_prize">Приз: %1$d баллов</string>
+    <string name="home_leaderboard">Таблица лидеров</string>
+    <string name="home_achievements">Достижения</string>
+    <string name="home_points_content_description">Баланс баллов</string>
+
+    <string name="shop_title">Каталог</string>
+    <string name="shop_search_placeholder">Поиск по каталогу…</string>
+    <string name="shop_category_merch">Мерч</string>
+    <string name="shop_category_certificates">Сертификаты</string>
+    <string name="shop_category_experience">Опыт</string>
+    <string name="shop_price">%1$s элементов</string>
+    <string name="shop_item_image">Изображение товара</string>
+
+    <string name="profile_title">Профиль</string>
+    <string name="profile_current_balance">Текущий баланс</string>
+    <string name="profile_balance_value">%1$s апексов</string>
+    <string name="profile_tab_thanks">Благодарности</string>
+    <string name="profile_tab_achievements">Достижения</string>
+    <string name="profile_amount_positive">+%1$d</string>
+    <string name="profile_amount_negative">−%1$d</string>
+    <string name="profile_avatar">Аватар</string>
+    <string name="profile_balance_hint_icon">Подсказка по балансу</string>
+
+    <string name="activities_title">Активности</string>
+    <string name="activities_search_placeholder">Поиск по каталогу…</string>
+    <string name="activities_category_surveys">Опросы</string>
+    <string name="activities_category_mini_games">Мини-игры</string>
+    <string name="activities_category_events">Мероприятия</string>
+    <string name="activities_questions">%1$d вопросов</string>
+    <string name="activities_reward">%1$d апексов</string>
+    <string name="activities_item_image">Изображение активности</string>
+
+    <string name="thanks_title">Поблагодарить коллег</string>
+    <string name="thanks_subtitle">Выберите коллегу и отправьте благодарность</string>
+    <string name="thanks_colleagues">КОЛЛЕГИ</string>
+    <string name="thanks_search_placeholder">Поиск по коллегам..</string>
+    <string name="thanks_action">Спасибо</string>
+    <string name="thanks_send_section">Отправить благодарность</string>
+    <string name="thanks_recipient">Кому: %1$s</string>
+    <string name="thanks_message_label">Сообщение (необязательно)</string>
+    <string name="thanks_message_placeholder">Напишите несколько слов благодарности…</string>
+    <string name="thanks_send">Отправить благодарность</string>
 </resources>

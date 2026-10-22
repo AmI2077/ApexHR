@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     bottomBar = {
                         BottomNavBar(
-                            selectedRoute = navigator.getCurrentTopLevelRoute(),
+                            selectedRoute = navigator.getTopLevelRoute(),
                             onClick = { route ->
                                 navigator.navigate(route)
                             }

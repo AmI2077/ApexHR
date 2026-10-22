@@ -8,6 +8,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation3.runtime.NavKey
 import com.example.apexhr.R
 import com.example.apexhr.core.ui.theme.primaryBlueColor
+import com.example.apexhr.core.ui.theme.transparent
 import kotlinx.serialization.Serializable
 
 val topLevelRoutes =
@@ -58,7 +59,6 @@ fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {
         Icon(
             painter = painterResource(this.iconResId),
-            tint = primaryBlueColor,
             contentDescription = null,
         )
     }
