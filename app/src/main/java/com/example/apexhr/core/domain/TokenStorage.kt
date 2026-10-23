@@ -2,14 +2,16 @@ package com.example.apexhr.core.domain
 
 interface TokenStorage {
 
-    suspend fun saveTokens(
-        accessToken: String,
-        refreshToken: String?,
-    )
+    suspend fun saveTokens(tokens: AuthTokens)
 
-    suspend fun getAccessToken(): String?
+    /**
+     * Возвращает сохранённые токены или null, если их нет.
+     * Если токены не удалось расшифровать (сброс ключа KeyStore, восстановление
+     * на другом устройстве и т.п.), хранилище очищается и тоже возвращается null.
+     */
+    suspend fun getTokens(): AuthTokens?
 
-    suspend fun getRefreshToken(): String?
+    suspend fun getAccessToken(): String? = getTokens()?.accessToken
 
     suspend fun clearTokens()
 }

@@ -2,6 +2,7 @@ package com.example.apexhr.core.data.local
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import java.security.GeneralSecurityException
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -10,10 +11,13 @@ import javax.crypto.spec.GCMParameterSpec
 import android.util.Base64
 
 class TokenEncryptor {
-    private val keyStore: KeyStore =
+    // KeyStore открываем лениво, чтобы не делать это при создании графа Koin
+    // на главном потоке.
+    private val keyStore: KeyStore by lazy {
         KeyStore.getInstance(ANDROID_KEYSTORE).apply {
             load(null)
         }
+    }
 
     private fun getOrCreateKey(): SecretKey {
         val existingKey = keyStore.getKey(KEY_ALIAS, null)
@@ -45,13 +49,30 @@ class TokenEncryptor {
         return keyGenerator.generateKey()
     }
 
+    /**
+     * Удаляет ключ из KeyStore. При следующем шифровании будет создан новый.
+     * Нужен, когда старый ключ стал недействителен и расшифровка невозможна.
+     */
+    fun resetKey() {
+        try {
+            if (keyStore.containsAlias(KEY_ALIAS)) {
+                keyStore.deleteEntry(KEY_ALIAS)
+            }
+        } catch (_: GeneralSecurityException) {
+            // Ключ уже недоступен, удалять нечего.
+        }
+    }
+
     fun encrypt(value: String): String {
         val cipher = Cipher.getInstance(TRANSFORMATION)
 
-        cipher.init(
-            Cipher.ENCRYPT_MODE,
-            getOrCreateKey()
-        )
+        try {
+            cipher.init(Cipher.ENCRYPT_MODE, getOrCreateKey())
+        } catch (_: GeneralSecurityException) {
+            // Ключ мог стать недействительным: пересоздаём его и пробуем ещё раз.
+            resetKey()
+            cipher.init(Cipher.ENCRYPT_MODE, getOrCreateKey())
+        }
 
         val encryptedBytes = cipher.doFinal(
             value.toByteArray(Charsets.UTF_8)
@@ -77,7 +98,7 @@ class TokenEncryptor {
         // Для AES-GCM стандартный размер IV — 12 байт.
         val ivSize = 12
 
-        require(combined.size > ivSize) {
+        require(combined.size > ivSize + GCM_TAG_LENGTH / 8) {
             "Invalid encrypted token"
         }
 

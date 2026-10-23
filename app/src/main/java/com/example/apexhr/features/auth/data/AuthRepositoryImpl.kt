@@ -10,6 +10,7 @@ import kotlin.coroutines.cancellation.CancellationException
 class AuthRepositoryImpl(
     private val networkAuthClient: NetworkAuthClient,
     private val tokenStorage: TokenStorage,
+    private val clock: () -> Long = System::currentTimeMillis,
 ): AuthRepository {
     override suspend fun login(email: String, password: String): LoginResult {
         return try {
@@ -21,8 +22,7 @@ class AuthRepositoryImpl(
             )
 
             tokenStorage.saveTokens(
-                accessToken = response.accessToken,
-                refreshToken = response.refreshToken
+                response.toAuthTokens(nowMillis = clock())
             )
 
             LoginResult.Success
