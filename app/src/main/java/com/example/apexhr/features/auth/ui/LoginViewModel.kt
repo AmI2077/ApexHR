@@ -3,6 +3,7 @@ package com.example.apexhr.features.auth.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apexhr.features.auth.domain.AuthRepository
+import com.example.apexhr.features.auth.domain.LoginResult
 import com.example.apexhr.features.auth.ui.model.AuthState
 import com.example.apexhr.features.auth.ui.model.LoginUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,7 +53,7 @@ class LoginViewModel(
         _uiState.update {
             it.copy(
                 login = value,
-                isError = false
+                error = null
             )
         }
     }
@@ -61,7 +62,7 @@ class LoginViewModel(
         _uiState.update {
             it.copy(
                 password = value,
-                isError = false
+                error = null
             )
         }
     }
@@ -81,46 +82,28 @@ class LoginViewModel(
             _uiState.update {
                 it.copy(
                     isLoading = true,
-                    isError = false
+                    error = null
                 )
             }
 
-            try {
-                val result = authRepository.login(
-                    email = currentState.login.trim(),
-                    password = currentState.password
-                )
+            val result = authRepository.login(
+                email = currentState.login.trim(),
+                password = currentState.password
+            )
 
-                result.fold(
-                    onSuccess = {
-                        _uiState.update {
-                            it.copy(
-                                login = "",
-                                password = "",
-                                isLoading = false,
-                                isError = false
-                            )
-                        }
+            when (result) {
+                LoginResult.Success -> {
+                    _uiState.value = LoginUiState()
+                    _authState.value = AuthState.Authorized
+                }
 
-                        _authState.value = AuthState.Authorized
-                    },
-                    onFailure = {
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                isError = true
-                            )
-                        }
+                is LoginResult.Failure -> {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = result.error
+                        )
                     }
-                )
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isError = true
-                    )
                 }
             }
         }

@@ -61,4 +61,11 @@
     <string name="thanks_message_label">Сообщение (необязательно)</string>
     <string name="thanks_message_placeholder">Напишите несколько слов благодарности…</string>
     <string name="thanks_send">Отправить благодарность</string>
+
+    <!-- Авторизация: ошибки -->
+    <string name="auth_error_invalid_credentials">Неверный email или пароль</string>
+    <string name="auth_error_timeout">Сервер долго не отвечает. Возможно, он просыпается — попробуйте ещё раз через минуту</string>
+    <string name="auth_error_network">Нет подключения к интернету или сервер недоступен</string>
+    <string name="auth_error_server">Ошибка на сервере. Попробуйте позже</string>
+    <string name="auth_error_unknown">Что-то пошло не так. Попробуйте ещё раз</string>
 </resources>

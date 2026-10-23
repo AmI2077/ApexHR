@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,6 +53,7 @@ import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.features.auth.ui.model.LoginUiState
+import com.example.apexhr.features.auth.ui.model.messageRes
 
 @Preview
 @Composable
@@ -147,7 +149,7 @@ fun LoginScreenContent(
                     contentDescription = null
                 )
             },
-            isError = state.isError,
+            isError = state.error != null,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
@@ -194,7 +196,7 @@ fun LoginScreenContent(
             } else {
                 PasswordVisualTransformation()
             },
-            isError = state.isError,
+            isError = state.error != null,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -206,11 +208,11 @@ fun LoginScreenContent(
             colors = loginTextFieldColors()
         )
 
-        if (state.isError) {
+        if (state.error != null) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Неверный email или пароль",
+                text = stringResource(state.error.messageRes()),
                 modifier = Modifier.fillMaxWidth(),
                 color = negativeRedColor,
                 style = MaterialTheme.typography.bodySmall

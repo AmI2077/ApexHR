@@ -4,13 +4,15 @@ import com.example.apexhr.core.data.dto.request.LoginRequest
 import com.example.apexhr.core.domain.NetworkAuthClient
 import com.example.apexhr.core.domain.TokenStorage
 import com.example.apexhr.features.auth.domain.AuthRepository
+import com.example.apexhr.features.auth.domain.LoginResult
+import kotlin.coroutines.cancellation.CancellationException
 
 class AuthRepositoryImpl(
     private val networkAuthClient: NetworkAuthClient,
     private val tokenStorage: TokenStorage,
 ): AuthRepository {
-    override suspend fun login(email: String, password: String): Result<Unit> {
-        return runCatching {
+    override suspend fun login(email: String, password: String): LoginResult {
+        return try {
             val response = networkAuthClient.login(
                 LoginRequest(
                     email = email,
@@ -22,6 +24,12 @@ class AuthRepositoryImpl(
                 accessToken = response.accessToken,
                 refreshToken = response.refreshToken
             )
+
+            LoginResult.Success
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            LoginResult.Failure(e.toAuthError())
         }
     }
 
