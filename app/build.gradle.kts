@@ -39,6 +39,12 @@ android {
 }
 
 dependencies {
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
+
+    implementation(libs.androidx.compose.material.icons.extended)
+
     implementation(libs.datastore.preferences)
 
     implementation(libs.ktor.client.core)

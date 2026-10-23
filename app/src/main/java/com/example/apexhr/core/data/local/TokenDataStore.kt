@@ -1,17 +1,11 @@
 package com.example.apexhr.core.data.local
 
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import com.example.apexhr.core.domain.TokenStorage
 import kotlinx.coroutines.flow.first
-
-const val TOKENS_DATA_STORE_NAME = "TokenDataStore"
-
-val Context.tokenDataStore: DataStore<Preferences> by preferencesDataStore(TOKENS_DATA_STORE_NAME)
 
 class TokenDataStore(
     private val dataStore: DataStore<Preferences>,

@@ -9,28 +9,18 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 object KtorModule {
-    fun provideAuthClient(): HttpClient {
+    fun provideAuthClient(json: Json): HttpClient {
         return HttpClient(OkHttp) {
             install(ContentNegotiation) {
-                json(
-                    Json {
-                        ignoreUnknownKeys = true
-                        isLenient = false
-                    }
-                )
+                json(json)
             }
         }
     }
 
-    fun provideAuthorizedClient(): HttpClient {
+    fun provideAuthorizedClient(json: Json): HttpClient {
         return HttpClient(OkHttp) {
             install(ContentNegotiation) {
-                json(
-                    Json {
-                        ignoreUnknownKeys = true
-                        isLenient = false
-                    }
-                )
+                json(json)
             }
 
             install(Auth) {
