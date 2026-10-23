@@ -46,9 +46,7 @@ fun AppRoot(
             LoginScreen(
                 state = loginState,
                 isSessionExpired = state.isSessionExpired,
-                onLoginChange = loginViewModel::onLoginChange,
-                onPasswordChange = loginViewModel::onPasswordChange,
-                onLoginClick = loginViewModel::login
+                callbacks = loginViewModel
             )
         }
 

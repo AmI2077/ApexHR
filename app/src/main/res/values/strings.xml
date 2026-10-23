@@ -64,12 +64,25 @@
 
     <!-- Авторизация -->
     <string name="logout">Выйти</string>
+    <string name="auth_brand">Апекс</string>
+    <string name="auth_welcome">Добро пожаловать!</string>
+    <string name="auth_subtitle">Войдите в свой аккаунт</string>
+    <string name="auth_email_label">Email</string>
+    <string name="auth_password_label">Пароль</string>
+    <string name="auth_show_password">Показать пароль</string>
+    <string name="auth_hide_password">Скрыть пароль</string>
+    <string name="auth_login_button">Войти</string>
+    <string name="auth_retry">Повторить</string>
+    <string name="auth_loading">Проверяем вход…</string>
 
     <!-- Авторизация: ошибки -->
     <string name="auth_error_invalid_credentials">Неверный email или пароль</string>
     <string name="auth_error_timeout">Сервер долго не отвечает. Возможно, он просыпается — попробуйте ещё раз через минуту</string>
     <string name="auth_error_network">Нет подключения к интернету или сервер недоступен</string>
     <string name="auth_error_server">Ошибка на сервере. Попробуйте позже</string>
+    <string name="auth_error_email_empty">Введите email</string>
+    <string name="auth_error_email_invalid">Неверный формат email</string>
+    <string name="auth_error_password_empty">Введите пароль</string>
     <string name="auth_session_expired">Сессия истекла, войдите снова</string>
     <string name="auth_error_unknown">Что-то пошло не так. Попробуйте ещё раз</string>
 </resources>

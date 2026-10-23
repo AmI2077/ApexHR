@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
@@ -34,14 +38,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.apexhr.R
@@ -52,21 +61,33 @@ import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
+import com.example.apexhr.features.auth.domain.AuthError
+import com.example.apexhr.features.auth.domain.EmailError
+import com.example.apexhr.features.auth.ui.model.LoginScreenCallbacks
 import com.example.apexhr.features.auth.ui.model.LoginUiState
 import com.example.apexhr.features.auth.ui.model.messageRes
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    LoginScreenContent(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(backgroundColor)
-            .padding(ApexDimens.spacing20.dp),
+    LoginScreen(
+        state = LoginUiState(),
+        isSessionExpired = false,
+        callbacks = LoginScreenCallbacks.Empty
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenErrorPreview() {
+    LoginScreen(
         state = LoginUiState(
-            login = "prooo.01@mail.ru",
-            password = "1234566"
-        )
+            email = "user@example",
+            emailError = EmailError.InvalidFormat,
+            error = AuthError.Timeout
+        ),
+        isSessionExpired = true,
+        callbacks = LoginScreenCallbacks.Empty
     )
 }
 
@@ -74,38 +95,44 @@ fun LoginScreenPreview() {
 fun LoginScreen(
     state: LoginUiState,
     isSessionExpired: Boolean,
-    onLoginChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
-    onLoginClick: () -> Unit,
+    callbacks: LoginScreenCallbacks,
     modifier: Modifier = Modifier
 ) {
     LoginScreenContent(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+            .safeDrawingPadding()
+            .imePadding()
+            .verticalScroll(rememberScrollState())
+            .padding(ApexDimens.spacing20.dp),
         state = state,
         isSessionExpired = isSessionExpired,
-        onLoginChange = onLoginChange,
-        onPasswordChange = onPasswordChange,
-        onLoginClick = onLoginClick
+        callbacks = callbacks
     )
 }
 
 @Composable
 fun LoginScreenContent(
-    modifier: Modifier = Modifier,
     state: LoginUiState,
+    modifier: Modifier = Modifier,
     isSessionExpired: Boolean = false,
-    onLoginChange: (String) -> Unit = {},
-    onPasswordChange: (String) -> Unit = {},
-    onLoginClick: () -> Unit = {}
+    callbacks: LoginScreenCallbacks = LoginScreenCallbacks.Empty,
 ) {
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
+    val submit = {
+        focusManager.clearFocus()
+        callbacks.onLoginClick()
+    }
 
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Row() {
+        Row {
             Icon(
                 modifier = Modifier
                     .size(48.dp),
@@ -115,7 +142,7 @@ fun LoginScreenContent(
             )
             Text(
                 modifier = Modifier.align(Alignment.Bottom),
-                text = "Апекс",
+                text = stringResource(R.string.auth_brand),
                 style = MaterialTheme.typography.headlineMedium,
                 color = primaryTextColor,
                 fontWeight = FontWeight.Bold
@@ -123,7 +150,7 @@ fun LoginScreenContent(
         }
         Spacer(Modifier.height(15.dp))
         Text(
-            text = "Добро пожаловать!",
+            text = stringResource(R.string.auth_welcome),
             style = MaterialTheme.typography.headlineMedium,
             color = primaryTextColor,
             fontWeight = FontWeight.Bold
@@ -132,7 +159,7 @@ fun LoginScreenContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Войдите в свой аккаунт",
+            text = stringResource(R.string.auth_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = secondaryTextColor
         )
@@ -143,26 +170,32 @@ fun LoginScreenContent(
             Text(
                 text = stringResource(R.string.auth_session_expired),
                 style = MaterialTheme.typography.bodyMedium,
-                color = negativeRedColor
+                color = negativeRedColor,
+                textAlign = TextAlign.Center
             )
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
         OutlinedTextField(
-            value = state.login,
-            onValueChange = onLoginChange,
-            modifier = Modifier.fillMaxWidth(),
+            value = state.email,
+            onValueChange = callbacks::onEmailChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentType = ContentType.EmailAddress },
             enabled = !state.isLoading,
             singleLine = true,
-            label = { Text("Email") },
+            label = { Text(stringResource(R.string.auth_email_label)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Outlined.Person,
                     contentDescription = null
                 )
             },
-            isError = state.error != null,
+            isError = state.emailError != null || state.error == AuthError.InvalidCredentials,
+            supportingText = state.emailError?.let { error ->
+                { Text(stringResource(error.messageRes())) }
+            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
@@ -175,11 +208,13 @@ fun LoginScreenContent(
 
         OutlinedTextField(
             value = state.password,
-            onValueChange = onPasswordChange,
-            modifier = Modifier.fillMaxWidth(),
+            onValueChange = callbacks::onPasswordChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { contentType = ContentType.Password },
             enabled = !state.isLoading,
             singleLine = true,
-            label = { Text("Пароль") },
+            label = { Text(stringResource(R.string.auth_password_label)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Outlined.Lock,
@@ -196,11 +231,13 @@ fun LoginScreenContent(
                         } else {
                             Icons.Outlined.Visibility
                         },
-                        contentDescription = if (isPasswordVisible) {
-                            "Скрыть пароль"
-                        } else {
-                            "Показать пароль"
-                        }
+                        contentDescription = stringResource(
+                            if (isPasswordVisible) {
+                                R.string.auth_hide_password
+                            } else {
+                                R.string.auth_show_password
+                            }
+                        )
                     )
                 }
             },
@@ -209,13 +246,16 @@ fun LoginScreenContent(
             } else {
                 PasswordVisualTransformation()
             },
-            isError = state.error != null,
+            isError = state.passwordError != null || state.error == AuthError.InvalidCredentials,
+            supportingText = state.passwordError?.let { error ->
+                { Text(stringResource(error.messageRes())) }
+            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
-                onDone = { onLoginClick() }
+                onDone = { submit() }
             ),
             shape = RoundedCornerShape(12.dp),
             colors = loginTextFieldColors()
@@ -235,13 +275,13 @@ fun LoginScreenContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = onLoginClick,
+            onClick = submit,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
-            enabled = !state.isLoading &&
-                    state.login.isNotBlank() &&
-                    state.password.isNotBlank(),
+            // Кнопка активна всегда, кроме загрузки: при пустых полях нажатие
+            // покажет подсказки валидации.
+            enabled = !state.isLoading,
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = primaryBlueColor,
@@ -256,13 +296,14 @@ fun LoginScreenContent(
                 )
             } else {
                 Text(
-                    text = "Войти",
+                    text = stringResource(R.string.auth_login_button),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
         }
     }
 }
+
 @Composable
 private fun loginTextFieldColors() =
     OutlinedTextFieldDefaults.colors(
