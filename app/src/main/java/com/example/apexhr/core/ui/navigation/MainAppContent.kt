@@ -25,7 +25,8 @@ fun MainAppContent(
     ) { innerPadding ->
         AppNavigation(
             modifier = Modifier.padding(innerPadding),
-            navigator = navigator
+            navigator = navigator,
+            onLogout = onLogout
         )
     }
 }

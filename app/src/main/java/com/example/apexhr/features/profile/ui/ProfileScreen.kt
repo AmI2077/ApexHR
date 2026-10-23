@@ -67,6 +67,7 @@ fun ProfileScreenContent(
             ProfileHeader(
                 onBackClick = callbacks::onBackClick,
                 onHistoryClick = callbacks::onHistoryClick,
+                onLogoutClick = callbacks::onLogoutClick,
             )
         }
         item {

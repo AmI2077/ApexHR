@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -45,6 +47,7 @@ fun ProfileHeader(
     onBackClick: () -> Unit,
     onHistoryClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onLogoutClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -64,12 +67,21 @@ fun ProfileHeader(
             fontSize = ApexDimens.text18.sp,
             fontWeight = FontWeight.Bold,
         )
-        IconButton(onClick = onHistoryClick) {
-//            Icon(
-//                imageVector = Icons.Filled.DateRange,
-//                contentDescription = stringResource(R.string.history),
-//                tint = primaryTextColor,
-//            )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = onHistoryClick) {
+//                Icon(
+//                    imageVector = Icons.Filled.DateRange,
+//                    contentDescription = stringResource(R.string.history),
+//                    tint = primaryTextColor,
+//                )
+            }
+            IconButton(onClick = onLogoutClick) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.Logout,
+                    contentDescription = stringResource(R.string.logout),
+                    tint = primaryTextColor,
+                )
+            }
         }
     }
 }

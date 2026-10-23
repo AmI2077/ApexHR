@@ -1,6 +1,7 @@
 package com.example.apexhr.core.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
@@ -21,7 +22,14 @@ import com.example.apexhr.features.shop.ui.models.ShopUiState
 fun AppNavigation(
     modifier: Modifier = Modifier,
     navigator: Navigator,
+    onLogout: () -> Unit,
 ) {
+    val profileCallbacks = remember(onLogout) {
+        object : ProfileScreenCallbacks by ProfileScreenCallbacks.Empty {
+            override fun onLogoutClick() = onLogout()
+        }
+    }
+
     NavDisplay(
         modifier = modifier,
         backStack = navigator.backStack,
@@ -36,7 +44,7 @@ fun AppNavigation(
             entry<TopLevelRoute.Profile> {
                 ProfileScreen(
                     uiState = ProfileUiState.Preview,
-                    callbacks = ProfileScreenCallbacks.Empty,
+                    callbacks = profileCallbacks,
                 )
             }
             entry<TopLevelRoute.Activities> {

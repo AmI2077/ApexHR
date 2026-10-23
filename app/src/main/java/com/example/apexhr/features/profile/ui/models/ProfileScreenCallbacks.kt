@@ -7,6 +7,9 @@ interface ProfileScreenCallbacks {
     fun onTransactionClick(transactionId: String)
     fun onAchievementClick(achievementId: String)
 
+    /** Выход из аккаунта. По умолчанию ничего не делает. */
+    fun onLogoutClick() = Unit
+
     companion object {
         val Empty = object : ProfileScreenCallbacks {
             override fun onBackClick() = Unit
