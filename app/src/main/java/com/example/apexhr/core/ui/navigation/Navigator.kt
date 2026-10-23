@@ -46,16 +46,24 @@ class Navigator(
         }
     }
 
+    /**
+     * true, когда открыт корень вкладки, отличной от стартовой. NavDisplay в этом
+     * состоянии системный «Назад» не обрабатывает (у него обработчик активен только
+     * при стеке > 1), поэтому его перехватывает отдельный BackHandler и возвращает
+     * на стартовую вкладку. На корне стартовой вкладки «Назад» никто не перехватывает,
+     * и система закрывает приложение.
+     */
+    val canGoBackToStartRoute: Boolean
+        get() = currentTopLevelRoute != startRoute && backStack.size == 1
+
     fun goBack() {
-        val size = topLevelBackStacks[currentTopLevelRoute]?.size
-            ?: error("No backstack for $currentTopLevelRoute")
+        val stack = backStack
 
-        if (size < 2) {
+        if (stack.size > 1) {
+            stack.removeLastOrNull()
+        } else if (currentTopLevelRoute != startRoute) {
             currentTopLevelRoute = startRoute
-        } else {
-            topLevelBackStacks[currentTopLevelRoute]?.removeLastOrNull()
         }
-
     }
 
     private fun add(route: NavKey) {

@@ -1,5 +1,6 @@
 package com.example.apexhr.core.ui.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -28,6 +29,11 @@ fun AppNavigation(
         object : ProfileScreenCallbacks by ProfileScreenCallbacks.Empty {
             override fun onLogoutClick() = onLogout()
         }
+    }
+
+    // На корне нестартовой вкладки возвращаемся на стартовую, а не закрываем приложение.
+    BackHandler(enabled = navigator.canGoBackToStartRoute) {
+        navigator.goBack()
     }
 
     NavDisplay(
