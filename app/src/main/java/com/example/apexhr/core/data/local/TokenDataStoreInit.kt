@@ -9,4 +9,4 @@ private const val TOKENS_DATA_STORE_NAME = "TokenDataStore"
 
 private val Context.tokenDataStore: DataStore<Preferences> by preferencesDataStore(TOKENS_DATA_STORE_NAME)
 
-fun getTokenDataStore(context: Context): DataStore<Preferences> = context.tokenDataStore
+fun getTokenStore(context: Context): DataStore<Preferences> = context.tokenDataStore
