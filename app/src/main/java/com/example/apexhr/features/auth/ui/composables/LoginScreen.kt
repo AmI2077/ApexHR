@@ -73,6 +73,7 @@ fun LoginScreenPreview() {
 @Composable
 fun LoginScreen(
     state: LoginUiState,
+    isSessionExpired: Boolean,
     onLoginChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
@@ -81,6 +82,7 @@ fun LoginScreen(
     LoginScreenContent(
         modifier = modifier,
         state = state,
+        isSessionExpired = isSessionExpired,
         onLoginChange = onLoginChange,
         onPasswordChange = onPasswordChange,
         onLoginClick = onLoginClick
@@ -91,6 +93,7 @@ fun LoginScreen(
 fun LoginScreenContent(
     modifier: Modifier = Modifier,
     state: LoginUiState,
+    isSessionExpired: Boolean = false,
     onLoginChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onLoginClick: () -> Unit = {}
@@ -133,6 +136,16 @@ fun LoginScreenContent(
             style = MaterialTheme.typography.bodyMedium,
             color = secondaryTextColor
         )
+
+        if (isSessionExpired) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = stringResource(R.string.auth_session_expired),
+                style = MaterialTheme.typography.bodyMedium,
+                color = negativeRedColor
+            )
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
 

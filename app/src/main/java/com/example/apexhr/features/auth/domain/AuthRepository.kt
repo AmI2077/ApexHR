@@ -9,5 +9,6 @@ interface AuthRepository {
 
     suspend fun logout()
 
-    suspend fun isAuthorized(): Boolean
+    /** Проверяет сохранённую сессию локально и через GET /api/Auth/me. */
+    suspend fun checkSession(): SessionStatus
 }

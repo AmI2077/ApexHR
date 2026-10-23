@@ -5,6 +5,7 @@ object NetworkConfig {
     const val BASE_URL = "https://$HOST"
 
     const val BASE_LOGIN_URL = "$BASE_URL/api/Auth/login"
+    const val CURRENT_USER_URL = "$BASE_URL/api/Auth/me"
 
     // Бэкенд крутится на Render: после простоя «холодный старт» может
     // занимать десятки секунд, поэтому таймауты заметно больше обычных.

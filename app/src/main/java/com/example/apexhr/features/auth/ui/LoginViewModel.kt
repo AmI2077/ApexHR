@@ -4,50 +4,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apexhr.features.auth.domain.AuthRepository
 import com.example.apexhr.features.auth.domain.LoginResult
-import com.example.apexhr.features.auth.ui.model.AuthState
+import com.example.apexhr.features.auth.ui.model.LoginUiActions
 import com.example.apexhr.features.auth.ui.model.LoginUiState
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.coroutines.cancellation.CancellationException
 
 class LoginViewModel(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _authState = MutableStateFlow<AuthState>(
-        AuthState.Checking
-    )
-    val authState: StateFlow<AuthState> = _authState.asStateFlow()
-
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    init {
-        checkAuthorization()
-    }
+    private val _actions = Channel<LoginUiActions>(Channel.BUFFERED)
 
-    fun checkAuthorization() {
-        viewModelScope.launch {
-            _authState.value = AuthState.Checking
-
-            try {
-                _authState.value = if (authRepository.isAuthorized()) {
-                    AuthState.Authorized
-                } else {
-                    AuthState.Unauthorized
-                }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                _authState.value = AuthState.Error(
-                    e.message ?: "Не удалось проверить авторизацию"
-                )
-            }
-        }
-    }
+    /** Одноразовые события экрана (успешный вход). */
+    val actions: Flow<LoginUiActions> = _actions.receiveAsFlow()
 
     fun onLoginChange(value: String) {
         _uiState.update {
@@ -94,7 +72,7 @@ class LoginViewModel(
             when (result) {
                 LoginResult.Success -> {
                     _uiState.value = LoginUiState()
-                    _authState.value = AuthState.Authorized
+                    _actions.send(LoginUiActions.Success)
                 }
 
                 is LoginResult.Failure -> {
@@ -107,24 +85,5 @@ class LoginViewModel(
                 }
             }
         }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            try {
-                authRepository.logout()
-                _authState.value = AuthState.Unauthorized
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                _authState.value = AuthState.Error(
-                    e.message ?: "Не удалось выйти из аккаунта"
-                )
-            }
-        }
-    }
-
-    fun retryAuthorizationCheck() {
-        checkAuthorization()
     }
 }
