@@ -4,7 +4,7 @@ interface TokenStorage {
 
     suspend fun saveTokens(
         accessToken: String,
-        refreshToken: String,
+        refreshToken: String?,
     )
 
     suspend fun getAccessToken(): String?

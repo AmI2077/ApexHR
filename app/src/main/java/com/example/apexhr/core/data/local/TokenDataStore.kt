@@ -11,16 +11,21 @@ class TokenDataStore(
     private val dataStore: DataStore<Preferences>,
     private val encryptor: TokenEncryptor
 ): TokenStorage {
-    override suspend fun saveTokens(accessToken: String, refreshToken: String) {
+    override suspend fun saveTokens(accessToken: String, refreshToken: String?) {
         val encryptedAccessToken =
             encryptor.encrypt(accessToken)
 
         val encryptedRefreshToken =
-            encryptor.encrypt(refreshToken)
+            refreshToken?.let(encryptor::encrypt)
 
         dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN] = encryptedAccessToken
-            preferences[REFRESH_TOKEN] = encryptedRefreshToken
+
+            if (encryptedRefreshToken != null) {
+                preferences[REFRESH_TOKEN] = encryptedRefreshToken
+            } else {
+                preferences.remove(REFRESH_TOKEN)
+            }
         }
     }
 

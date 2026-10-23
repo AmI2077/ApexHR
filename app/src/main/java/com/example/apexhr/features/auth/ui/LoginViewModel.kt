@@ -87,7 +87,7 @@ class LoginViewModel(
 
             try {
                 val result = authRepository.login(
-                    login = currentState.login.trim(),
+                    email = currentState.login.trim(),
                     password = currentState.password
                 )
 

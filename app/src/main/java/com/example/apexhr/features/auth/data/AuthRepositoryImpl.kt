@@ -9,11 +9,11 @@ class AuthRepositoryImpl(
     private val networkAuthClient: NetworkAuthClient,
     private val tokenStorage: TokenStorage,
 ): AuthRepository {
-    override suspend fun login(login: String, password: String): Result<Unit> {
+    override suspend fun login(email: String, password: String): Result<Unit> {
         return runCatching {
             val response = networkAuthClient.login(
                 LoginRequest(
-                    login = login,
+                    email = email,
                     password = password
                 )
             )
@@ -30,7 +30,7 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun isAuthorized(): Boolean {
+        // Эндпоинта обновления токена нет, поэтому достаточно access-токена.
         return !tokenStorage.getAccessToken().isNullOrBlank()
-                && !tokenStorage.getRefreshToken().isNullOrBlank()
     }
 }
