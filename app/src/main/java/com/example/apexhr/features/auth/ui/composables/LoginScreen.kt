@@ -32,8 +32,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -53,6 +55,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import com.example.apexhr.R
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
@@ -74,6 +77,18 @@ fun LoginScreenPreview() {
         state = LoginUiState(),
         isSessionExpired = false,
         callbacks = LoginScreenCallbacks.Empty
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenLoadingPreview() {
+    LoginScreenContent(
+        modifier = Modifier
+            .background(backgroundColor)
+            .padding(ApexDimens.spacing20.dp),
+        state = LoginUiState(email = "user@example.com", password = "password", isLoading = true),
+        showWakeUpHintInitially = true
     )
 }
 
@@ -118,8 +133,21 @@ fun LoginScreenContent(
     modifier: Modifier = Modifier,
     isSessionExpired: Boolean = false,
     callbacks: LoginScreenCallbacks = LoginScreenCallbacks.Empty,
+    showWakeUpHintInitially: Boolean = false,
 ) {
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
+
+    // Если вход идёт дольше WAKE_UP_HINT_DELAY_MS, скорее всего сервер просыпается:
+    // показываем подсказку под кнопкой, пока запрос не завершится.
+    var isWakeUpHintVisible by remember { mutableStateOf(showWakeUpHintInitially) }
+    LaunchedEffect(state.isLoading) {
+        if (state.isLoading) {
+            delay(WAKE_UP_HINT_DELAY_MS)
+            isWakeUpHintVisible = true
+        } else {
+            isWakeUpHintVisible = false
+        }
+    }
     val focusManager = LocalFocusManager.current
 
     val submit = {
@@ -301,6 +329,17 @@ fun LoginScreenContent(
                 )
             }
         }
+
+        if (state.isLoading && isWakeUpHintVisible) {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = stringResource(R.string.auth_server_waking_up),
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodySmall,
+                color = secondaryTextColor
+            )
+        }
     }
 }
 
@@ -318,3 +357,5 @@ private fun loginTextFieldColors() =
         focusedTextColor = primaryTextColor,
         unfocusedTextColor = primaryTextColor
     )
+
+private const val WAKE_UP_HINT_DELAY_MS = 3_000L
