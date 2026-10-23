@@ -10,17 +10,24 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 
 class KtorAuthClient(
     private val client: HttpClient
 ): NetworkAuthClient {
     override suspend fun login(loginRequest: LoginRequest): LoginResponseDto {
-        return client.post(BASE_LOGIN_URL) {
+        val response = client.post(BASE_LOGIN_URL) {
             contentType(ContentType.Application.Json)
 
             setBody(
                 loginRequest
             )
-        }.body<LoginResponseDto>()
+        }
+
+        if (!response.status.isSuccess()) {
+            throw ApiStatusException(response.status.value)
+        }
+
+        return response.body<LoginResponseDto>()
     }
 }

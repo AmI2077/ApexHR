@@ -1,5 +1,6 @@
 package com.example.apexhr.core.di
 
+import com.example.apexhr.BuildConfig
 import com.example.apexhr.core.data.network.KtorAuthClient
 import com.example.apexhr.core.data.network.KtorModule
 import com.example.apexhr.core.domain.NetworkAuthClient
@@ -20,5 +21,5 @@ val networkModule = module {
         KtorAuthClient(get())
     }
 
-    single { KtorModule.provideAuthClient(get()) }
+    single { KtorModule.provideAuthClient(get(), BuildConfig.DEBUG) }
 }
