@@ -66,10 +66,10 @@ class Navigator(
     private fun switchTopLevelRoute(route: TopLevelRoute) {
         val isExist = topLevelBackStacks[route] != null
 
-        if (isExist) {
-            currentTopLevelRoute = route
-        } else {
+        if (!isExist) {
             topLevelBackStacks[route] = mutableStateListOf(route)
         }
+
+        currentTopLevelRoute = route
     }
 }
