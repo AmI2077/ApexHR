@@ -87,4 +87,11 @@
     <string name="auth_error_password_empty">Введите пароль</string>
     <string name="auth_session_expired">Сессия истекла, войдите снова</string>
     <string name="auth_error_unknown">Что-то пошло не так. Попробуйте ещё раз</string>
+
+    <!-- Загрузка данных -->
+    <string name="retry">Повторить</string>
+    <string name="data_error_timeout">Сервер долго не отвечает. Возможно, он просыпается — попробуйте ещё раз через минуту</string>
+    <string name="data_error_network">Нет подключения к интернету или сервер недоступен</string>
+    <string name="data_error_server">Ошибка на сервере. Попробуйте позже</string>
+    <string name="data_error_unknown">Не удалось загрузить данные. Попробуйте ещё раз</string>
 </resources>
