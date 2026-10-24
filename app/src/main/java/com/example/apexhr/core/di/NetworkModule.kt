@@ -7,6 +7,8 @@ import com.example.apexhr.core.domain.NetworkAuthClient
 import com.example.apexhr.core.domain.SessionEventBus
 import com.example.apexhr.features.profile.data.KtorProfileApi
 import com.example.apexhr.features.profile.data.ProfileApi
+import com.example.apexhr.features.shop.data.KtorShopApi
+import com.example.apexhr.features.shop.data.ShopApi
 import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -50,4 +52,5 @@ val networkModule = module {
     }
 
     single<ProfileApi> { KtorProfileApi(get(AUTHORIZED_HTTP_CLIENT)) }
+    single<ShopApi> { KtorShopApi(get(AUTHORIZED_HTTP_CLIENT)) }
 }

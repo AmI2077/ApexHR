@@ -6,6 +6,7 @@ interface ShopScreenCallbacks {
     fun onCategoryClick(categoryId: String)
     fun onProductClick(productId: String)
     fun onGetProductClick(productId: String)
+    fun onRetryClick() = Unit
 
     companion object {
         val Empty = object : ShopScreenCallbacks {

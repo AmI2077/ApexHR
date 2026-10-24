@@ -2,6 +2,7 @@ package com.example.apexhr.features.profile.ui.models
 
 import com.example.apexhr.R
 import com.example.apexhr.core.ui.model.formatAmount
+import com.example.apexhr.core.ui.model.takeIfHttpUrl
 import com.example.apexhr.features.profile.domain.Profile
 import com.example.apexhr.features.profile.domain.UserProfile
 
@@ -28,7 +29,7 @@ fun Profile.toUiState(selectedTab: ProfileTab): ProfileUiState = ProfileUiState(
             title = achievement.title.orEmpty(),
         )
     },
-    avatarUrl = user.avatarUrl?.takeIf { it.isHttpUrl() },
+    avatarUrl = user.avatarUrl.takeIfHttpUrl(),
 )
 
 /** «Имя Фамилия». Пустая строка, если сервер не прислал ни того, ни другого. */
@@ -38,6 +39,3 @@ internal fun UserProfile.displayName(): String =
 /** «Должность · Отдел»: в API они раздельно, а в UI одна строка. */
 internal fun UserProfile.displayDepartment(): String =
     listOfNotNull(position, department).joinToString(" · ")
-
-internal fun String.isHttpUrl(): Boolean =
-    startsWith("https://", ignoreCase = true) || startsWith("http://", ignoreCase = true)

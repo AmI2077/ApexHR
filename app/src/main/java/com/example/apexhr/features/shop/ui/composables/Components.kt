@@ -2,6 +2,7 @@ package com.example.apexhr.features.shop.ui.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -25,11 +27,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.example.apexhr.R
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
@@ -40,6 +44,7 @@ import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.core.ui.theme.transparent
 import com.example.apexhr.features.shop.ui.models.ShopCategoryUiModel
 import com.example.apexhr.features.shop.ui.models.ShopProductUiModel
+import com.example.apexhr.features.shop.ui.models.ShopUiState
 
 @Composable
 fun ShopHeader(
@@ -118,14 +123,22 @@ fun ShopCategoryTabs(
     onCategoryClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // Категорий с сервера может быть больше, чем помещается в ширину экрана.
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing24.dp),
     ) {
         categories.forEach { category ->
             val selected = category.id == selectedCategoryId
+            val title = when {
+                category.id == ShopUiState.CATEGORY_ALL -> stringResource(R.string.shop_category_all)
+                category.title.isNullOrBlank() -> stringResource(R.string.shop_category_untitled)
+                else -> category.title
+            }
             Text(
-                text = stringResource(category.titleRes),
+                text = title,
                 color = if (selected) primaryBlueColor else secondaryTextColor,
                 fontSize = ApexDimens.text14.sp,
                 fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
@@ -178,11 +191,19 @@ fun ShopProductCard(
                     fontSize = ApexDimens.text24.sp,
                 )
             }
+            if (product.imageUrl != null) {
+                AsyncImage(
+                    model = product.imageUrl,
+                    contentDescription = stringResource(R.string.shop_item_image),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.matchParentSize(),
+                )
+            }
         }
         Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = product.title,
+                text = product.title.ifBlank { stringResource(R.string.shop_product_untitled) },
                 color = primaryTextColor,
                 fontSize = ApexDimens.text16.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -212,6 +233,7 @@ fun ShopProductCard(
                 )
                 Button(
                     onClick = onGetClick,
+                    enabled = product.isAvailable,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = primaryBlueColor,
                         contentColor = backgroundColor,
@@ -223,7 +245,9 @@ fun ShopProductCard(
                     ),
                 ) {
                     Text(
-                        text = stringResource(R.string.get),
+                        text = stringResource(
+                            if (product.isAvailable) R.string.get else R.string.shop_out_of_stock,
+                        ),
                         fontSize = ApexDimens.text12.sp,
                         fontWeight = FontWeight.SemiBold,
                     )

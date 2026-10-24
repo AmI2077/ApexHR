@@ -13,6 +13,10 @@ object NetworkConfig {
     const val BALANCE_TRANSACTIONS_URL = "$BASE_URL/api/balances/me/transactions"
     fun userAchievementsUrl(userId: String) = "$BASE_URL/api/achievements/users/$userId"
 
+    // Каталог
+    const val CATEGORIES_URL = "$BASE_URL/api/categories"
+    const val PRODUCTS_URL = "$BASE_URL/api/products"
+
     // Бэкенд крутится на Render: после простоя «холодный старт» может
     // занимать десятки секунд, поэтому таймауты заметно больше обычных.
     const val REQUEST_TIMEOUT_MILLIS = 60_000L

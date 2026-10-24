@@ -20,8 +20,7 @@ import com.example.apexhr.features.profile.ui.ProfileScreen
 import com.example.apexhr.features.profile.ui.ProfileViewModel
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
 import com.example.apexhr.features.shop.ui.ShopScreen
-import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
-import com.example.apexhr.features.shop.ui.models.ShopUiState
+import com.example.apexhr.features.shop.ui.ShopViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -73,9 +72,11 @@ fun AppNavigation(
                 )
             }
             entry<TopLevelRoute.Shop> {
+                val viewModel: ShopViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
                 ShopScreen(
-                    uiState = ShopUiState.Preview,
-                    callbacks = ShopScreenCallbacks.Empty,
+                    screenState = screenState,
+                    callbacks = viewModel,
                 )
             }
         }
