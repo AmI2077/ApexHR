@@ -41,6 +41,13 @@
     <string name="profile_amount_negative">−%1$d</string>
     <string name="profile_avatar">Аватар</string>
     <string name="profile_balance_hint_icon">Подсказка по балансу</string>
+    <string name="profile_balance_hint">Тратьте апексы на награды в каталоге</string>
+    <string name="profile_balance_hint_empty">Зарабатывайте апексы за активности и благодарности коллег</string>
+    <string name="profile_transactions_empty">Операций по балансу пока нет</string>
+    <string name="profile_achievements_empty">Достижений пока нет</string>
+    <string name="profile_transaction_untitled">Операция по балансу</string>
+    <string name="profile_achievement_untitled">Достижение</string>
+    <string name="profile_name_unknown">Сотрудник</string>
 
     <string name="activities_title">Активности</string>
     <string name="activities_search_placeholder">Поиск по каталогу…</string>

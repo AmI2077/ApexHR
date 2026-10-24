@@ -10,6 +10,9 @@ interface ProfileScreenCallbacks {
     /** Выход из аккаунта. По умолчанию ничего не делает. */
     fun onLogoutClick() = Unit
 
+    /** Повторная загрузка после ошибки. По умолчанию ничего не делает. */
+    fun onRetryClick() = Unit
+
     companion object {
         val Empty = object : ProfileScreenCallbacks {
             override fun onBackClick() = Unit

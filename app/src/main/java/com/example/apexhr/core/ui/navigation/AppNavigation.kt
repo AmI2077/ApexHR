@@ -2,9 +2,13 @@ package com.example.apexhr.core.ui.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.apexhr.features.activities.ui.ActivitiesScreen
 import com.example.apexhr.features.activities.ui.models.ActivitiesScreenCallbacks
@@ -13,11 +17,12 @@ import com.example.apexhr.features.home.ui.HomeScreen
 import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
 import com.example.apexhr.features.home.ui.models.HomeUiState
 import com.example.apexhr.features.profile.ui.ProfileScreen
+import com.example.apexhr.features.profile.ui.ProfileViewModel
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
-import com.example.apexhr.features.profile.ui.models.ProfileUiState
 import com.example.apexhr.features.shop.ui.ShopScreen
 import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import com.example.apexhr.features.shop.ui.models.ShopUiState
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AppNavigation(
@@ -25,12 +30,6 @@ fun AppNavigation(
     navigator: Navigator,
     onLogout: () -> Unit,
 ) {
-    val profileCallbacks = remember(onLogout) {
-        object : ProfileScreenCallbacks by ProfileScreenCallbacks.Empty {
-            override fun onLogoutClick() = onLogout()
-        }
-    }
-
     // На корне нестартовой вкладки возвращаемся на стартовую, а не закрываем приложение.
     BackHandler(enabled = navigator.canGoBackToStartRoute) {
         navigator.goBack()
@@ -40,6 +39,13 @@ fun AppNavigation(
         modifier = modifier,
         backStack = navigator.backStack,
         onBack = { navigator.goBack() },
+        // ViewModel экрана живёт, пока его запись есть в стеке, а не всё время
+        // жизни Activity: иначе после выхода и входа под другим пользователем
+        // на экране остались бы чужие данные.
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator(),
+        ),
         entryProvider = entryProvider {
             entry<TopLevelRoute.Home> {
                 HomeScreen(
@@ -48,8 +54,15 @@ fun AppNavigation(
                 )
             }
             entry<TopLevelRoute.Profile> {
+                val viewModel: ProfileViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val profileCallbacks = remember(viewModel, onLogout) {
+                    object : ProfileScreenCallbacks by viewModel {
+                        override fun onLogoutClick() = onLogout()
+                    }
+                }
                 ProfileScreen(
-                    uiState = ProfileUiState.Preview,
+                    screenState = screenState,
                     callbacks = profileCallbacks,
                 )
             }

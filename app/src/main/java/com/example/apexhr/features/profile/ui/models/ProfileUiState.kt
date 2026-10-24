@@ -1,5 +1,9 @@
 package com.example.apexhr.features.profile.ui.models
 
+import androidx.annotation.StringRes
+import com.example.apexhr.R
+import com.example.apexhr.core.domain.DataError
+
 enum class ProfileTab {
     Thanks,
     Achievements,
@@ -9,17 +13,18 @@ data class ProfileUiState(
     val name: String,
     val department: String,
     val balance: String,
-    val balanceHint: String,
+    @StringRes val balanceHintRes: Int,
     val selectedTab: ProfileTab,
     val transactions: List<TransactionUiModel>,
     val achievements: List<ProfileAchievementUiModel>,
+    val avatarUrl: String? = null,
 ) {
     companion object {
         val Preview = ProfileUiState(
             name = "Olivia Martinez",
             department = "Marketing Department",
             balance = "1,250",
-            balanceHint = "Great balance! Keep earning rewards.",
+            balanceHintRes = R.string.profile_balance_hint,
             selectedTab = ProfileTab.Thanks,
             transactions = listOf(
                 TransactionUiModel(id = "1", title = "Monthly Bonus", amount = 300),
@@ -41,10 +46,17 @@ data class ProfileUiState(
 data class TransactionUiModel(
     val id: String,
     val title: String,
-    val amount: Int,
+    val amount: Long,
 )
 
 data class ProfileAchievementUiModel(
     val id: String,
     val title: String,
 )
+
+/** Состояние экрана профиля с учётом загрузки данных. */
+sealed interface ProfileScreenState {
+    data object Loading : ProfileScreenState
+    data class Error(val error: DataError) : ProfileScreenState
+    data class Content(val uiState: ProfileUiState) : ProfileScreenState
+}
