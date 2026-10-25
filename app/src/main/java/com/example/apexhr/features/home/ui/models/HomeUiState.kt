@@ -1,5 +1,7 @@
 package com.example.apexhr.features.home.ui.models
 
+import com.example.apexhr.core.domain.DataError
+
 data class HomeUiState(
     val userName: String,
     val points: String,
@@ -35,9 +37,10 @@ data class HomeUiState(
 data class ChallengeUiModel(
     val id: String,
     val title: String,
-    val prizePoints: Int,
+    val prizePoints: Long,
 )
 
+/** @param points значение рейтинга; сервер считает его по числу благодарностей. */
 data class LeaderboardEntryUiModel(
     val id: String,
     val rank: Int,
@@ -49,3 +52,10 @@ data class AchievementUiModel(
     val id: String,
     val title: String,
 )
+
+/** Состояние главной целиком. */
+sealed interface HomeScreenState {
+    data object Loading : HomeScreenState
+    data class Error(val error: DataError) : HomeScreenState
+    data class Content(val uiState: HomeUiState) : HomeScreenState
+}

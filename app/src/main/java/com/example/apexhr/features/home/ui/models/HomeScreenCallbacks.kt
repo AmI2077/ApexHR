@@ -5,6 +5,7 @@ interface HomeScreenCallbacks {
     fun onChallengeClick(challengeId: String)
     fun onLeaderboardEntryClick(entryId: String)
     fun onAchievementClick(achievementId: String)
+    fun onRetryClick() = Unit
 
     companion object {
         val Empty = object : HomeScreenCallbacks {

@@ -39,7 +39,7 @@ import com.example.apexhr.features.home.ui.models.LeaderboardEntryUiModel
 
 @Composable
 fun HomeHeader(
-    points: String,
+    points: String?,
     onPointsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -65,25 +65,28 @@ fun HomeHeader(
                 fontWeight = FontWeight.Bold,
             )
         }
-        Row(
-            modifier = Modifier.clickable(
-                onClick = onPointsClick,
-                onClickLabel = stringResource(R.string.home_points_content_description),
-            ),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(R.string.points_diamond),
-                color = darkBlueColor,
-                fontSize = ApexDimens.text16.sp,
-            )
-            Spacer(modifier = Modifier.width(ApexDimens.spacing6.dp))
-            Text(
-                text = points,
-                color = primaryTextColor,
-                fontSize = ApexDimens.text16.sp,
-                fontWeight = FontWeight.Medium,
-            )
+        // Пока баланс не загружен, блок баллов не показываем.
+        if (points != null) {
+            Row(
+                modifier = Modifier.clickable(
+                    onClick = onPointsClick,
+                    onClickLabel = stringResource(R.string.home_points_content_description),
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.points_diamond),
+                    color = darkBlueColor,
+                    fontSize = ApexDimens.text16.sp,
+                )
+                Spacer(modifier = Modifier.width(ApexDimens.spacing6.dp))
+                Text(
+                    text = points,
+                    color = primaryTextColor,
+                    fontSize = ApexDimens.text16.sp,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
         }
     }
 }
@@ -95,7 +98,10 @@ fun HomeGreeting(
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = stringResource(R.string.home_greeting, userName),
+            text = stringResource(
+                R.string.home_greeting,
+                userName.ifBlank { stringResource(R.string.home_greeting_fallback_name) },
+            ),
             color = primaryTextColor,
             fontSize = ApexDimens.text24.sp,
             fontWeight = FontWeight.Bold,
@@ -127,7 +133,7 @@ fun ChallengeCard(
             ),
     ) {
         Text(
-            text = challenge.title,
+            text = challenge.title.ifBlank { stringResource(R.string.home_challenge_untitled) },
             color = primaryTextColor,
             fontSize = ApexDimens.text16.sp,
             fontWeight = FontWeight.SemiBold,
@@ -167,7 +173,7 @@ fun LeaderboardRow(
             modifier = Modifier.width(ApexDimens.spacing24.dp),
         )
         Text(
-            text = entry.name,
+            text = entry.name.ifBlank { stringResource(R.string.home_leaderboard_unknown_name) },
             color = primaryTextColor,
             fontSize = ApexDimens.text14.sp,
             fontWeight = FontWeight.Medium,
@@ -211,7 +217,7 @@ fun AchievementCard(
 //        )
         Spacer(modifier = Modifier.height(ApexDimens.spacing12.dp))
         Text(
-            text = achievement.title,
+            text = achievement.title.ifBlank { stringResource(R.string.home_achievement_untitled) },
             color = primaryTextColor,
             fontSize = ApexDimens.text12.sp,
             textAlign = TextAlign.Center,

@@ -14,8 +14,7 @@ import com.example.apexhr.features.activities.ui.ActivitiesScreen
 import com.example.apexhr.features.activities.ui.models.ActivitiesScreenCallbacks
 import com.example.apexhr.features.activities.ui.models.ActivitiesUiState
 import com.example.apexhr.features.home.ui.HomeScreen
-import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
-import com.example.apexhr.features.home.ui.models.HomeUiState
+import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.profile.ui.ProfileScreen
 import com.example.apexhr.features.profile.ui.ProfileViewModel
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
@@ -47,9 +46,11 @@ fun AppNavigation(
         ),
         entryProvider = entryProvider {
             entry<TopLevelRoute.Home> {
+                val viewModel: HomeViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
                 HomeScreen(
-                    uiState = HomeUiState.Preview,
-                    callbacks = HomeScreenCallbacks.Empty,
+                    screenState = screenState,
+                    callbacks = viewModel,
                 )
             }
             entry<TopLevelRoute.Profile> {
