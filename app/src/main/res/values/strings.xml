@@ -151,6 +151,25 @@
     <string name="event_message_registered">Вы записались на мероприятие</string>
     <string name="event_message_cancelled">Запись отменена</string>
     <string name="event_message_reward_claimed">Награда начислена</string>
+    <string name="quest_details_title">Квест</string>
+    <string name="quest_details_reward">Награда: %1$s</string>
+    <string name="quest_details_end">До: %1$s</string>
+    <string name="quest_details_steps">Шаги: выполнено %1$d из %2$d</string>
+    <string name="quest_step_optional">Необязательный шаг</string>
+    <string name="quest_step_completed">Выполнено</string>
+    <string name="quest_step_proof_pending">Подтверждение на проверке</string>
+    <string name="quest_step_proof_rejected">Подтверждение отклонено</string>
+    <string name="quest_step_proof_unavailable">Нужно подтверждение: загрузить его в приложении пока нельзя</string>
+    <string name="quest_step_automatic">Засчитается автоматически</string>
+    <string name="quest_step_unsupported">Этот шаг пока нельзя выполнить в приложении</string>
+    <string name="quest_action_join">Участвовать</string>
+    <string name="quest_action_complete_step">Отметить выполненным</string>
+    <string name="quest_action_complete">Завершить и получить награду</string>
+    <string name="quest_note_required_steps">Выполните обязательные шаги, чтобы завершить квест</string>
+    <string name="quest_note_inactive">Квест сейчас недоступен</string>
+    <string name="quest_message_joined">Вы участвуете в квесте</string>
+    <string name="quest_message_step_completed">Шаг отмечен выполненным</string>
+    <string name="quest_message_completed">Квест завершён</string>
 
     <string name="thanks_title">Поблагодарить коллег</string>
     <string name="thanks_subtitle">Выберите коллегу и отправьте благодарность</string>

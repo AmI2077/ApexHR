@@ -66,6 +66,10 @@ data object OrdersRoute : NavKey
 @Serializable
 data class EventDetailsRoute(val eventId: Long) : NavKey
 
+/** Квест: открывается из списка «Активности» (вкладка «Мини-игры»). */
+@Serializable
+data class QuestDetailsRoute(val questId: Long) : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {
