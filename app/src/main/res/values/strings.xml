@@ -132,6 +132,25 @@
     <string name="activities_status_event_cancelled">Запись отменена</string>
     <string name="activities_status_event_no_show">Вы не пришли</string>
     <string name="activities_item_image">Изображение активности</string>
+    <string name="activities_error_not_found">Активность не найдена: возможно, её уже сняли с публикации</string>
+    <string name="activities_error_forbidden">Недостаточно прав для этого действия</string>
+    <string name="activities_error_server_message">Сервер отклонил запрос: %1$s</string>
+    <string name="activities_error_action">Не удалось выполнить действие. Попробуйте ещё раз</string>
+    <string name="event_details_title">Мероприятие</string>
+    <string name="event_details_period">Когда: %1$s</string>
+    <string name="event_details_location">Где: %1$s</string>
+    <string name="event_details_participants">Записались: %1$d</string>
+    <string name="event_details_participants_limited">Записались: %1$d из %2$d</string>
+    <string name="event_details_reward">Награда: %1$s</string>
+    <string name="event_action_register">Записаться</string>
+    <string name="event_action_cancel">Отменить запись</string>
+    <string name="event_action_claim_reward">Получить награду</string>
+    <string name="event_note_closed">Регистрация закрыта</string>
+    <string name="event_note_full">Свободных мест нет</string>
+    <string name="event_note_reward_claimed">Награда получена</string>
+    <string name="event_message_registered">Вы записались на мероприятие</string>
+    <string name="event_message_cancelled">Запись отменена</string>
+    <string name="event_message_reward_claimed">Награда начислена</string>
 
     <string name="thanks_title">Поблагодарить коллег</string>
     <string name="thanks_subtitle">Выберите коллегу и отправьте благодарность</string>

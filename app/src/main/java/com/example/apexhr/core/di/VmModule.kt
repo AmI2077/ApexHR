@@ -1,6 +1,7 @@
 package com.example.apexhr.core.di
 
 import com.example.apexhr.features.activities.ui.ActivitiesViewModel
+import com.example.apexhr.features.activities.ui.event.EventDetailsViewModel
 import com.example.apexhr.features.auth.ui.LoginViewModel
 import com.example.apexhr.features.auth.ui.SessionViewModel
 import com.example.apexhr.features.home.ui.HomeViewModel
@@ -42,5 +43,9 @@ val vmModule = module {
 
     viewModel {
         ActivitiesViewModel(get())
+    }
+
+    viewModel { (eventId: Long) ->
+        EventDetailsViewModel(eventId, get())
     }
 }

@@ -12,6 +12,12 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.apexhr.features.activities.ui.ActivitiesScreen
 import com.example.apexhr.features.activities.ui.ActivitiesViewModel
+import com.example.apexhr.features.activities.ui.event.EventDetailsScreen
+import com.example.apexhr.features.activities.ui.event.EventDetailsViewModel
+import com.example.apexhr.features.activities.ui.event.models.EventDetailsScreenCallbacks
+import com.example.apexhr.features.activities.ui.models.ActivitiesScreenCallbacks
+import com.example.apexhr.features.activities.ui.models.ActivityKind
+import com.example.apexhr.features.activities.ui.models.ActivityUiModel
 import com.example.apexhr.features.home.ui.HomeScreen
 import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.profile.ui.ProfileScreen
@@ -27,6 +33,7 @@ import com.example.apexhr.features.shop.ui.orders.OrdersScreen
 import com.example.apexhr.features.shop.ui.orders.OrdersViewModel
 import com.example.apexhr.features.shop.ui.orders.models.OrdersScreenCallbacks
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun AppNavigation(
@@ -75,9 +82,33 @@ fun AppNavigation(
             entry<TopLevelRoute.Activities> {
                 val viewModel: ActivitiesViewModel = koinViewModel()
                 val uiState by viewModel.state.collectAsStateWithLifecycle()
+                val activitiesCallbacks = remember(viewModel, navigator) {
+                    object : ActivitiesScreenCallbacks by viewModel {
+                        override fun onActivityClick(activity: ActivityUiModel) =
+                            navigator.openActivity(activity)
+
+                        override fun onParticipateClick(activity: ActivityUiModel) =
+                            navigator.openActivity(activity)
+                    }
+                }
                 ActivitiesScreen(
                     uiState = uiState,
-                    callbacks = viewModel,
+                    callbacks = activitiesCallbacks,
+                )
+            }
+            entry<EventDetailsRoute> { key ->
+                val viewModel: EventDetailsViewModel =
+                    koinViewModel(parameters = { parametersOf(key.eventId) })
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val eventCallbacks = remember(viewModel, navigator) {
+                    object : EventDetailsScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                EventDetailsScreen(
+                    screenState = screenState,
+                    callbacks = eventCallbacks,
+                    messages = viewModel.messages,
                 )
             }
             entry<TopLevelRoute.Shop> {
@@ -124,4 +155,12 @@ fun AppNavigation(
             }
         }
     )
+}
+
+/** Детали активности из списка; экраны анкет и квестов появятся следующими шагами. */
+private fun Navigator.openActivity(activity: ActivityUiModel) {
+    when (activity.kind) {
+        ActivityKind.Event -> navigate(EventDetailsRoute(activity.id))
+        ActivityKind.Survey, ActivityKind.Quest -> Unit
+    }
 }

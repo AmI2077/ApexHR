@@ -62,6 +62,10 @@ data object CartRoute : NavKey
 @Serializable
 data object OrdersRoute : NavKey
 
+/** Мероприятие: открывается из списка «Активности». */
+@Serializable
+data class EventDetailsRoute(val eventId: Long) : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {
