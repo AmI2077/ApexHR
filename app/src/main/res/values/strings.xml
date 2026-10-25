@@ -170,6 +170,23 @@
     <string name="quest_message_joined">Вы участвуете в квесте</string>
     <string name="quest_message_step_completed">Шаг отмечен выполненным</string>
     <string name="quest_message_completed">Квест завершён</string>
+    <string name="survey_details_title">Опрос</string>
+    <string name="survey_question">%1$d. %2$s</string>
+    <string name="survey_question_required">%1$d. %2$s *</string>
+    <string name="survey_question_unsupported">Этот тип вопроса не поддерживается в приложении</string>
+    <string name="survey_answer_placeholder">Ваш ответ</string>
+    <string name="survey_answer_yes">Да</string>
+    <string name="survey_answer_no">Нет</string>
+    <string name="survey_error_required">Обязательный вопрос</string>
+    <string name="survey_error_number">Введите число</string>
+    <string name="survey_action_submit">Отправить</string>
+    <string name="survey_note_answered">Вы уже ответили %1$s</string>
+    <string name="survey_note_answered_again">Вы уже отвечали %1$s. Можно ответить ещё раз</string>
+    <string name="survey_note_answered_again_no_date">Вы уже отвечали. Можно ответить ещё раз</string>
+    <string name="survey_note_closed">Опрос сейчас закрыт</string>
+    <string name="survey_note_unsupported">Ответить в приложении нельзя: в опросе есть неподдерживаемый обязательный вопрос</string>
+    <string name="survey_message_fix_errors">Ответьте на обязательные вопросы</string>
+    <string name="survey_message_submitted">Спасибо, ответы отправлены</string>
 
     <string name="thanks_title">Поблагодарить коллег</string>
     <string name="thanks_subtitle">Выберите коллегу и отправьте благодарность</string>

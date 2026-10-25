@@ -70,6 +70,10 @@ data class EventDetailsRoute(val eventId: Long) : NavKey
 @Serializable
 data class QuestDetailsRoute(val questId: Long) : NavKey
 
+/** Опрос: открывается из списка «Активности». */
+@Serializable
+data class SurveyDetailsRoute(val surveyId: Long) : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {

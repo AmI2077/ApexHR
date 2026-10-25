@@ -21,6 +21,9 @@ import com.example.apexhr.features.activities.ui.models.ActivityUiModel
 import com.example.apexhr.features.activities.ui.quest.QuestDetailsScreen
 import com.example.apexhr.features.activities.ui.quest.QuestDetailsViewModel
 import com.example.apexhr.features.activities.ui.quest.models.QuestDetailsScreenCallbacks
+import com.example.apexhr.features.activities.ui.survey.SurveyDetailsScreen
+import com.example.apexhr.features.activities.ui.survey.SurveyDetailsViewModel
+import com.example.apexhr.features.activities.ui.survey.models.SurveyDetailsScreenCallbacks
 import com.example.apexhr.features.home.ui.HomeScreen
 import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.profile.ui.ProfileScreen
@@ -129,6 +132,21 @@ fun AppNavigation(
                     messages = viewModel.messages,
                 )
             }
+            entry<SurveyDetailsRoute> { key ->
+                val viewModel: SurveyDetailsViewModel =
+                    koinViewModel(parameters = { parametersOf(key.surveyId) })
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val surveyCallbacks = remember(viewModel, navigator) {
+                    object : SurveyDetailsScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                SurveyDetailsScreen(
+                    screenState = screenState,
+                    callbacks = surveyCallbacks,
+                    messages = viewModel.messages,
+                )
+            }
             entry<TopLevelRoute.Shop> {
                 val viewModel: ShopViewModel = koinViewModel()
                 val screenState by viewModel.state.collectAsStateWithLifecycle()
@@ -175,11 +193,11 @@ fun AppNavigation(
     )
 }
 
-/** Детали активности из списка; экран анкеты появится следующим шагом. */
+/** Открывает детали активности из списка. */
 private fun Navigator.openActivity(activity: ActivityUiModel) {
     when (activity.kind) {
         ActivityKind.Event -> navigate(EventDetailsRoute(activity.id))
         ActivityKind.Quest -> navigate(QuestDetailsRoute(activity.id))
-        ActivityKind.Survey -> Unit
+        ActivityKind.Survey -> navigate(SurveyDetailsRoute(activity.id))
     }
 }
