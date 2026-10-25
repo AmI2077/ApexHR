@@ -28,6 +28,20 @@ object NetworkConfig {
     const val QUESTS_URL = "$BASE_URL/api/quests"
     const val LEADERBOARD_URL = "$BASE_URL/api/leaderboard"
 
+    // Активности (список квестов — тот же QUESTS_URL, что у главной)
+    const val SURVEYS_URL = "$BASE_URL/api/surveys"
+    const val EVENTS_URL = "$BASE_URL/api/events"
+    fun surveyUrl(surveyId: Long) = "$SURVEYS_URL/$surveyId"
+    fun surveyResponsesUrl(surveyId: Long) = "${surveyUrl(surveyId)}/responses"
+    fun questUrl(questId: Long) = "$QUESTS_URL/$questId"
+    fun questJoinUrl(questId: Long) = "${questUrl(questId)}/join"
+    fun questCompleteUrl(questId: Long) = "${questUrl(questId)}/complete"
+    fun questStepCompleteUrl(questId: Long, stepId: Long) = "${questUrl(questId)}/steps/$stepId/complete"
+    fun eventUrl(eventId: Long) = "$EVENTS_URL/$eventId"
+    fun eventRegisterUrl(eventId: Long) = "${eventUrl(eventId)}/register"
+    fun eventRegistrationUrl(eventId: Long) = "${eventUrl(eventId)}/registration"
+    fun eventRewardUrl(eventId: Long) = "${eventUrl(eventId)}/reward"
+
     // Бэкенд крутится на Render: после простоя «холодный старт» может
     // занимать десятки секунд, поэтому таймауты заметно больше обычных.
     const val REQUEST_TIMEOUT_MILLIS = 60_000L

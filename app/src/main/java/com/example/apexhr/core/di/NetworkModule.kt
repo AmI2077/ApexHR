@@ -5,6 +5,8 @@ import com.example.apexhr.core.data.network.KtorAuthClient
 import com.example.apexhr.core.data.network.KtorModule
 import com.example.apexhr.core.domain.NetworkAuthClient
 import com.example.apexhr.core.domain.SessionEventBus
+import com.example.apexhr.features.activities.data.ActivitiesApi
+import com.example.apexhr.features.activities.data.KtorActivitiesApi
 import com.example.apexhr.features.home.data.HomeApi
 import com.example.apexhr.features.home.data.KtorHomeApi
 import com.example.apexhr.features.profile.data.KtorProfileApi
@@ -59,4 +61,5 @@ val networkModule = module {
     single<ShopApi> { KtorShopApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<CartApi> { KtorCartApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<HomeApi> { KtorHomeApi(get(AUTHORIZED_HTTP_CLIENT)) }
+    single<ActivitiesApi> { KtorActivitiesApi(get(AUTHORIZED_HTTP_CLIENT)) }
 }

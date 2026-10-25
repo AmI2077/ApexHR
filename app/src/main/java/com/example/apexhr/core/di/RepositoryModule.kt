@@ -1,5 +1,7 @@
 package com.example.apexhr.core.di
 
+import com.example.apexhr.features.activities.data.ActivitiesRepositoryImpl
+import com.example.apexhr.features.activities.domain.ActivitiesRepository
 import com.example.apexhr.features.auth.data.AuthRepositoryImpl
 import com.example.apexhr.features.auth.domain.AuthRepository
 import com.example.apexhr.features.home.data.HomeRepositoryImpl
@@ -18,4 +20,5 @@ val repoModule = module {
     single<ShopRepository> { ShopRepositoryImpl(get()) }
     single<CartRepository> { CartRepositoryImpl(get(), get()) }
     single<HomeRepository> { HomeRepositoryImpl(get(), get()) }
+    single<ActivitiesRepository> { ActivitiesRepositoryImpl(get()) }
 }
