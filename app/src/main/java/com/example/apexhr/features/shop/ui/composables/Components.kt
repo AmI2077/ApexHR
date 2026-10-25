@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -233,7 +234,7 @@ fun ShopProductCard(
                 )
                 Button(
                     onClick = onGetClick,
-                    enabled = product.isAvailable,
+                    enabled = product.isAvailable && !product.isAddingToCart,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = primaryBlueColor,
                         contentColor = backgroundColor,
@@ -244,6 +245,14 @@ fun ShopProductCard(
                         vertical = ApexDimens.spacing6.dp,
                     ),
                 ) {
+                    if (product.isAddingToCart) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(ApexDimens.icon16.dp),
+                            color = primaryBlueColor,
+                            strokeWidth = 2.dp,
+                        )
+                        Spacer(modifier = Modifier.width(ApexDimens.spacing6.dp))
+                    }
                     Text(
                         text = stringResource(
                             if (product.isAvailable) R.string.get else R.string.shop_out_of_stock,

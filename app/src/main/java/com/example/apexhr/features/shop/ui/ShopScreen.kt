@@ -2,12 +2,17 @@ package com.example.apexhr.features.shop.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,13 +26,17 @@ import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.features.shop.ui.composables.ShopCategoryTabs
 import com.example.apexhr.features.shop.ui.composables.ShopHeader
+import com.example.apexhr.features.shop.ui.composables.ShopMessagesEffect
 import com.example.apexhr.features.shop.ui.composables.ShopPopularTitle
 import com.example.apexhr.features.shop.ui.composables.ShopProductCard
 import com.example.apexhr.features.shop.ui.composables.ShopSearchField
+import com.example.apexhr.features.shop.ui.models.ShopMessage
 import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import com.example.apexhr.features.shop.ui.models.ShopScreenState
 import com.example.apexhr.features.shop.ui.models.ShopUiState
 import com.example.apexhr.ui.theme.ApexHRTheme
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
@@ -65,31 +74,61 @@ fun ShopScreenProductsErrorPreview() {
     }
 }
 
+@Preview(showBackground = true, widthDp = 360)
+@Composable
+fun ShopScreenAddingToCartPreview() {
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        ShopScreen(
+            uiState = ShopUiState.Preview.copy(
+                products = ShopUiState.Preview.products.mapIndexed { index, product ->
+                    product.copy(isAddingToCart = index == 0)
+                },
+            ),
+            callbacks = ShopScreenCallbacks.Empty,
+        )
+    }
+}
+
+/**
+ * @param messages разовые сообщения (добавление в корзину), показываются в snackbar.
+ */
 @Composable
 fun ShopScreen(
     screenState: ShopScreenState,
     callbacks: ShopScreenCallbacks,
     modifier: Modifier = Modifier,
+    messages: Flow<ShopMessage> = emptyFlow(),
 ) {
-    when (screenState) {
-        is ShopScreenState.Content -> ShopScreenContent(
-            uiState = screenState.uiState,
-            callbacks = callbacks,
-            modifier = modifier,
-        )
+    val snackbarHostState = remember { SnackbarHostState() }
+    ShopMessagesEffect(
+        messages = messages,
+        snackbarHostState = snackbarHostState,
+    )
 
-        ShopScreenState.Loading -> ShopScreenFrame(callbacks, modifier) {
-            item { LoadingState() }
-        }
+    Box(modifier = modifier.fillMaxSize()) {
+        when (screenState) {
+            is ShopScreenState.Content -> ShopScreenContent(
+                uiState = screenState.uiState,
+                callbacks = callbacks,
+            )
 
-        is ShopScreenState.Error -> ShopScreenFrame(callbacks, modifier) {
-            item {
-                ErrorState(
-                    error = screenState.error,
-                    onRetry = callbacks::onRetryClick,
-                )
+            ShopScreenState.Loading -> ShopScreenFrame(callbacks) {
+                item { LoadingState() }
+            }
+
+            is ShopScreenState.Error -> ShopScreenFrame(callbacks) {
+                item {
+                    ErrorState(
+                        error = screenState.error,
+                        onRetry = callbacks::onRetryClick,
+                    )
+                }
             }
         }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        )
     }
 }
 

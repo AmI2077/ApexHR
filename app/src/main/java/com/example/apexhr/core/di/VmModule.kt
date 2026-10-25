@@ -22,7 +22,7 @@ val vmModule = module {
     }
 
     viewModel {
-        ShopViewModel(get())
+        ShopViewModel(get(), get())
     }
 
     viewModel {

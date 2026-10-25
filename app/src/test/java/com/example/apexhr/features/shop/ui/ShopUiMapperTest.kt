@@ -79,6 +79,12 @@ class ShopUiMapperTest {
     }
 
     @Test
+    fun `adding to cart flag is passed to model`() {
+        assertEquals(false, hoodie.toUiModel().isAddingToCart)
+        assertEquals(true, hoodie.toUiModel(isAddingToCart = true).isAddingToCart)
+    }
+
+    @Test
     fun `search matches name and description ignoring case`() {
         val products = listOf(hoodie, hike)
 

@@ -78,6 +78,7 @@ fun AppNavigation(
                 ShopScreen(
                     screenState = screenState,
                     callbacks = viewModel,
+                    messages = viewModel.messages,
                 )
             }
         }

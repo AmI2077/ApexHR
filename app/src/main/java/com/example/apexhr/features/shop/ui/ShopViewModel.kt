@@ -2,38 +2,54 @@ package com.example.apexhr.features.shop.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.shop.domain.CartActionResult
+import com.example.apexhr.features.shop.domain.CartRepository
 import com.example.apexhr.features.shop.domain.Product
 import com.example.apexhr.features.shop.domain.ShopRepository
+import com.example.apexhr.features.shop.ui.models.ShopMessage
 import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import com.example.apexhr.features.shop.ui.models.ShopScreenState
 import com.example.apexhr.features.shop.ui.models.ShopUiState
 import com.example.apexhr.features.shop.ui.models.filterByQuery
 import com.example.apexhr.features.shop.ui.models.toCategoryIdOrNull
 import com.example.apexhr.features.shop.ui.models.toCategoryTabs
+import com.example.apexhr.features.shop.ui.models.toShopMessage
 import com.example.apexhr.features.shop.ui.models.toUiModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
  * Каталог: категории грузятся один раз вместе с товарами вкладки «Все»,
  * при смене категории перезагружаются только товары. Поиск — локальный.
+ * «Получить» добавляет товар в корзину, результат — сообщением в snackbar.
  */
 class ShopViewModel(
     private val repository: ShopRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel(), ShopScreenCallbacks {
 
     private val _state = MutableStateFlow<ShopScreenState>(ShopScreenState.Loading)
     val state: StateFlow<ShopScreenState> = _state.asStateFlow()
 
+    private val _messages = Channel<ShopMessage>(Channel.BUFFERED)
+    val messages: Flow<ShopMessage> = _messages.receiveAsFlow()
+
     /** Товары выбранной категории без учёта поиска. */
     private var loadedProducts: List<Product> = emptyList()
     private var loadJob: Job? = null
+
+    /** id товаров, которые сейчас добавляются в корзину. */
+    private val addingProductIds = mutableSetOf<String>()
 
     init {
         loadCatalog()
@@ -96,7 +112,19 @@ class ShopViewModel(
         }
 
     private fun visibleProducts(query: String) =
-        loadedProducts.filterByQuery(query).map { it.toUiModel() }
+        loadedProducts.filterByQuery(query).map {
+            it.toUiModel(isAddingToCart = it.id.toString() in addingProductIds)
+        }
+
+    private fun refreshAddingState() {
+        updateContent { uiState ->
+            uiState.copy(
+                products = uiState.products.map {
+                    it.copy(isAddingToCart = it.id in addingProductIds)
+                },
+            )
+        }
+    }
 
     private inline fun updateContent(transform: (ShopUiState) -> ShopUiState) {
         _state.update { current ->
@@ -137,8 +165,23 @@ class ShopViewModel(
         loadProducts(categoryId)
     }
 
-    // Корзины, оформления заказа и карточки товара пока нет.
+    override fun onGetProductClick(productId: String) {
+        val id = productId.toLongOrNull() ?: return
+        if (!addingProductIds.add(productId)) return
+        refreshAddingState()
+
+        viewModelScope.launch {
+            val message = when (val result = cartRepository.addToCart(id)) {
+                CartActionResult.Success -> ShopMessage(R.string.shop_added_to_cart)
+                is CartActionResult.Failure -> result.error.toShopMessage()
+            }
+            addingProductIds.remove(productId)
+            refreshAddingState()
+            _messages.send(message)
+        }
+    }
+
+    // Корзины и карточки товара пока нет.
     override fun onCartClick() = Unit
     override fun onProductClick(productId: String) = Unit
-    override fun onGetProductClick(productId: String) = Unit
 }

@@ -75,6 +75,8 @@ data class ShopProductUiModel(
     val imageUrl: String? = null,
     /** false, если товар закончился: кнопка «Получить» неактивна. */
     val isAvailable: Boolean = true,
+    /** Товар добавляется в корзину: на кнопке индикатор, повторно нажать нельзя. */
+    val isAddingToCart: Boolean = false,
 )
 
 /** Состояние экрана каталога целиком. */

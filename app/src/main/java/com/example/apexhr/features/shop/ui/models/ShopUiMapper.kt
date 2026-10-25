@@ -14,7 +14,7 @@ fun List<Category>.toCategoryTabs(): List<ShopCategoryUiModel> =
 fun String.toCategoryIdOrNull(): Long? =
     if (this == ShopUiState.CATEGORY_ALL) null else toLongOrNull()
 
-fun Product.toUiModel(): ShopProductUiModel {
+fun Product.toUiModel(isAddingToCart: Boolean = false): ShopProductUiModel {
     val image = imageUrl.takeIfHttpUrl()
     return ShopProductUiModel(
         id = id.toString(),
@@ -24,6 +24,7 @@ fun Product.toUiModel(): ShopProductUiModel {
         showMark = image == null,
         imageUrl = image,
         isAvailable = isAvailable,
+        isAddingToCart = isAddingToCart,
     )
 }
 
