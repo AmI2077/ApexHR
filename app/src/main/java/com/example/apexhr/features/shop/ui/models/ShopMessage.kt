@@ -13,7 +13,14 @@ import com.example.apexhr.features.shop.domain.CartActionError
 data class ShopMessage(
     @StringRes val textRes: Int,
     val args: List<Any> = emptyList(),
+    /** Кнопка в snackbar; null — без кнопки. */
+    val action: ShopMessageAction? = null,
 )
+
+enum class ShopMessageAction {
+    /** «Корзина»: открыть корзину. */
+    OpenCart,
+}
 
 /** Текст ошибки действия с корзиной для пользователя. */
 fun CartActionError.toShopMessage(): ShopMessage = when (this) {

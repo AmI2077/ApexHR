@@ -55,6 +55,16 @@
     <string name="cart_error_server_message">Сервер отклонил запрос: %1$s</string>
     <string name="cart_error_action">Не удалось выполнить действие. Попробуйте ещё раз</string>
 
+    <string name="cart_empty">В корзине пока ничего нет. Выберите награду в каталоге</string>
+    <string name="cart_amount">%1$s апексов</string>
+    <string name="cart_item_unit_price">%1$s апексов за шт.</string>
+    <string name="cart_increase">Добавить ещё одну</string>
+    <string name="cart_decrease">Убрать одну</string>
+    <string name="cart_remove">Удалить из корзины</string>
+    <string name="cart_total">Итого</string>
+    <string name="cart_balance">Ваш баланс</string>
+    <string name="cart_not_enough_balance">Не хватает %1$s апексов для оформления</string>
+
     <string name="profile_title">Профиль</string>
     <string name="profile_current_balance">Текущий баланс</string>
     <string name="profile_balance_value">%1$s апексов</string>

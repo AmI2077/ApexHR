@@ -31,6 +31,7 @@ import com.example.apexhr.features.shop.ui.composables.ShopPopularTitle
 import com.example.apexhr.features.shop.ui.composables.ShopProductCard
 import com.example.apexhr.features.shop.ui.composables.ShopSearchField
 import com.example.apexhr.features.shop.ui.models.ShopMessage
+import com.example.apexhr.features.shop.ui.models.ShopMessageAction
 import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import com.example.apexhr.features.shop.ui.models.ShopScreenState
 import com.example.apexhr.features.shop.ui.models.ShopUiState
@@ -90,7 +91,8 @@ fun ShopScreenAddingToCartPreview() {
 }
 
 /**
- * @param messages разовые сообщения (добавление в корзину), показываются в snackbar.
+ * @param messages разовые сообщения (добавление в корзину), показываются в snackbar;
+ * у сообщения об успехе есть кнопка «Корзина».
  */
 @Composable
 fun ShopScreen(
@@ -100,9 +102,16 @@ fun ShopScreen(
     messages: Flow<ShopMessage> = emptyFlow(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val cartLabel = stringResource(R.string.cart)
     ShopMessagesEffect(
         messages = messages,
         snackbarHostState = snackbarHostState,
+        actionLabel = { message ->
+            if (message.action == ShopMessageAction.OpenCart) cartLabel else null
+        },
+        onAction = { message ->
+            if (message.action == ShopMessageAction.OpenCart) callbacks.onCartClick()
+        },
     )
 
     Box(modifier = modifier.fillMaxSize()) {

@@ -1,0 +1,245 @@
+package com.example.apexhr.features.shop.ui.cart.composables
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Remove
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import com.example.apexhr.R
+import com.example.apexhr.core.ui.theme.ApexDimens
+import com.example.apexhr.core.ui.theme.negativeRedColor
+import com.example.apexhr.core.ui.theme.primaryBlueColor
+import com.example.apexhr.core.ui.theme.primaryTextColor
+import com.example.apexhr.core.ui.theme.secondaryBlueColor
+import com.example.apexhr.core.ui.theme.secondaryTextColor
+import com.example.apexhr.features.shop.ui.cart.models.CartItemUiModel
+import com.example.apexhr.features.shop.ui.cart.models.CartUiState
+
+/** Шапка вложенного экрана каталога: «Назад» и заголовок. */
+@Composable
+fun ShopSubscreenHeader(
+    title: String,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.back),
+                tint = primaryTextColor,
+            )
+        }
+        Text(
+            text = title,
+            color = primaryTextColor,
+            fontSize = ApexDimens.text20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@Composable
+fun CartItemCard(
+    item: CartItemUiModel,
+    onIncreaseClick: () -> Unit,
+    onDecreaseClick: () -> Unit,
+    onRemoveClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(ApexDimens.radius20.dp))
+            .background(secondaryBlueColor.copy(alpha = 0.28f))
+            .padding(ApexDimens.spacing12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            modifier = Modifier
+                .size(ApexDimens.productImageSize.dp)
+                .clip(RoundedCornerShape(ApexDimens.radius16.dp))
+                .background(secondaryBlueColor.copy(alpha = 0.55f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (item.imageUrl == null) {
+                Text(
+                    text = stringResource(R.string.points_diamond),
+                    color = primaryBlueColor,
+                    fontSize = ApexDimens.text20.sp,
+                )
+            } else {
+                AsyncImage(
+                    model = item.imageUrl,
+                    contentDescription = stringResource(R.string.shop_item_image),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.matchParentSize(),
+                )
+            }
+        }
+        Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = item.title.ifBlank { stringResource(R.string.shop_product_untitled) },
+                color = primaryTextColor,
+                fontSize = ApexDimens.text16.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
+            Text(
+                text = stringResource(R.string.cart_item_unit_price, item.unitPrice),
+                color = secondaryTextColor,
+                fontSize = ApexDimens.text12.sp,
+            )
+            Text(
+                text = stringResource(R.string.cart_amount, item.total),
+                color = primaryTextColor,
+                fontSize = ApexDimens.text14.sp,
+                fontWeight = FontWeight.Medium,
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(
+                    onClick = onDecreaseClick,
+                    enabled = item.canDecrease && !item.isUpdating,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Remove,
+                        contentDescription = stringResource(R.string.cart_decrease),
+                    )
+                }
+                Box(
+                    modifier = Modifier.width(ApexDimens.icon32.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (item.isUpdating) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(ApexDimens.icon16.dp),
+                            color = primaryBlueColor,
+                            strokeWidth = 2.dp,
+                        )
+                    } else {
+                        Text(
+                            text = item.quantity.toString(),
+                            color = primaryTextColor,
+                            fontSize = ApexDimens.text16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                }
+                IconButton(
+                    onClick = onIncreaseClick,
+                    enabled = !item.isUpdating,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Add,
+                        contentDescription = stringResource(R.string.cart_increase),
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = onRemoveClick,
+                    enabled = !item.isUpdating,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = stringResource(R.string.cart_remove),
+                        tint = if (item.isUpdating) secondaryTextColor else negativeRedColor,
+                    )
+                }
+            }
+        }
+    }
+}
+
+/** Итог корзины и баланс; если баланса не хватает — предупреждение. */
+@Composable
+fun CartSummaryCard(
+    uiState: CartUiState,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(ApexDimens.radius20.dp))
+            .background(secondaryBlueColor.copy(alpha = 0.28f))
+            .padding(ApexDimens.spacing16.dp),
+        verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing8.dp),
+    ) {
+        CartSummaryRow(
+            label = stringResource(R.string.cart_total),
+            value = stringResource(R.string.cart_amount, uiState.total),
+            isAccent = true,
+        )
+        CartSummaryRow(
+            label = stringResource(R.string.cart_balance),
+            value = stringResource(R.string.cart_amount, uiState.balance),
+            isAccent = false,
+        )
+        if (!uiState.isBalanceEnough) {
+            Text(
+                text = stringResource(R.string.cart_not_enough_balance, uiState.missingAmount),
+                color = negativeRedColor,
+                fontSize = ApexDimens.text13.sp,
+                fontWeight = FontWeight.Medium,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CartSummaryRow(
+    label: String,
+    value: String,
+    isAccent: Boolean,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = label,
+            color = if (isAccent) primaryTextColor else secondaryTextColor,
+            fontSize = ApexDimens.text14.sp,
+        )
+        Text(
+            text = value,
+            color = primaryTextColor,
+            fontSize = if (isAccent) ApexDimens.text16.sp else ApexDimens.text14.sp,
+            fontWeight = if (isAccent) FontWeight.Bold else FontWeight.Medium,
+        )
+    }
+}

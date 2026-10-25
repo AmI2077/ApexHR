@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -64,12 +66,12 @@ fun ShopHeader(
             fontWeight = FontWeight.Bold,
         )
         IconButton(onClick = onCartClick) {
-//            Icon(
-//                imageVector = Icons.Outlined.ShoppingCart,
-//                contentDescription = stringResource(R.string.cart),
-//                tint = primaryTextColor,
-//                modifier = Modifier.size(ApexDimens.icon24.dp),
-//            )
+            Icon(
+                imageVector = Icons.Outlined.ShoppingCart,
+                contentDescription = stringResource(R.string.cart),
+                tint = primaryTextColor,
+                modifier = Modifier.size(ApexDimens.icon24.dp),
+            )
         }
     }
 }

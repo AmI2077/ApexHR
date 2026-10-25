@@ -9,6 +9,7 @@ import com.example.apexhr.features.shop.domain.CartRepository
 import com.example.apexhr.features.shop.domain.Product
 import com.example.apexhr.features.shop.domain.ShopRepository
 import com.example.apexhr.features.shop.ui.models.ShopMessage
+import com.example.apexhr.features.shop.ui.models.ShopMessageAction
 import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import com.example.apexhr.features.shop.ui.models.ShopScreenState
 import com.example.apexhr.features.shop.ui.models.ShopUiState
@@ -172,7 +173,10 @@ class ShopViewModel(
 
         viewModelScope.launch {
             val message = when (val result = cartRepository.addToCart(id)) {
-                CartActionResult.Success -> ShopMessage(R.string.shop_added_to_cart)
+                CartActionResult.Success -> ShopMessage(
+                    textRes = R.string.shop_added_to_cart,
+                    action = ShopMessageAction.OpenCart,
+                )
                 is CartActionResult.Failure -> result.error.toShopMessage()
             }
             addingProductIds.remove(productId)
@@ -181,7 +185,9 @@ class ShopViewModel(
         }
     }
 
-    // Корзины и карточки товара пока нет.
+    /** Переход в корзину задаёт навигация (AppNavigation). */
     override fun onCartClick() = Unit
+
+    // Карточки товара пока нет.
     override fun onProductClick(productId: String) = Unit
 }

@@ -54,6 +54,10 @@ interface TopLevelRoute : NavKey {
     }
 }
 
+/** Корзина каталога: открывается поверх вкладки «Каталог». */
+@Serializable
+data object CartRoute : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {

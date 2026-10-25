@@ -20,6 +20,10 @@ import com.example.apexhr.features.profile.ui.ProfileViewModel
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
 import com.example.apexhr.features.shop.ui.ShopScreen
 import com.example.apexhr.features.shop.ui.ShopViewModel
+import com.example.apexhr.features.shop.ui.cart.CartScreen
+import com.example.apexhr.features.shop.ui.cart.CartViewModel
+import com.example.apexhr.features.shop.ui.cart.models.CartScreenCallbacks
+import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -75,9 +79,28 @@ fun AppNavigation(
             entry<TopLevelRoute.Shop> {
                 val viewModel: ShopViewModel = koinViewModel()
                 val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val shopCallbacks = remember(viewModel, navigator) {
+                    object : ShopScreenCallbacks by viewModel {
+                        override fun onCartClick() = navigator.navigate(CartRoute)
+                    }
+                }
                 ShopScreen(
                     screenState = screenState,
-                    callbacks = viewModel,
+                    callbacks = shopCallbacks,
+                    messages = viewModel.messages,
+                )
+            }
+            entry<CartRoute> {
+                val viewModel: CartViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val cartCallbacks = remember(viewModel, navigator) {
+                    object : CartScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                CartScreen(
+                    screenState = screenState,
+                    callbacks = cartCallbacks,
                     messages = viewModel.messages,
                 )
             }
