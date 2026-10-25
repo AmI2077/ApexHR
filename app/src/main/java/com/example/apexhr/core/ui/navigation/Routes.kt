@@ -58,6 +58,10 @@ interface TopLevelRoute : NavKey {
 @Serializable
 data object CartRoute : NavKey
 
+/** «Мои заказы»: открываются из корзины. */
+@Serializable
+data object OrdersRoute : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {

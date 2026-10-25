@@ -24,6 +24,9 @@ import com.example.apexhr.features.shop.ui.cart.CartScreen
 import com.example.apexhr.features.shop.ui.cart.CartViewModel
 import com.example.apexhr.features.shop.ui.cart.models.CartScreenCallbacks
 import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
+import com.example.apexhr.features.shop.ui.orders.OrdersScreen
+import com.example.apexhr.features.shop.ui.orders.OrdersViewModel
+import com.example.apexhr.features.shop.ui.orders.models.OrdersScreenCallbacks
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -96,12 +99,26 @@ fun AppNavigation(
                 val cartCallbacks = remember(viewModel, navigator) {
                     object : CartScreenCallbacks by viewModel {
                         override fun onBackClick() = navigator.goBack()
+                        override fun onOrdersClick() = navigator.navigate(OrdersRoute)
                     }
                 }
                 CartScreen(
                     screenState = screenState,
                     callbacks = cartCallbacks,
                     messages = viewModel.messages,
+                )
+            }
+            entry<OrdersRoute> {
+                val viewModel: OrdersViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val ordersCallbacks = remember(viewModel, navigator) {
+                    object : OrdersScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                OrdersScreen(
+                    screenState = screenState,
+                    callbacks = ordersCallbacks,
                 )
             }
         }

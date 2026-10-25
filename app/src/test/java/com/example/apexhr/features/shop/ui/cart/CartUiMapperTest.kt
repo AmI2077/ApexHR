@@ -12,6 +12,7 @@ import com.example.apexhr.features.shop.ui.cart.models.toShopMessage
 import com.example.apexhr.features.shop.ui.cart.models.toUiModel
 import com.example.apexhr.features.shop.ui.cart.models.toUiState
 import com.example.apexhr.features.shop.ui.models.ShopMessage
+import com.example.apexhr.features.shop.ui.models.ShopMessageAction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -106,11 +107,11 @@ class CartUiMapperTest {
     @Test
     fun `checkout success shows order number`() {
         assertEquals(
-            ShopMessage(R.string.cart_checkout_success, listOf(6L)),
+            ShopMessage(R.string.cart_checkout_success, listOf(6L), ShopMessageAction.OpenOrders),
             CheckoutResult.Success(orderId = 6).toShopMessage(),
         )
         assertEquals(
-            ShopMessage(R.string.cart_checkout_success_no_number),
+            ShopMessage(R.string.cart_checkout_success_no_number, action = ShopMessageAction.OpenOrders),
             CheckoutResult.Success(orderId = null).toShopMessage(),
         )
     }

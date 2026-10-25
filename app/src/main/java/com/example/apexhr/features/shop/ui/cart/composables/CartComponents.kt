@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,12 +46,13 @@ import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.features.shop.ui.cart.models.CartItemUiModel
 import com.example.apexhr.features.shop.ui.cart.models.CartUiState
 
-/** Шапка вложенного экрана каталога: «Назад» и заголовок. */
+/** Шапка вложенного экрана каталога: «Назад», заголовок и [actions] справа. */
 @Composable
 fun ShopSubscreenHeader(
     title: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -70,6 +72,7 @@ fun ShopSubscreenHeader(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
+        actions()
     }
 }
 

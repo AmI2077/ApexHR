@@ -6,6 +6,7 @@ import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.profile.ui.ProfileViewModel
 import com.example.apexhr.features.shop.ui.ShopViewModel
 import com.example.apexhr.features.shop.ui.cart.CartViewModel
+import com.example.apexhr.features.shop.ui.orders.OrdersViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -28,6 +29,10 @@ val vmModule = module {
 
     viewModel {
         CartViewModel(get())
+    }
+
+    viewModel {
+        OrdersViewModel(get())
     }
 
     viewModel {

@@ -20,6 +20,9 @@ data class ShopMessage(
 enum class ShopMessageAction {
     /** «Корзина»: открыть корзину. */
     OpenCart,
+
+    /** «Мои заказы»: открыть список заказов. */
+    OpenOrders,
 }
 
 /** Текст ошибки действия с корзиной для пользователя. */

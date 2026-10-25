@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
  * Корзина с балансом и оформление заказа. После каждого изменения и оформления
  * корзина перечитывается с сервера без полноэкранного лоадера: суммы, остатки
  * и списание считает сервер.
- * Переход «Назад» задаёт навигация (AppNavigation).
+ * Переходы задаёт навигация (AppNavigation).
  */
 class CartViewModel(
     private val repository: CartRepository,
@@ -73,7 +73,9 @@ class CartViewModel(
         )
     }
 
+    // Переходы «Назад» и «Мои заказы» задаёт навигация.
     override fun onBackClick() = Unit
+    override fun onOrdersClick() = Unit
 
     override fun onRetryClick() = load()
 

@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,6 +27,7 @@ import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadingState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
+import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.features.shop.ui.cart.composables.CartCheckoutButton
 import com.example.apexhr.features.shop.ui.cart.composables.CartItemCard
 import com.example.apexhr.features.shop.ui.cart.composables.CartSummaryCard
@@ -34,6 +37,7 @@ import com.example.apexhr.features.shop.ui.cart.models.CartScreenState
 import com.example.apexhr.features.shop.ui.cart.models.CartUiState
 import com.example.apexhr.features.shop.ui.composables.ShopMessagesEffect
 import com.example.apexhr.features.shop.ui.models.ShopMessage
+import com.example.apexhr.features.shop.ui.models.ShopMessageAction
 import com.example.apexhr.ui.theme.ApexHRTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -108,7 +112,8 @@ fun CartScreenErrorPreview() {
 
 /**
  * Корзина: позиции с количеством, итог, баланс и оформление заказа.
- * @param messages разовые сообщения (ошибки действий), показываются в snackbar.
+ * @param messages разовые сообщения (ошибки действий, итог оформления), показываются
+ * в snackbar; у сообщения об оформленном заказе есть кнопка «Мои заказы».
  */
 @Composable
 fun CartScreen(
@@ -118,9 +123,16 @@ fun CartScreen(
     messages: Flow<ShopMessage> = emptyFlow(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val ordersLabel = stringResource(R.string.cart_orders)
     ShopMessagesEffect(
         messages = messages,
         snackbarHostState = snackbarHostState,
+        actionLabel = { message ->
+            if (message.action == ShopMessageAction.OpenOrders) ordersLabel else null
+        },
+        onAction = { message ->
+            if (message.action == ShopMessageAction.OpenOrders) callbacks.onOrdersClick()
+        },
     )
 
     Box(
@@ -136,6 +148,14 @@ fun CartScreen(
                     horizontal = ApexDimens.spacing8.dp,
                     vertical = ApexDimens.spacing8.dp,
                 ),
+                actions = {
+                    TextButton(onClick = callbacks::onOrdersClick) {
+                        Text(
+                            text = ordersLabel,
+                            color = primaryBlueColor,
+                        )
+                    }
+                },
             )
             when (screenState) {
                 CartScreenState.Loading -> LoadingState()

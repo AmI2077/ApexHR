@@ -9,6 +9,7 @@ import com.example.apexhr.features.shop.domain.CartItem
 import com.example.apexhr.features.shop.domain.CartSummary
 import com.example.apexhr.features.shop.domain.CheckoutResult
 import com.example.apexhr.features.shop.ui.models.ShopMessage
+import com.example.apexhr.features.shop.ui.models.ShopMessageAction
 import com.example.apexhr.features.shop.ui.models.toShopMessage
 
 /**
@@ -31,9 +32,16 @@ fun CartSummary.toUiState(
 /** Сообщение после оформления заказа. */
 fun CheckoutResult.toShopMessage(): ShopMessage = when (this) {
     is CheckoutResult.Success -> if (orderId != null) {
-        ShopMessage(R.string.cart_checkout_success, listOf(orderId))
+        ShopMessage(
+            textRes = R.string.cart_checkout_success,
+            args = listOf(orderId),
+            action = ShopMessageAction.OpenOrders,
+        )
     } else {
-        ShopMessage(R.string.cart_checkout_success_no_number)
+        ShopMessage(
+            textRes = R.string.cart_checkout_success_no_number,
+            action = ShopMessageAction.OpenOrders,
+        )
     }
     // Ответа не дождались, но заказ мог создаться: повторять вслепую нельзя.
     is CheckoutResult.Failure -> if (error == CartActionError.Data(DataError.Timeout)) {
