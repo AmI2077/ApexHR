@@ -102,12 +102,35 @@
     <string name="profile_name_unknown">Сотрудник</string>
 
     <string name="activities_title">Активности</string>
-    <string name="activities_search_placeholder">Поиск по каталогу…</string>
+    <string name="activities_search_placeholder">Поиск по активностям…</string>
     <string name="activities_category_surveys">Опросы</string>
     <string name="activities_category_mini_games">Мини-игры</string>
     <string name="activities_category_events">Мероприятия</string>
-    <string name="activities_questions">%1$d вопросов</string>
-    <string name="activities_reward">%1$d апексов</string>
+    <plurals name="activities_questions_count">
+        <item quantity="one">%1$d вопрос</item>
+        <item quantity="few">%1$d вопроса</item>
+        <item quantity="many">%1$d вопросов</item>
+        <item quantity="other">%1$d вопроса</item>
+    </plurals>
+    <plurals name="activities_steps_count">
+        <item quantity="one">%1$d шаг</item>
+        <item quantity="few">%1$d шага</item>
+        <item quantity="many">%1$d шагов</item>
+        <item quantity="other">%1$d шага</item>
+    </plurals>
+    <string name="activities_reward">%1$s апексов</string>
+    <string name="activities_event_separator">" · "</string>
+    <string name="activities_untitled">Без названия</string>
+    <string name="activities_empty">Здесь пока ничего нет</string>
+    <string name="activities_not_found">Ничего не найдено</string>
+    <string name="activities_status_survey_answered">Вы уже ответили</string>
+    <string name="activities_status_quest_in_progress">Вы участвуете</string>
+    <string name="activities_status_quest_completed">Квест пройден</string>
+    <string name="activities_status_quest_cancelled">Участие отменено</string>
+    <string name="activities_status_event_registered">Вы записаны</string>
+    <string name="activities_status_event_attended">Вы посетили</string>
+    <string name="activities_status_event_cancelled">Запись отменена</string>
+    <string name="activities_status_event_no_show">Вы не пришли</string>
     <string name="activities_item_image">Изображение активности</string>
 
     <string name="thanks_title">Поблагодарить коллег</string>

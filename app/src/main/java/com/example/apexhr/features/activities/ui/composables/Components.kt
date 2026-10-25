@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +39,7 @@ import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.core.ui.theme.transparent
 import com.example.apexhr.features.activities.ui.models.ActivityCategoryUiModel
+import com.example.apexhr.features.activities.ui.models.ActivitySubtitle
 import com.example.apexhr.features.activities.ui.models.ActivityUiModel
 
 @Composable
@@ -158,7 +160,7 @@ fun ActivityCard(
         Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = activity.title,
+                text = activity.title ?: stringResource(R.string.activities_untitled),
                 color = primaryTextColor,
                 fontSize = ApexDimens.text16.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -166,16 +168,30 @@ fun ActivityCard(
                 overflow = TextOverflow.Ellipsis,
             )
             Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
-            Text(
-                text = stringResource(R.string.activities_questions, activity.questionsCount),
-                color = primaryTextColor,
-                fontSize = ApexDimens.text13.sp,
-            )
-            Text(
-                text = stringResource(R.string.activities_reward, activity.rewardPoints),
-                color = primaryTextColor,
-                fontSize = ApexDimens.text13.sp,
-            )
+            activity.subtitle?.let { subtitle ->
+                Text(
+                    text = subtitle.text(),
+                    color = primaryTextColor,
+                    fontSize = ApexDimens.text13.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            if (activity.reward != null) {
+                Text(
+                    text = stringResource(R.string.activities_reward, activity.reward),
+                    color = primaryTextColor,
+                    fontSize = ApexDimens.text13.sp,
+                )
+            }
+            if (activity.statusRes != null) {
+                Text(
+                    text = stringResource(activity.statusRes),
+                    color = primaryBlueColor,
+                    fontSize = ApexDimens.text12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
             Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -202,4 +218,12 @@ fun ActivityCard(
             }
         }
     }
+}
+
+@Composable
+private fun ActivitySubtitle.text(): String = when (this) {
+    is ActivitySubtitle.Questions -> pluralStringResource(R.plurals.activities_questions_count, count, count)
+    is ActivitySubtitle.Steps -> pluralStringResource(R.plurals.activities_steps_count, count, count)
+    is ActivitySubtitle.EventTime -> listOfNotNull(startAt, location)
+        .joinToString(stringResource(R.string.activities_event_separator))
 }

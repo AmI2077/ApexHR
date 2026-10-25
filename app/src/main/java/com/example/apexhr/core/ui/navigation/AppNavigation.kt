@@ -11,8 +11,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.apexhr.features.activities.ui.ActivitiesScreen
-import com.example.apexhr.features.activities.ui.models.ActivitiesScreenCallbacks
-import com.example.apexhr.features.activities.ui.models.ActivitiesUiState
+import com.example.apexhr.features.activities.ui.ActivitiesViewModel
 import com.example.apexhr.features.home.ui.HomeScreen
 import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.profile.ui.ProfileScreen
@@ -74,9 +73,11 @@ fun AppNavigation(
                 )
             }
             entry<TopLevelRoute.Activities> {
+                val viewModel: ActivitiesViewModel = koinViewModel()
+                val uiState by viewModel.state.collectAsStateWithLifecycle()
                 ActivitiesScreen(
-                    uiState = ActivitiesUiState.Preview,
-                    callbacks = ActivitiesScreenCallbacks.Empty,
+                    uiState = uiState,
+                    callbacks = viewModel,
                 )
             }
             entry<TopLevelRoute.Shop> {
