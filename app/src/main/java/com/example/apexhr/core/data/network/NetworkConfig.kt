@@ -17,6 +17,13 @@ object NetworkConfig {
     const val CATEGORIES_URL = "$BASE_URL/api/categories"
     const val PRODUCTS_URL = "$BASE_URL/api/products"
 
+    // Корзина и заказы
+    const val CART_URL = "$BASE_URL/api/cart"
+    const val CART_ITEMS_URL = "$BASE_URL/api/cart/items"
+    fun cartItemUrl(itemId: Long) = "$CART_ITEMS_URL/$itemId"
+    const val ORDERS_URL = "$BASE_URL/api/orders"
+    const val ORDERS_CHECKOUT_URL = "$BASE_URL/api/orders/checkout"
+
     // Главная
     const val QUESTS_URL = "$BASE_URL/api/quests"
     const val LEADERBOARD_URL = "$BASE_URL/api/leaderboard"

@@ -9,6 +9,8 @@ import com.example.apexhr.features.home.data.HomeApi
 import com.example.apexhr.features.home.data.KtorHomeApi
 import com.example.apexhr.features.profile.data.KtorProfileApi
 import com.example.apexhr.features.profile.data.ProfileApi
+import com.example.apexhr.features.shop.data.CartApi
+import com.example.apexhr.features.shop.data.KtorCartApi
 import com.example.apexhr.features.shop.data.KtorShopApi
 import com.example.apexhr.features.shop.data.ShopApi
 import kotlinx.serialization.json.Json
@@ -55,5 +57,6 @@ val networkModule = module {
 
     single<ProfileApi> { KtorProfileApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<ShopApi> { KtorShopApi(get(AUTHORIZED_HTTP_CLIENT)) }
+    single<CartApi> { KtorCartApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<HomeApi> { KtorHomeApi(get(AUTHORIZED_HTTP_CLIENT)) }
 }
