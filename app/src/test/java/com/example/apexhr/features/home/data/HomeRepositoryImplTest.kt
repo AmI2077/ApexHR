@@ -1,0 +1,148 @@
+package com.example.apexhr.features.home.data
+
+import com.example.apexhr.core.data.network.ApiStatusException
+import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.home.data.dto.LeaderboardEntryDto
+import com.example.apexhr.features.home.data.dto.QuestListItemDto
+import com.example.apexhr.features.home.data.dto.QuestPageDto
+import com.example.apexhr.features.home.domain.HomeData
+import com.example.apexhr.features.profile.data.ProfileApi
+import com.example.apexhr.features.profile.data.dto.AchievementDto
+import com.example.apexhr.features.profile.data.dto.BalanceDto
+import com.example.apexhr.features.profile.data.dto.CurrentUserProfileDto
+import com.example.apexhr.features.profile.data.dto.TransactionDto
+import com.example.apexhr.features.profile.data.dto.UserAchievementDto
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import java.net.UnknownHostException
+
+class HomeRepositoryImplTest {
+
+    private val homeApi = FakeHomeApi()
+    private val profileApi = FakeProfileApi()
+    private val repository = HomeRepositoryImpl(homeApi, profileApi)
+
+    private suspend fun loadData(): HomeData =
+        (repository.loadHome() as DataResult.Success).data
+
+    @Test
+    fun `loads user balance and lists`() = runBlocking {
+        val data = loadData()
+
+        assertEquals("Анна", data.user.firstName)
+        assertEquals(120L, data.balance)
+        assertEquals("user-1", profileApi.achievementsUserId)
+    }
+
+    @Test
+    fun `requests use home page sizes`() = runBlocking {
+        loadData()
+
+        assertEquals(1, homeApi.questsPage)
+        assertEquals(HomeRepositoryImpl.QUESTS_PAGE_SIZE, homeApi.questsPageSize)
+        assertEquals(HomeRepositoryImpl.LEADERBOARD_DAYS, homeApi.leaderboardDays)
+        assertEquals(HomeRepositoryImpl.LEADERBOARD_LIMIT, homeApi.leaderboardLimit)
+    }
+
+    @Test
+    fun `finished quests are skipped and list is limited`() = runBlocking {
+        homeApi.quests = listOf(
+            QuestListItemDto(id = 1, participationStatus = "completed"),
+            QuestListItemDto(id = 2, participationStatus = null),
+            QuestListItemDto(id = 3, participationStatus = "in_progress"),
+            QuestListItemDto(id = 4, participationStatus = "cancelled"),
+            QuestListItemDto(id = 5),
+            QuestListItemDto(id = 6),
+        )
+
+        assertEquals(listOf(2L, 3L, 5L), loadData().quests.map { it.id })
+    }
+
+    @Test
+    fun `leaderboard is sorted by rank`() = runBlocking {
+        homeApi.leaderboard = listOf(
+            LeaderboardEntryDto(rank = 2, userId = "b"),
+            LeaderboardEntryDto(rank = 1, userId = "a"),
+        )
+
+        assertEquals(listOf("a", "b"), loadData().leaderboard.map { it.userId })
+    }
+
+    @Test
+    fun `only first achievements are kept`() = runBlocking {
+        profileApi.achievements = (1L..5L).map { UserAchievementDto(id = it) }
+
+        assertEquals(listOf(1L, 2L, 3L), loadData().achievements.map { it.id })
+    }
+
+    @Test
+    fun `failure of any request fails the whole screen`() = runBlocking {
+        homeApi.leaderboardError = ApiStatusException(500)
+
+        assertEquals(DataResult.Failure(DataError.Server), repository.loadHome())
+    }
+
+    @Test
+    fun `network error is mapped`() = runBlocking {
+        profileApi.userError = UnknownHostException("no network")
+
+        assertEquals(DataResult.Failure(DataError.Network), repository.loadHome())
+    }
+
+    @Test
+    fun `401 is mapped to unauthorized`() = runBlocking {
+        homeApi.questsError = ApiStatusException(401)
+
+        assertEquals(DataResult.Failure(DataError.Unauthorized), repository.loadHome())
+    }
+}
+
+private class FakeHomeApi : HomeApi {
+    var quests = listOf(QuestListItemDto(id = 1, title = "Квест", rewardAmount = 100))
+    var leaderboard = listOf(LeaderboardEntryDto(rank = 1, userId = "u-1", name = "Иван", thanksCount = 3))
+    var questsError: Throwable? = null
+    var leaderboardError: Throwable? = null
+
+    var questsPage: Int? = null
+    var questsPageSize: Int? = null
+    var leaderboardDays: Int? = null
+    var leaderboardLimit: Int? = null
+
+    override suspend fun getQuests(page: Int, pageSize: Int): QuestPageDto {
+        questsError?.let { throw it }
+        questsPage = page
+        questsPageSize = pageSize
+        return QuestPageDto(items = quests)
+    }
+
+    override suspend fun getLeaderboard(days: Int, limit: Int): List<LeaderboardEntryDto> {
+        leaderboardError?.let { throw it }
+        leaderboardDays = days
+        leaderboardLimit = limit
+        return leaderboard
+    }
+}
+
+private class FakeProfileApi : ProfileApi {
+    var userError: Throwable? = null
+    var achievements = listOf(
+        UserAchievementDto(id = 1, achievement = AchievementDto(id = 1, name = "Первая покупка")),
+    )
+    var achievementsUserId: String? = null
+
+    override suspend fun getCurrentUser(): CurrentUserProfileDto {
+        userError?.let { throw it }
+        return CurrentUserProfileDto(id = "user-1", firstName = "Анна", lastName = "Иванова")
+    }
+
+    override suspend fun getBalance(): BalanceDto = BalanceDto(amount = 120)
+
+    override suspend fun getTransactions(skip: Int, take: Int): List<TransactionDto> = emptyList()
+
+    override suspend fun getUserAchievements(userId: String): List<UserAchievementDto> {
+        achievementsUserId = userId
+        return achievements
+    }
+}
