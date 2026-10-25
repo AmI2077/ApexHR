@@ -25,6 +25,7 @@ import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadingState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
+import com.example.apexhr.features.shop.ui.cart.composables.CartCheckoutButton
 import com.example.apexhr.features.shop.ui.cart.composables.CartItemCard
 import com.example.apexhr.features.shop.ui.cart.composables.CartSummaryCard
 import com.example.apexhr.features.shop.ui.cart.composables.ShopSubscreenHeader
@@ -70,6 +71,19 @@ fun CartScreenNotEnoughBalancePreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
+fun CartScreenCheckoutPreview() {
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        CartScreen(
+            screenState = CartScreenState.Content(
+                CartUiState.Preview.copy(isCheckoutInProgress = true),
+            ),
+            callbacks = CartScreenCallbacks.Empty,
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360)
+@Composable
 fun CartScreenEmptyPreview() {
     ApexHRTheme(dynamicColor = false, darkTheme = false) {
         CartScreen(
@@ -93,7 +107,7 @@ fun CartScreenErrorPreview() {
 }
 
 /**
- * Корзина: позиции с количеством, итог и баланс.
+ * Корзина: позиции с количеством, итог, баланс и оформление заказа.
  * @param messages разовые сообщения (ошибки действий), показываются в snackbar.
  */
 @Composable
@@ -173,6 +187,12 @@ private fun CartContent(
         }
         item {
             CartSummaryCard(uiState = uiState)
+        }
+        item {
+            CartCheckoutButton(
+                uiState = uiState,
+                onClick = callbacks::onCheckoutClick,
+            )
         }
     }
 }

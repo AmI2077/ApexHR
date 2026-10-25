@@ -17,6 +17,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Remove
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.apexhr.R
 import com.example.apexhr.core.ui.theme.ApexDimens
+import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.negativeRedColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
@@ -241,5 +244,40 @@ private fun CartSummaryRow(
             fontSize = if (isAccent) ApexDimens.text16.sp else ApexDimens.text14.sp,
             fontWeight = if (isAccent) FontWeight.Bold else FontWeight.Medium,
         )
+    }
+}
+
+/** «Оформить за N апексов»; во время оформления — индикатор. */
+@Composable
+fun CartCheckoutButton(
+    uiState: CartUiState,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        onClick = onClick,
+        enabled = uiState.canCheckout,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(ApexDimens.buttonHeight.dp),
+        shape = RoundedCornerShape(ApexDimens.radius16.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = primaryBlueColor,
+            contentColor = backgroundColor,
+        ),
+    ) {
+        if (uiState.isCheckoutInProgress) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(ApexDimens.icon20.dp),
+                color = primaryBlueColor,
+                strokeWidth = 2.dp,
+            )
+        } else {
+            Text(
+                text = stringResource(R.string.cart_checkout, uiState.total),
+                fontSize = ApexDimens.text16.sp,
+                fontWeight = FontWeight.SemiBold,
+            )
+        }
     }
 }

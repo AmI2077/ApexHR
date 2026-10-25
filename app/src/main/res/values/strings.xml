@@ -64,6 +64,10 @@
     <string name="cart_total">Итого</string>
     <string name="cart_balance">Ваш баланс</string>
     <string name="cart_not_enough_balance">Не хватает %1$s апексов для оформления</string>
+    <string name="cart_checkout">Оформить за %1$s апексов</string>
+    <string name="cart_checkout_success">Заказ №%1$d оформлен</string>
+    <string name="cart_checkout_success_no_number">Заказ оформлен</string>
+    <string name="cart_checkout_timeout">Сервер не ответил вовремя. Заказ мог оформиться: проверьте баланс и корзину, прежде чем оформлять снова</string>
 
     <string name="profile_title">Профиль</string>
     <string name="profile_current_balance">Текущий баланс</string>

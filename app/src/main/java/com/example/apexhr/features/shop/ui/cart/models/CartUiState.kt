@@ -11,7 +11,16 @@ data class CartUiState(
     val isBalanceEnough: Boolean,
     /** Сколько апексов не хватает; показывается, только если [isBalanceEnough] = false. */
     val missingAmount: String,
+    /** Идёт оформление заказа: кнопки корзины неактивны. */
+    val isCheckoutInProgress: Boolean = false,
 ) {
+    /** Оформить можно непустую корзину, если хватает баланса и нет других запросов. */
+    val canCheckout: Boolean
+        get() = items.isNotEmpty() &&
+            isBalanceEnough &&
+            !isCheckoutInProgress &&
+            items.none { it.isUpdating }
+
     companion object {
         val Preview = CartUiState(
             items = listOf(

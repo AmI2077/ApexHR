@@ -6,6 +6,7 @@ interface CartScreenCallbacks {
     fun onIncreaseClick(itemId: Long)
     fun onDecreaseClick(itemId: Long)
     fun onRemoveClick(itemId: Long)
+    fun onCheckoutClick()
 
     companion object {
         val Empty = object : CartScreenCallbacks {
@@ -14,6 +15,7 @@ interface CartScreenCallbacks {
             override fun onIncreaseClick(itemId: Long) = Unit
             override fun onDecreaseClick(itemId: Long) = Unit
             override fun onRemoveClick(itemId: Long) = Unit
+            override fun onCheckoutClick() = Unit
         }
     }
 }

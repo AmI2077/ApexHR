@@ -1,11 +1,17 @@
 package com.example.apexhr.features.shop.ui.cart
 
+import com.example.apexhr.R
+import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.features.shop.domain.Cart
+import com.example.apexhr.features.shop.domain.CartActionError
 import com.example.apexhr.features.shop.domain.CartItem
 import com.example.apexhr.features.shop.domain.CartSummary
+import com.example.apexhr.features.shop.domain.CheckoutResult
 import com.example.apexhr.features.shop.ui.cart.models.CartItemUiModel
+import com.example.apexhr.features.shop.ui.cart.models.toShopMessage
 import com.example.apexhr.features.shop.ui.cart.models.toUiModel
 import com.example.apexhr.features.shop.ui.cart.models.toUiState
+import com.example.apexhr.features.shop.ui.models.ShopMessage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -84,5 +90,48 @@ class CartUiMapperTest {
             .toUiState(updatingItemIds = setOf(59L))
 
         assertEquals(listOf(false, true), state.items.map { it.isUpdating })
+    }
+
+    @Test
+    fun `checkout is allowed only for affordable idle cart`() {
+        val summary = CartSummary(Cart(listOf(hoodie, sticker)), balance = 5000)
+
+        assertTrue(summary.toUiState().canCheckout)
+        assertFalse(summary.toUiState(isCheckoutInProgress = true).canCheckout)
+        assertFalse(summary.toUiState(updatingItemIds = setOf(58L)).canCheckout)
+        assertFalse(summary.copy(balance = 100).toUiState().canCheckout)
+        assertFalse(CartSummary(Cart(emptyList()), balance = 5000).toUiState().canCheckout)
+    }
+
+    @Test
+    fun `checkout success shows order number`() {
+        assertEquals(
+            ShopMessage(R.string.cart_checkout_success, listOf(6L)),
+            CheckoutResult.Success(orderId = 6).toShopMessage(),
+        )
+        assertEquals(
+            ShopMessage(R.string.cart_checkout_success_no_number),
+            CheckoutResult.Success(orderId = null).toShopMessage(),
+        )
+    }
+
+    @Test
+    fun `checkout timeout warns that order may exist`() {
+        assertEquals(
+            ShopMessage(R.string.cart_checkout_timeout),
+            CheckoutResult.Failure(CartActionError.Data(DataError.Timeout)).toShopMessage(),
+        )
+    }
+
+    @Test
+    fun `checkout rejection uses cart error texts`() {
+        assertEquals(
+            ShopMessage(R.string.cart_error_insufficient_balance),
+            CheckoutResult.Failure(CartActionError.InsufficientBalance).toShopMessage(),
+        )
+        assertEquals(
+            ShopMessage(R.string.cart_error_server_message, listOf("Cart is locked.")),
+            CheckoutResult.Failure(CartActionError.Rejected("Cart is locked.")).toShopMessage(),
+        )
     }
 }

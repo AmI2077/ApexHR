@@ -10,6 +10,7 @@ import com.example.apexhr.features.shop.domain.CartRepository
 import com.example.apexhr.features.shop.domain.CartSummary
 import com.example.apexhr.features.shop.ui.cart.models.CartScreenCallbacks
 import com.example.apexhr.features.shop.ui.cart.models.CartScreenState
+import com.example.apexhr.features.shop.ui.cart.models.toShopMessage
 import com.example.apexhr.features.shop.ui.cart.models.toUiState
 import com.example.apexhr.features.shop.ui.models.ShopMessage
 import com.example.apexhr.features.shop.ui.models.toShopMessage
@@ -23,8 +24,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 /**
- * Корзина с балансом. После каждого изменения корзина перечитывается с сервера
- * без полноэкранного лоадера: суммы и остатки считает сервер.
+ * Корзина с балансом и оформление заказа. После каждого изменения и оформления
+ * корзина перечитывается с сервера без полноэкранного лоадера: суммы, остатки
+ * и списание считает сервер.
  * Переход «Назад» задаёт навигация (AppNavigation).
  */
 class CartViewModel(
@@ -43,6 +45,7 @@ class CartViewModel(
 
     /** Позиции, по которым сейчас идёт запрос. */
     private val updatingItemIds = mutableSetOf<Long>()
+    private var isCheckoutInProgress = false
 
     init {
         load()
@@ -65,7 +68,9 @@ class CartViewModel(
 
     private fun render() {
         val current = summary ?: return
-        _state.value = CartScreenState.Content(current.toUiState(updatingItemIds))
+        _state.value = CartScreenState.Content(
+            current.toUiState(updatingItemIds, isCheckoutInProgress),
+        )
     }
 
     override fun onBackClick() = Unit
@@ -87,6 +92,7 @@ class CartViewModel(
 
     /** @param action запрос к серверу; null — действие недоступно, ничего не делаем. */
     private fun changeItem(itemId: Long, action: suspend (CartItem) -> CartActionResult?) {
+        if (isCheckoutInProgress) return
         val item = summary?.cart?.items?.firstOrNull { it.id == itemId } ?: return
         if (!updatingItemIds.add(itemId)) return
         render()
@@ -106,6 +112,23 @@ class CartViewModel(
                 }
                 null -> Unit
             }
+            render()
+        }
+    }
+
+    override fun onCheckoutClick() {
+        val current = (_state.value as? CartScreenState.Content)?.uiState ?: return
+        if (!current.canCheckout) return
+        isCheckoutInProgress = true
+        render()
+
+        viewModelScope.launch {
+            val result = repository.checkout()
+            _messages.send(result.toShopMessage())
+            // И после успеха, и после отказа корзина и баланс на сервере могли измениться.
+            val refreshed = repository.loadCart()
+            isCheckoutInProgress = false
+            if (refreshed is DataResult.Success) summary = refreshed.data
             render()
         }
     }
