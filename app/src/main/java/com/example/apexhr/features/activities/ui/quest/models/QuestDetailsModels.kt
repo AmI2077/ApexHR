@@ -7,7 +7,8 @@ import com.example.apexhr.core.domain.DataError
 data class QuestDetailsUiModel(
     val title: String?,
     val description: String?,
-    val reward: String?,
+    /** Награда в апексах; null — награды нет. */
+    val reward: Long?,
     /** Дата окончания или null. */
     val endAt: String?,
     @StringRes val statusRes: Int?,
@@ -21,7 +22,7 @@ data class QuestDetailsUiModel(
         val Preview = QuestDetailsUiModel(
             title = "Тестовый квест",
             description = "Пройдите шаги и получите апексы",
-            reward = "300",
+            reward = 300,
             endAt = "31.10.2026 01:46",
             statusRes = R.string.activities_status_quest_in_progress,
             completedStepsCount = 1,

@@ -13,7 +13,8 @@ data class EventDetailsUiModel(
     val registeredCount: Int,
     /** null — без ограничения мест. */
     val maxParticipants: Int?,
-    val reward: String?,
+    /** Награда в апексах; null — награды нет. */
+    val reward: Long?,
     @StringRes val statusRes: Int?,
     /** Доступное действие; null — кнопки нет, см. [noteRes]. */
     val action: EventAction?,
@@ -28,7 +29,7 @@ data class EventDetailsUiModel(
             location = "ул. Примерная, д. 1",
             registeredCount = 3,
             maxParticipants = 5,
-            reward = "100",
+            reward = 100,
             statusRes = R.string.activities_status_event_attended,
             action = EventAction.ClaimReward,
             noteRes = null,

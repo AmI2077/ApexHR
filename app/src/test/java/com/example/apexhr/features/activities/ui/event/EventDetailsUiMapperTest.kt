@@ -47,7 +47,7 @@ class EventDetailsUiMapperTest {
         assertEquals("ул. Примерная, д. 1", model.location)
         assertEquals(3, model.registeredCount)
         assertEquals(5, model.maxParticipants)
-        assertEquals("100", model.reward)
+        assertEquals(100L, model.reward)
         assertNull(model.statusRes)
     }
 

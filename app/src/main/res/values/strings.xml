@@ -156,7 +156,7 @@
         <item quantity="many">%1$d шагов</item>
         <item quantity="other">%1$d шага</item>
     </plurals>
-    <string name="activities_reward">%1$s апексов</string>
+    <string name="activities_details_reward">Награда:</string>
     <string name="activities_event_separator">" · "</string>
     <string name="activities_untitled">Без названия</string>
     <string name="activities_empty">Здесь пока ничего нет</string>
@@ -179,7 +179,6 @@
     <string name="event_details_location">Где: %1$s</string>
     <string name="event_details_participants">Записались: %1$d</string>
     <string name="event_details_participants_limited">Записались: %1$d из %2$d</string>
-    <string name="event_details_reward">Награда: %1$s</string>
     <string name="event_action_register">Записаться</string>
     <string name="event_action_cancel">Отменить запись</string>
     <string name="event_action_claim_reward">Получить награду</string>
@@ -190,7 +189,6 @@
     <string name="event_message_cancelled">Запись отменена</string>
     <string name="event_message_reward_claimed">Награда начислена</string>
     <string name="quest_details_title">Квест</string>
-    <string name="quest_details_reward">Награда: %1$s</string>
     <string name="quest_details_end">До: %1$s</string>
     <string name="quest_details_steps">Шаги: выполнено %1$d из %2$d</string>
     <string name="quest_step_optional">Необязательный шаг</string>

@@ -33,6 +33,7 @@ import com.example.apexhr.features.activities.ui.common.ActivityInfoText
 import com.example.apexhr.features.activities.ui.common.ActivityMessage
 import com.example.apexhr.features.activities.ui.common.ActivityMessagesEffect
 import com.example.apexhr.features.activities.ui.common.ActivityNoteText
+import com.example.apexhr.features.activities.ui.common.ActivityRewardInfo
 import com.example.apexhr.features.activities.ui.common.ActivityStatusText
 import com.example.apexhr.features.activities.ui.quest.models.QuestAction
 import com.example.apexhr.features.activities.ui.quest.models.QuestDetailsScreenCallbacks
@@ -129,14 +130,7 @@ private fun QuestDetailsBody(
     ActivityDetailsContent {
         ActivityDetailsTitle(title = quest.title)
         quest.statusRes?.let { ActivityStatusText(text = stringResource(it)) }
-        quest.reward?.let {
-            ActivityInfoText(
-                text = stringResource(
-                    R.string.quest_details_reward,
-                    stringResource(R.string.activities_reward, it),
-                ),
-            )
-        }
+        quest.reward?.let { ActivityRewardInfo(amount = it) }
         quest.endAt?.let {
             ActivityInfoText(text = stringResource(R.string.quest_details_end, it))
         }

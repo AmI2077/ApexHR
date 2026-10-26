@@ -19,6 +19,7 @@ import com.example.apexhr.features.activities.ui.common.ActivityInfoText
 import com.example.apexhr.features.activities.ui.common.ActivityMessage
 import com.example.apexhr.features.activities.ui.common.ActivityMessagesEffect
 import com.example.apexhr.features.activities.ui.common.ActivityNoteText
+import com.example.apexhr.features.activities.ui.common.ActivityRewardInfo
 import com.example.apexhr.features.activities.ui.common.ActivityStatusText
 import com.example.apexhr.features.activities.ui.event.models.EventAction
 import com.example.apexhr.features.activities.ui.event.models.EventDetailsScreenCallbacks
@@ -124,14 +125,7 @@ private fun EventDetailsBody(
             stringResource(R.string.event_details_participants_limited, event.registeredCount, it)
         } ?: stringResource(R.string.event_details_participants, event.registeredCount)
         ActivityInfoText(text = participants)
-        event.reward?.let {
-            ActivityInfoText(
-                text = stringResource(
-                    R.string.event_details_reward,
-                    stringResource(R.string.activities_reward, it),
-                ),
-            )
-        }
+        event.reward?.let { ActivityRewardInfo(amount = it) }
         event.description?.takeIf { it.isNotBlank() }?.let { ActivityDescription(text = it) }
         event.noteRes?.let { ActivityNoteText(text = stringResource(it)) }
         event.action?.let { action ->

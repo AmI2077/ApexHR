@@ -79,8 +79,8 @@ data class ActivityUiModel(
     /** null — сервер не прислал название, показываем заглушку. */
     val title: String?,
     val subtitle: ActivitySubtitle?,
-    /** Награда в апексах, уже отформатированная; null — не показываем (опросы, награды нет). */
-    val reward: String?,
+    /** Награда в апексах (рисуется через ApexAmount); null — не показываем (опросы, награды нет). */
+    val reward: Long?,
     /** Статус участия пользователя; null — пользователь ещё не участвовал. */
     @StringRes val statusRes: Int?,
 )

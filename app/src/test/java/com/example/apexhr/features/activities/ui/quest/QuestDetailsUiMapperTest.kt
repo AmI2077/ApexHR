@@ -57,7 +57,7 @@ class QuestDetailsUiMapperTest {
     fun `maps fields and counts completed steps`() {
         val model = quest(steps = listOf(step(1, isCompleted = true), step(2))).toUiModel(moscow)
 
-        assertEquals("300", model.reward)
+        assertEquals(300L, model.reward)
         assertEquals("31.10.2026 01:46", model.endAt)
         assertEquals(1, model.completedStepsCount)
         assertEquals(listOf(1L, 2L), model.steps.map { it.id })

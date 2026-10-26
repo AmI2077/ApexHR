@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
+import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
@@ -153,6 +154,30 @@ fun ActivityInfoText(
         fontSize = ApexDimens.text14.sp,
         modifier = modifier,
     )
+}
+
+/** Строка «Награда: <сумма со значком апексов>» на экранах деталей. */
+@Composable
+fun ActivityRewardInfo(
+    amount: Long,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(R.string.activities_details_reward),
+            color = primaryTextColor,
+            fontSize = ApexDimens.text14.sp,
+        )
+        ApexAmount(
+            amount = amount,
+            fontSize = ApexDimens.text14.sp,
+            fontWeight = FontWeight.SemiBold,
+        )
+    }
 }
 
 @Composable

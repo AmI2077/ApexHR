@@ -2,7 +2,6 @@ package com.example.apexhr.features.activities.ui.models
 
 import androidx.annotation.StringRes
 import com.example.apexhr.R
-import com.example.apexhr.core.ui.model.formatAmount
 import com.example.apexhr.features.activities.domain.Event
 import com.example.apexhr.features.activities.domain.EventRegistrationStatus
 import com.example.apexhr.features.activities.domain.Quest
@@ -18,8 +17,8 @@ private val ACTIVITY_DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm
 fun Instant.formatActivityDate(zone: ZoneId = ZoneId.systemDefault()): String =
     atZone(zone).format(ACTIVITY_DATE_FORMAT)
 
-/** Награда для карточки: пустую (0) не показываем. */
-fun Long.toRewardOrNull(): String? = takeIf { it > 0 }?.let(::formatAmount)
+/** Награда в апексах для карточки и деталей: пустую (0) не показываем. */
+fun Long.toRewardOrNull(): Long? = takeIf { it > 0 }
 
 /** Награду за опросы сервер не начисляет, поэтому её на карточке нет. */
 fun Survey.toUiModel(): ActivityUiModel =

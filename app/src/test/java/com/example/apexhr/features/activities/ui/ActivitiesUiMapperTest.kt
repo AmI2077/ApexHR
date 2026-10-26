@@ -74,7 +74,7 @@ class ActivitiesUiMapperTest {
                 kind = ActivityKind.Quest,
                 title = "Тестовый квест",
                 subtitle = ActivitySubtitle.Steps(2),
-                reward = "1\u00A0500",
+                reward = 1500L,
                 statusRes = R.string.activities_status_quest_in_progress,
             ),
             quest.toUiModel(),
@@ -92,7 +92,7 @@ class ActivitiesUiMapperTest {
 
         assertEquals(ActivityKind.Event, model.kind)
         assertEquals(ActivitySubtitle.EventTime("23.10.2026 01:46", "ул. Примерная, д. 1"), model.subtitle)
-        assertEquals("100", model.reward)
+        assertEquals(100L, model.reward)
         assertEquals(R.string.activities_status_event_attended, model.statusRes)
     }
 

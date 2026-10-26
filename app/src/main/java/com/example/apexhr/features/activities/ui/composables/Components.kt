@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
+import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
@@ -153,10 +154,10 @@ fun ActivityCard(
                 )
             }
             if (activity.reward != null) {
-                Text(
-                    text = stringResource(R.string.activities_reward, activity.reward),
-                    color = primaryTextColor,
+                ApexAmount(
+                    amount = activity.reward,
                     fontSize = ApexDimens.text13.sp,
+                    fontWeight = FontWeight.SemiBold,
                 )
             }
             if (activity.statusRes != null) {
