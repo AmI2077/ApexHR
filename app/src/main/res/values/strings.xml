@@ -106,8 +106,6 @@
     <string name="profile_current_balance">Текущий баланс</string>
     <string name="profile_tab_thanks">Благодарности</string>
     <string name="profile_tab_achievements">Достижения</string>
-    <string name="profile_amount_positive">+%1$d</string>
-    <string name="profile_amount_negative">−%1$d</string>
     <string name="profile_avatar">Аватар</string>
     <string name="profile_transactions_empty">Операций по балансу пока нет</string>
     <string name="profile_achievements_empty">Достижений пока нет</string>
@@ -243,6 +241,7 @@
     <string name="thanks_nothing_found">Никого не нашли</string>
     <string name="thanks_no_colleagues">Пока некого благодарить</string>
     <string name="thanks_amount_label">Сумма</string>
+    <string name="thanks_amount_currency">в апексах</string>
     <string name="thanks_amount_option">%1$d</string>
     <string name="thanks_message_counter">%1$d / %2$d</string>
     <string name="thanks_sent">Благодарность отправлена</string>
@@ -254,8 +253,6 @@
     <string name="thanks_sent_section">Отправленные</string>
     <string name="thanks_received_empty">Вас пока никто не благодарил</string>
     <string name="thanks_sent_empty">Вы пока никого не благодарили</string>
-    <string name="thanks_amount_received">+%1$d</string>
-    <string name="thanks_amount_sent">%1$d</string>
 
     <!-- Авторизация -->
     <string name="logout">Выйти</string>

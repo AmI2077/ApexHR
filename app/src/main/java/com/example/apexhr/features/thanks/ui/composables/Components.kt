@@ -28,6 +28,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
+import com.example.apexhr.core.ui.composables.ApexAmount
+import com.example.apexhr.core.ui.composables.ApexCurrencyIcon
 import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
@@ -269,11 +271,19 @@ fun ThanksAmountSelector(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = stringResource(R.string.thanks_amount_label),
-            color = secondaryTextColor,
-            fontSize = ApexDimens.text13.sp,
-        )
+        // Таблетки умеют только текст, поэтому значок валюты стоит у подписи.
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(R.string.thanks_amount_label),
+                color = secondaryTextColor,
+                fontSize = ApexDimens.text13.sp,
+            )
+            Spacer(modifier = Modifier.width(ApexDimens.spacing4.dp))
+            ApexCurrencyIcon(
+                size = ApexDimens.icon16.dp,
+                contentDescription = stringResource(R.string.thanks_amount_currency),
+            )
+        }
         Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
         ApexPillTabs(
             labels = options.map { amount -> stringResource(R.string.thanks_amount_option, amount) },
@@ -355,14 +365,14 @@ fun ThankRow(
             }
         }
         Spacer(modifier = Modifier.width(ApexDimens.spacing8.dp))
-        Text(
-            text = stringResource(
-                if (received) R.string.thanks_amount_received else R.string.thanks_amount_sent,
-                thank.amount,
-            ),
-            color = if (received) primaryBlueColor else secondaryTextColor,
+        val amountColor = if (received) primaryBlueColor else secondaryTextColor
+        ApexAmount(
+            amount = thank.amount,
+            color = amountColor,
             fontSize = ApexDimens.text14.sp,
             fontWeight = FontWeight.Bold,
+            iconTint = amountColor,
+            showSign = received,
         )
     }
 }

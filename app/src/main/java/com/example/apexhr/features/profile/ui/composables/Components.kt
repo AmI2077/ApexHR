@@ -54,7 +54,6 @@ import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.features.profile.ui.models.ProfileAchievementUiModel
 import com.example.apexhr.features.profile.ui.models.ProfileTab
 import com.example.apexhr.features.profile.ui.models.TransactionUiModel
-import kotlin.math.abs
 
 @Composable
 fun ProfileHeader(
@@ -235,15 +234,14 @@ fun TransactionRow(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        Text(
-            text = if (isPositive) {
-                stringResource(R.string.profile_amount_positive, transaction.amount)
-            } else {
-                stringResource(R.string.profile_amount_negative, abs(transaction.amount))
-            },
-            color = if (isPositive) primaryBlueColor else negativeRedColor,
+        val amountColor = if (isPositive) primaryBlueColor else negativeRedColor
+        ApexAmount(
+            amount = transaction.amount,
+            color = amountColor,
             fontSize = ApexDimens.text14.sp,
             fontWeight = FontWeight.SemiBold,
+            iconTint = amountColor,
+            showSign = true,
         )
     }
 }

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
@@ -50,7 +51,6 @@ import com.example.apexhr.features.profile.ui.history.models.TransactionHistoryS
 import com.example.apexhr.features.profile.ui.history.models.TransactionHistoryUiState
 import com.example.apexhr.features.profile.ui.history.models.labelRes
 import com.example.apexhr.ui.theme.ApexHRTheme
-import kotlin.math.abs
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
@@ -221,15 +221,14 @@ private fun HistoryTransactionRow(
                 fontSize = ApexDimens.text12.sp,
             )
         }
-        Text(
-            text = if (isPositive) {
-                stringResource(R.string.profile_amount_positive, transaction.amount)
-            } else {
-                stringResource(R.string.profile_amount_negative, abs(transaction.amount))
-            },
-            color = if (isPositive) primaryBlueColor else negativeRedColor,
+        val amountColor = if (isPositive) primaryBlueColor else negativeRedColor
+        ApexAmount(
+            amount = transaction.amount,
+            color = amountColor,
             fontSize = ApexDimens.text14.sp,
             fontWeight = FontWeight.SemiBold,
+            iconTint = amountColor,
+            showSign = true,
             modifier = Modifier.padding(start = ApexDimens.spacing12.dp),
         )
     }
