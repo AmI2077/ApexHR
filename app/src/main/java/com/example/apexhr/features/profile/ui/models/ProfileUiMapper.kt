@@ -27,6 +27,9 @@ fun Profile.toUiState(selectedTab: ProfileTab): ProfileUiState = ProfileUiState(
         ProfileAchievementUiModel(
             id = achievement.id.toString(),
             title = achievement.title.orEmpty(),
+            description = achievement.description,
+            // Профиль загружает только полученные достижения пользователя.
+            isEarned = true,
         )
     },
     avatarUrl = user.avatarUrl.takeIfHttpUrl(),

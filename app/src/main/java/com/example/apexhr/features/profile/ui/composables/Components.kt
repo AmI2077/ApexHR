@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
@@ -253,12 +255,21 @@ fun TransactionRow(
     }
 }
 
+/**
+ * Карточка достижения: звезда слева, ниже названия — «Открыто» у полученного
+ * или условие получения у неполученного (если сервер его прислал).
+ */
 @Composable
 fun ProfileAchievementRow(
     achievement: ProfileAchievementUiModel,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val subtitle = if (achievement.isEarned) {
+        stringResource(R.string.profile_achievement_earned)
+    } else {
+        achievement.description?.takeIf { it.isNotBlank() }
+    }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -271,18 +282,29 @@ fun ProfileAchievementRow(
             ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-//        Icon(
-//            imageVector = Icons.Filled.Star,
-//            contentDescription = null,
-//            tint = primaryBlueColor,
-//            modifier = Modifier.size(ApexDimens.icon20.dp),
-//        )
-        Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
-        Text(
-            text = achievement.title.ifBlank { stringResource(R.string.profile_achievement_untitled) },
-            color = primaryTextColor,
-            fontSize = ApexDimens.text14.sp,
+        Icon(
+            imageVector = if (achievement.isEarned) Icons.Filled.Star else Icons.Outlined.StarOutline,
+            contentDescription = null,
+            tint = if (achievement.isEarned) primaryBlueColor else secondaryBlueColor,
+            modifier = Modifier.size(ApexDimens.icon28.dp),
         )
+        Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = achievement.title.ifBlank { stringResource(R.string.profile_achievement_untitled) },
+                color = primaryTextColor,
+                fontSize = ApexDimens.text14.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            if (subtitle != null) {
+                Spacer(modifier = Modifier.height(ApexDimens.spacing2.dp))
+                Text(
+                    text = subtitle,
+                    color = secondaryTextColor,
+                    fontSize = ApexDimens.text12.sp,
+                )
+            }
+        }
     }
 }
 

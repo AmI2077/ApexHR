@@ -62,6 +62,34 @@ class ProfileUiMapperTest {
     }
 
     @Test
+    fun `loaded achievements are earned and keep condition description`() {
+        val state = profile
+            .copy(
+                achievements = listOf(
+                    EarnedAchievement(
+                        id = 5,
+                        title = "Первая благодарность",
+                        description = "Для получения необходимо поблагодарить коллегу",
+                        iconUrl = null,
+                    ),
+                ),
+            )
+            .toUiState(ProfileTab.Achievements)
+
+        assertEquals(
+            listOf(
+                ProfileAchievementUiModel(
+                    id = "5",
+                    title = "Первая благодарность",
+                    description = "Для получения необходимо поблагодарить коллегу",
+                    isEarned = true,
+                ),
+            ),
+            state.achievements,
+        )
+    }
+
+    @Test
     fun `zero balance uses empty balance hint`() {
         val state = profile.copy(balance = 0).toUiState(ProfileTab.Thanks)
 

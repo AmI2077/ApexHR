@@ -41,7 +41,12 @@ data class ProfileUiState(
             achievements = listOf(
                 ProfileAchievementUiModel(id = "steps", title = "10K шагов"),
                 ProfileAchievementUiModel(id = "activity", title = "Активность"),
-                ProfileAchievementUiModel(id = "goal", title = "Целеустремлённость"),
+                ProfileAchievementUiModel(
+                    id = "goal",
+                    title = "Целеустремлённость",
+                    description = "Выполните 5 активностей за месяц",
+                    isEarned = false,
+                ),
             ),
         )
     }
@@ -56,6 +61,9 @@ data class TransactionUiModel(
 data class ProfileAchievementUiModel(
     val id: String,
     val title: String,
+    /** Условие получения; показывается только у неполученного достижения. */
+    val description: String? = null,
+    val isEarned: Boolean = true,
 )
 
 /** Состояние экрана профиля с учётом загрузки данных. */

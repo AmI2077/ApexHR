@@ -117,6 +117,7 @@
     <string name="profile_achievements_empty">Достижений пока нет</string>
     <string name="profile_transaction_untitled">Операция по балансу</string>
     <string name="profile_achievement_untitled">Достижение</string>
+    <string name="profile_achievement_earned">Открыто</string>
     <string name="profile_name_unknown">Сотрудник</string>
     <string name="profile_position_employee">Сотрудник</string>
     <string name="profile_position_manager">Менеджер</string>
