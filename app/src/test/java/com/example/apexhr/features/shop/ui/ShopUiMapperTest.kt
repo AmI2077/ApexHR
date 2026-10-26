@@ -7,6 +7,7 @@ import com.example.apexhr.features.shop.ui.models.ShopProductUiModel
 import com.example.apexhr.features.shop.ui.models.ShopUiState
 import com.example.apexhr.features.shop.ui.models.filterByQuery
 import com.example.apexhr.features.shop.ui.models.toCategoryIdOrNull
+import com.example.apexhr.features.shop.ui.models.toCategoryNames
 import com.example.apexhr.features.shop.ui.models.toCategoryTabs
 import com.example.apexhr.features.shop.ui.models.toUiModel
 import org.junit.Assert.assertEquals
@@ -53,6 +54,8 @@ class ShopUiMapperTest {
         assertEquals(4L, "4".toCategoryIdOrNull())
     }
 
+    private val categoryNames = mapOf(1L to "Мерч", 2L to "Опыт")
+
     @Test
     fun `product with image url is mapped`() {
         assertEquals(
@@ -60,13 +63,42 @@ class ShopUiMapperTest {
                 id = "1",
                 title = "Худи Supabase",
                 subtitle = "Тёмно-зелёное, унисекс",
-                price = "1\u00A0990",
+                price = 1_990,
+                category = "Мерч",
+                stock = 3,
                 showMark = false,
                 imageUrl = "https://example.com/hoodie.png",
                 isAvailable = true,
             ),
-            hoodie.toUiModel(),
+            hoodie.toUiModel(categoryNames),
         )
+    }
+
+    @Test
+    fun `category names skip blank and missing names`() {
+        val names = listOf(
+            Category(id = 1, name = " Мерч "),
+            Category(id = 2, name = null),
+            Category(id = 3, name = "  "),
+            Category(id = 4, name = "Опыт"),
+        ).toCategoryNames()
+
+        assertEquals(mapOf(1L to "Мерч", 4L to "Опыт"), names)
+    }
+
+    @Test
+    fun `category is null when product category is unknown or absent`() {
+        assertNull(hoodie.copy(categoryId = 99).toUiModel(categoryNames).category)
+        assertNull(hoodie.copy(categoryId = null).toUiModel(categoryNames).category)
+        assertNull(hoodie.toUiModel().category)
+    }
+
+    @Test
+    fun `stock is passed as is including unlimited`() {
+        assertEquals(0, hike.toUiModel().stock)
+        val unlimited = hike.copy(stock = null).toUiModel()
+        assertNull(unlimited.stock)
+        assertEquals(true, unlimited.isAvailable)
     }
 
     @Test

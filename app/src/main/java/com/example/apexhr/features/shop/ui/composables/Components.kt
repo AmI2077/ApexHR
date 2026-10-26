@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.apexhr.R
+import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
@@ -164,6 +165,10 @@ fun ShopPopularTitle(
     )
 }
 
+/**
+ * Карточка товара: слева картинка (или заглушка), справа категория, название, описание,
+ * цена, остаток и кнопка «В корзину».
+ */
 @Composable
 fun ShopProductCard(
     product: ShopProductUiModel,
@@ -178,7 +183,7 @@ fun ShopProductCard(
             .background(secondaryBlueColor.copy(alpha = 0.28f))
             .clickable(onClick = onClick)
             .padding(ApexDimens.spacing12.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
     ) {
         Box(
             modifier = Modifier
@@ -205,64 +210,80 @@ fun ShopProductCard(
         }
         Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
         Column(modifier = Modifier.weight(1f)) {
+            if (product.category != null) {
+                Text(
+                    text = product.category,
+                    color = primaryBlueColor,
+                    fontSize = ApexDimens.text12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
+            }
             Text(
                 text = product.title.ifBlank { stringResource(R.string.shop_product_untitled) },
                 color = primaryTextColor,
                 fontSize = ApexDimens.text16.sp,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
+                fontWeight = FontWeight.Bold,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
+            )
+            if (product.subtitle.isNotBlank()) {
+                Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
+                Text(
+                    text = product.subtitle,
+                    color = secondaryTextColor,
+                    fontSize = ApexDimens.text13.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
+            ApexAmount(
+                amount = product.price,
+                fontSize = ApexDimens.text16.sp,
+                fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
             Text(
-                text = product.subtitle,
+                text = if (product.stock == null) {
+                    stringResource(R.string.shop_in_stock_unlimited)
+                } else {
+                    stringResource(R.string.shop_in_stock, product.stock)
+                },
                 color = secondaryTextColor,
                 fontSize = ApexDimens.text12.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
-            Spacer(modifier = Modifier.height(ApexDimens.spacing12.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+            Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
+            Button(
+                onClick = onGetClick,
+                enabled = product.isAvailable && !product.isAddingToCart,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = primaryBlueColor,
+                    contentColor = backgroundColor,
+                ),
+                shape = RoundedCornerShape(ApexDimens.radius20.dp),
+                contentPadding = PaddingValues(
+                    horizontal = ApexDimens.spacing16.dp,
+                    vertical = ApexDimens.spacing6.dp,
+                ),
             ) {
-                Text(
-                    text = stringResource(R.string.shop_price, product.price),
-                    color = primaryTextColor,
-                    fontSize = ApexDimens.text14.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.weight(1f),
-                )
-                Button(
-                    onClick = onGetClick,
-                    enabled = product.isAvailable && !product.isAddingToCart,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = primaryBlueColor,
-                        contentColor = backgroundColor,
-                    ),
-                    shape = RoundedCornerShape(ApexDimens.radius20.dp),
-                    contentPadding = PaddingValues(
-                        horizontal = ApexDimens.spacing16.dp,
-                        vertical = ApexDimens.spacing6.dp,
-                    ),
-                ) {
-                    if (product.isAddingToCart) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(ApexDimens.icon16.dp),
-                            color = primaryBlueColor,
-                            strokeWidth = 2.dp,
-                        )
-                        Spacer(modifier = Modifier.width(ApexDimens.spacing6.dp))
-                    }
-                    Text(
-                        text = stringResource(
-                            if (product.isAvailable) R.string.get else R.string.shop_out_of_stock,
-                        ),
-                        fontSize = ApexDimens.text12.sp,
-                        fontWeight = FontWeight.SemiBold,
+                if (product.isAddingToCart) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(ApexDimens.icon16.dp),
+                        color = primaryBlueColor,
+                        strokeWidth = 2.dp,
                     )
+                    Spacer(modifier = Modifier.width(ApexDimens.spacing6.dp))
                 }
+                Text(
+                    text = stringResource(
+                        if (product.isAvailable) R.string.shop_add_to_cart else R.string.shop_out_of_stock,
+                    ),
+                    fontSize = ApexDimens.text12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
             }
         }
     }

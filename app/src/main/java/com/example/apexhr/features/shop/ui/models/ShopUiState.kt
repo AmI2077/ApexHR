@@ -34,21 +34,27 @@ data class ShopUiState(
                     id = "hoodie",
                     title = "Худи Supabase",
                     subtitle = "Тёмно-зелёное, унисекс",
-                    price = "1\u00A0990",
+                    price = 1_990,
+                    category = "Мерч",
+                    stock = 12,
                 ),
                 ShopProductUiModel(
                     id = "certificate",
                     title = "Сертификат Supabase",
                     subtitle = "На 3 000 ₽",
-                    price = "3\u00A0000",
+                    price = 3_000,
+                    category = "Сертификаты",
+                    stock = 0,
                     isAvailable = false,
                 ),
                 ShopProductUiModel(
                     id = "hike",
                     title = "Поход выходного дня",
-                    subtitle = "Подмосковье, 1 день",
-                    price = "1\u00A0500",
+                    subtitle = "Подмосковье, 1 день. Сбор у офиса в 9:00, вернёмся к вечеру",
+                    price = 1_500,
                     showMark = true,
+                    category = "Опыт",
+                    stock = null,
                 ),
             ),
         )
@@ -68,12 +74,17 @@ data class ShopProductUiModel(
     val id: String,
     val title: String,
     val subtitle: String,
-    val price: String,
+    /** Цена в апексах. */
+    val price: Long,
+    /** Название категории; null — категория неизвестна или без названия (строка не показывается). */
+    val category: String? = null,
+    /** Остаток на складе; null — сервер не ограничивает количество («В наличии» без числа). */
+    val stock: Int? = null,
     /** Показывать значок-заглушку вместо картинки. */
     val showMark: Boolean = false,
     /** http(s)-ссылка на картинку; null — показывается заглушка. */
     val imageUrl: String? = null,
-    /** false, если товар закончился: кнопка «Получить» неактивна. */
+    /** false, если товар закончился: кнопка «В корзину» неактивна. */
     val isAvailable: Boolean = true,
     /** Товар добавляется в корзину: на кнопке индикатор, повторно нажать нельзя. */
     val isAddingToCart: Boolean = false,

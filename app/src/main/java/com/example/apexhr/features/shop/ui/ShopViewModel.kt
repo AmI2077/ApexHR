@@ -15,6 +15,7 @@ import com.example.apexhr.features.shop.ui.models.ShopScreenState
 import com.example.apexhr.features.shop.ui.models.ShopUiState
 import com.example.apexhr.features.shop.ui.models.filterByQuery
 import com.example.apexhr.features.shop.ui.models.toCategoryIdOrNull
+import com.example.apexhr.features.shop.ui.models.toCategoryNames
 import com.example.apexhr.features.shop.ui.models.toCategoryTabs
 import com.example.apexhr.features.shop.ui.models.toShopMessage
 import com.example.apexhr.features.shop.ui.models.toUiModel
@@ -32,7 +33,7 @@ import kotlinx.coroutines.launch
 /**
  * Каталог: категории грузятся один раз вместе с товарами вкладки «Все»,
  * при смене категории перезагружаются только товары. Поиск — локальный.
- * «Получить» добавляет товар в корзину, результат — сообщением в snackbar.
+ * «В корзину» добавляет товар в корзину, результат — сообщением в snackbar.
  */
 class ShopViewModel(
     private val repository: ShopRepository,
@@ -47,6 +48,9 @@ class ShopViewModel(
 
     /** Товары выбранной категории без учёта поиска. */
     private var loadedProducts: List<Product> = emptyList()
+
+    /** Названия категорий по id — для подписи на карточке товара. */
+    private var categoryNames: Map<Long, String> = emptyMap()
     private var loadJob: Job? = null
 
     /** id товаров, которые сейчас добавляются в корзину. */
@@ -70,6 +74,7 @@ class ShopViewModel(
                 }
 
                 is DataResult.Success -> {
+                    categoryNames = categories.data.toCategoryNames()
                     val initial = ShopUiState(
                         searchQuery = "",
                         selectedCategoryId = ShopUiState.CATEGORY_ALL,
@@ -114,7 +119,10 @@ class ShopViewModel(
 
     private fun visibleProducts(query: String) =
         loadedProducts.filterByQuery(query).map {
-            it.toUiModel(isAddingToCart = it.id.toString() in addingProductIds)
+            it.toUiModel(
+                categoryNames = categoryNames,
+                isAddingToCart = it.id.toString() in addingProductIds,
+            )
         }
 
     private fun refreshAddingState() {

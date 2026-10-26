@@ -50,12 +50,14 @@
     <string name="shop_category_merch">Мерч</string>
     <string name="shop_category_certificates">Сертификаты</string>
     <string name="shop_category_experience">Опыт</string>
-    <string name="shop_price">%1$s элементов</string>
     <string name="shop_item_image">Изображение товара</string>
     <string name="shop_category_all">Все</string>
     <string name="shop_category_untitled">Без названия</string>
     <string name="shop_product_untitled">Товар</string>
     <string name="shop_out_of_stock">Нет в наличии</string>
+    <string name="shop_add_to_cart">В корзину</string>
+    <string name="shop_in_stock">В наличии: %1$d</string>
+    <string name="shop_in_stock_unlimited">В наличии</string>
     <string name="shop_products_empty">В этой категории пока нет товаров</string>
     <string name="shop_search_empty">По вашему запросу ничего не найдено</string>
     <string name="shop_added_to_cart">Товар добавлен в корзину</string>
