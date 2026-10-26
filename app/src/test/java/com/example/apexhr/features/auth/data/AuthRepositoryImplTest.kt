@@ -1,13 +1,17 @@
 package com.example.apexhr.features.auth.data
 
+import com.example.apexhr.core.data.dto.request.ChangePasswordRequest
 import com.example.apexhr.core.data.dto.request.LoginRequest
 import com.example.apexhr.core.data.dto.response.LoginResponseDto
 import com.example.apexhr.core.data.dto.response.MeResponseDto
+import com.example.apexhr.core.data.network.ApiMessageException
 import com.example.apexhr.core.data.network.ApiStatusException
 import com.example.apexhr.core.domain.AuthTokens
 import com.example.apexhr.core.domain.NetworkAuthClient
 import com.example.apexhr.core.domain.TokenStorage
 import com.example.apexhr.features.auth.domain.AuthError
+import com.example.apexhr.features.auth.domain.ChangePasswordError
+import com.example.apexhr.features.auth.domain.ChangePasswordResult
 import com.example.apexhr.features.auth.domain.LoginResult
 import com.example.apexhr.features.auth.domain.SessionStatus
 import kotlinx.coroutines.runBlocking
@@ -122,6 +126,63 @@ class AuthRepositoryImplTest {
         assertEquals(1, client.clearCachedCalls)
     }
 
+    @Test
+    fun `login keeps mustChangePassword flag in session`() = runBlocking {
+        client.loginResponse = LoginResponseDto(accessToken = "access", mustChangePassword = true)
+
+        repository.login("user@example.com", "temporary")
+
+        assertEquals(true, storage.tokens?.mustChangePassword)
+    }
+
+    @Test
+    fun `successful password change sends new password and clears flag`() = runBlocking {
+        storage.tokens = AuthTokens("access", "refresh", now + 3_600_000L, mustChangePassword = true)
+
+        val result = repository.changePassword("new-secret")
+
+        assertEquals(ChangePasswordResult.Success, result)
+        assertEquals(ChangePasswordRequest("new-secret"), client.lastChangePasswordRequest)
+        assertEquals(
+            AuthTokens("access", "refresh", now + 3_600_000L, mustChangePassword = false),
+            storage.tokens
+        )
+    }
+
+    @Test
+    fun `rejected password change keeps flag and server message`() = runBlocking {
+        val tokens = AuthTokens("access", null, null, mustChangePassword = true)
+        storage.tokens = tokens
+        client.changePasswordError = ApiMessageException(400, "Пароль слишком простой")
+
+        val result = repository.changePassword("123456")
+
+        assertEquals(
+            ChangePasswordResult.Failure(ChangePasswordError.Rejected("Пароль слишком простой")),
+            result
+        )
+        assertEquals(tokens, storage.tokens)
+    }
+
+    @Test
+    fun `password change without network returns network error`() = runBlocking {
+        storage.tokens = AuthTokens("access", null, null, mustChangePassword = true)
+        client.changePasswordError = UnknownHostException("no network")
+
+        val result = repository.changePassword("new-secret")
+
+        assertEquals(ChangePasswordResult.Failure(ChangePasswordError.Auth(AuthError.Network)), result)
+        assertEquals(true, storage.tokens?.mustChangePassword)
+    }
+
+    @Test
+    fun `password change after session was cleared does not restore tokens`() = runBlocking {
+        val result = repository.changePassword("new-secret")
+
+        assertEquals(ChangePasswordResult.Success, result)
+        assertNull(storage.tokens)
+    }
+
     private class FakeTokenStorage : TokenStorage {
         var tokens: AuthTokens? = null
 
@@ -141,6 +202,8 @@ class AuthRepositoryImplTest {
         var loginError: Exception? = null
         var meError: Exception? = null
         var lastLoginRequest: LoginRequest? = null
+        var changePasswordError: Exception? = null
+        var lastChangePasswordRequest: ChangePasswordRequest? = null
         var meCalls = 0
         var clearCachedCalls = 0
 
@@ -154,6 +217,11 @@ class AuthRepositoryImplTest {
             meCalls++
             meError?.let { throw it }
             return MeResponseDto(message = "ok", userId = "id")
+        }
+
+        override suspend fun changePassword(request: ChangePasswordRequest) {
+            lastChangePasswordRequest = request
+            changePasswordError?.let { throw it }
         }
 
         override fun clearCachedTokens() {

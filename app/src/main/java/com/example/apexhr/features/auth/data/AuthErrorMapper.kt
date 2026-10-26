@@ -1,5 +1,6 @@
 package com.example.apexhr.features.auth.data
 
+import com.example.apexhr.core.data.network.ApiMessageException
 import com.example.apexhr.core.data.network.ApiStatusException
 import com.example.apexhr.features.auth.domain.AuthError
 import io.ktor.client.network.sockets.ConnectTimeoutException
@@ -26,12 +27,8 @@ fun Throwable.toAuthError(): AuthError {
 }
 
 private fun mapSingle(throwable: Throwable): AuthError? = when (throwable) {
-    is ApiStatusException -> when (throwable.statusCode) {
-        400, 401 -> AuthError.InvalidCredentials
-        408 -> AuthError.Timeout
-        in 500..599 -> AuthError.Server
-        else -> AuthError.Unknown
-    }
+    is ApiStatusException -> mapStatus(throwable.statusCode)
+    is ApiMessageException -> mapStatus(throwable.statusCode)
 
     // Таймауты проверяем раньше IOException: это её подклассы.
     is HttpRequestTimeoutException,
@@ -41,6 +38,13 @@ private fun mapSingle(throwable: Throwable): AuthError? = when (throwable) {
     is IOException -> AuthError.Network
 
     else -> null
+}
+
+private fun mapStatus(statusCode: Int): AuthError = when (statusCode) {
+    400, 401 -> AuthError.InvalidCredentials
+    408 -> AuthError.Timeout
+    in 500..599 -> AuthError.Server
+    else -> AuthError.Unknown
 }
 
 private const val MAX_CAUSE_DEPTH = 10

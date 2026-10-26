@@ -3,6 +3,7 @@ package com.example.apexhr.core.data.local
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -37,6 +38,9 @@ class TokenDataStore(
             } else {
                 preferences.remove(EXPIRES_AT)
             }
+
+            // Флаг не секретный, поэтому хранится без шифрования.
+            preferences[MUST_CHANGE_PASSWORD] = tokens.mustChangePassword
         }
     }
 
@@ -49,7 +53,9 @@ class TokenDataStore(
             AuthTokens(
                 accessToken = encryptor.decrypt(encryptedAccessToken),
                 refreshToken = preferences[REFRESH_TOKEN]?.let(encryptor::decrypt),
-                expiresAtMillis = preferences[EXPIRES_AT]
+                expiresAtMillis = preferences[EXPIRES_AT],
+                // Сессии, сохранённые до появления флага, считаем обычными.
+                mustChangePassword = preferences[MUST_CHANGE_PASSWORD] ?: false
             )
         } catch (e: GeneralSecurityException) {
             onDecryptionFailed(e)
@@ -67,6 +73,7 @@ class TokenDataStore(
             preferences.remove(ACCESS_TOKEN)
             preferences.remove(REFRESH_TOKEN)
             preferences.remove(EXPIRES_AT)
+            preferences.remove(MUST_CHANGE_PASSWORD)
         }
     }
 
@@ -89,5 +96,8 @@ class TokenDataStore(
 
         private val EXPIRES_AT =
             longPreferencesKey("expires_at")
+
+        private val MUST_CHANGE_PASSWORD =
+            booleanPreferencesKey("must_change_password")
     }
 }

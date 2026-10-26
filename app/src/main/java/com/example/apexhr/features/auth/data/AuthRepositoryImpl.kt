@@ -1,10 +1,12 @@
 package com.example.apexhr.features.auth.data
 
+import com.example.apexhr.core.data.dto.request.ChangePasswordRequest
 import com.example.apexhr.core.data.dto.request.LoginRequest
 import com.example.apexhr.core.data.network.ApiStatusException
 import com.example.apexhr.core.domain.NetworkAuthClient
 import com.example.apexhr.core.domain.TokenStorage
 import com.example.apexhr.features.auth.domain.AuthRepository
+import com.example.apexhr.features.auth.domain.ChangePasswordResult
 import com.example.apexhr.features.auth.domain.LoginResult
 import com.example.apexhr.features.auth.domain.SessionStatus
 import kotlin.coroutines.cancellation.CancellationException
@@ -39,6 +41,27 @@ class AuthRepositoryImpl(
     override suspend fun logout() {
         tokenStorage.clearTokens()
         networkAuthClient.clearCachedTokens()
+    }
+
+    override suspend fun changePassword(newPassword: String): ChangePasswordResult {
+        return try {
+            networkAuthClient.changePassword(ChangePasswordRequest(newPassword = newPassword))
+
+            // Токен после смены пароля остаётся действительным (так же
+            // работает веб-версия), поэтому перелогин не нужен: только
+            // снимаем флаг. Если токены уже удалены (401), сохранять нечего.
+            tokenStorage.getTokens()?.let { tokens ->
+                if (tokens.mustChangePassword) {
+                    tokenStorage.saveTokens(tokens.copy(mustChangePassword = false))
+                }
+            }
+
+            ChangePasswordResult.Success
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            ChangePasswordResult.Failure(e.toChangePasswordError())
+        }
     }
 
     override suspend fun checkSession(): SessionStatus {

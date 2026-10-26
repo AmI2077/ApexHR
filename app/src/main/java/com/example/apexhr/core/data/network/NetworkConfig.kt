@@ -6,6 +6,7 @@ object NetworkConfig {
 
     const val BASE_LOGIN_URL = "$BASE_URL/api/Auth/login"
     const val CURRENT_USER_URL = "$BASE_URL/api/Auth/me"
+    const val CHANGE_PASSWORD_URL = "$BASE_URL/api/Auth/change-password"
 
     // Профиль
     const val USER_PROFILE_URL = "$BASE_URL/api/users/me"

@@ -1,9 +1,11 @@
 package com.example.apexhr.core.data.network
 
+import com.example.apexhr.core.data.dto.request.ChangePasswordRequest
 import com.example.apexhr.core.data.dto.request.LoginRequest
 import com.example.apexhr.core.data.dto.response.LoginResponseDto
 import com.example.apexhr.core.data.dto.response.MeResponseDto
 import com.example.apexhr.core.data.network.NetworkConfig.BASE_LOGIN_URL
+import com.example.apexhr.core.data.network.NetworkConfig.CHANGE_PASSWORD_URL
 import com.example.apexhr.core.data.network.NetworkConfig.CURRENT_USER_URL
 import com.example.apexhr.core.domain.NetworkAuthClient
 import io.ktor.client.HttpClient
@@ -41,6 +43,14 @@ class KtorAuthClient(
         return authorizedClient.get(CURRENT_USER_URL)
             .requireSuccess()
             .body<MeResponseDto>()
+    }
+
+    override suspend fun changePassword(request: ChangePasswordRequest) {
+        // Тело успешного ответа в Swagger не описано и не разбирается.
+        authorizedClient.post(CHANGE_PASSWORD_URL) {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.requireSuccessWithMessage()
     }
 
     override fun clearCachedTokens() {

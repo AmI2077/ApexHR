@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 /**
  * Ответ POST /api/Auth/login.
  * В Swagger схема не описана, поля сверены с реальным ответом сервера:
- * { "accessToken": "...", "tokenType": "bearer", "expiresIn": 3600, "refreshToken": "..." }
+ * { "accessToken": "...", "tokenType": "bearer", "expiresIn": 3600,
+ *   "refreshToken": "...", "mustChangePassword": false }
  * Обязателен только accessToken, остальные поля опциональны.
  */
 @Serializable
@@ -23,4 +24,8 @@ data class LoginResponseDto(
 
     @SerialName("refreshToken")
     val refreshToken: String? = null,
+
+    /** true — первый вход с временным паролем, его нужно сменить. */
+    @SerialName("mustChangePassword")
+    val mustChangePassword: Boolean? = null,
 )

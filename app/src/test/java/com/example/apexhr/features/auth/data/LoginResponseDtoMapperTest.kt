@@ -40,4 +40,27 @@ class LoginResponseDtoMapperTest {
 
         assertNull(tokens.expiresAtMillis)
     }
+
+    @Test
+    fun `mustChangePassword true is kept`() {
+        val tokens = LoginResponseDto(
+            accessToken = "access",
+            mustChangePassword = true
+        ).toAuthTokens(nowMillis = 1_000L)
+
+        assertEquals(true, tokens.mustChangePassword)
+    }
+
+    @Test
+    fun `missing or false mustChangePassword means no change required`() {
+        assertEquals(
+            false,
+            LoginResponseDto(accessToken = "access").toAuthTokens(nowMillis = 1_000L).mustChangePassword
+        )
+        assertEquals(
+            false,
+            LoginResponseDto(accessToken = "access", mustChangePassword = false)
+                .toAuthTokens(nowMillis = 1_000L).mustChangePassword
+        )
+    }
 }

@@ -12,7 +12,9 @@ fun LoginResponseDto.toAuthTokens(nowMillis: Long): AuthTokens {
         refreshToken = refreshToken?.takeIf { it.isNotBlank() },
         expiresAtMillis = expiresIn
             ?.takeIf { it > 0 }
-            ?.let { nowMillis + it * MILLIS_IN_SECOND }
+            ?.let { nowMillis + it * MILLIS_IN_SECOND },
+        // Нет поля — считаем, что смена пароля не нужна.
+        mustChangePassword = mustChangePassword == true,
     )
 }
 
