@@ -2,7 +2,6 @@ package com.example.apexhr.features.thanks.ui.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,8 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -31,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
+import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.negativeRedColor
@@ -277,26 +275,12 @@ fun ThanksAmountSelector(
             fontSize = ApexDimens.text13.sp,
         )
         Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing8.dp)) {
-            options.forEach { amount ->
-                FilterChip(
-                    selected = amount == selected,
-                    onClick = { onAmountClick(amount) },
-                    enabled = enabled,
-                    label = {
-                        Text(
-                            text = stringResource(R.string.thanks_amount_option, amount),
-                            fontSize = ApexDimens.text14.sp,
-                        )
-                    },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = primaryBlueColor,
-                        selectedLabelColor = backgroundColor,
-                        labelColor = primaryTextColor,
-                    ),
-                )
-            }
-        }
+        ApexPillTabs(
+            labels = options.map { amount -> stringResource(R.string.thanks_amount_option, amount) },
+            selectedIndex = options.indexOf(selected),
+            onSelect = { index -> onAmountClick(options[index]) },
+            enabled = enabled,
+        )
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.apexhr.features.profile.ui.composables
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.apexhr.R
 import com.example.apexhr.core.ui.composables.ApexAmount
+import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.negativeRedColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
@@ -191,29 +193,19 @@ fun ProfileTabs(
     onTabClick: (ProfileTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing24.dp),
-    ) {
-        Text(
-            text = stringResource(R.string.profile_tab_thanks),
-            color = if (selectedTab == ProfileTab.Thanks) primaryBlueColor else secondaryTextColor,
-            fontSize = ApexDimens.text14.sp,
-            fontWeight = if (selectedTab == ProfileTab.Thanks) FontWeight.SemiBold else FontWeight.Normal,
-            modifier = Modifier.clickable { onTabClick(ProfileTab.Thanks) },
-        )
-        Text(
-            text = stringResource(R.string.profile_tab_achievements),
-            color = if (selectedTab == ProfileTab.Achievements) primaryBlueColor else secondaryTextColor,
-            fontSize = ApexDimens.text14.sp,
-            fontWeight = if (selectedTab == ProfileTab.Achievements) {
-                FontWeight.SemiBold
-            } else {
-                FontWeight.Normal
-            },
-            modifier = Modifier.clickable { onTabClick(ProfileTab.Achievements) },
-        )
-    }
+    val tabs = ProfileTab.entries
+    ApexPillTabs(
+        labels = tabs.map { stringResource(it.labelRes()) },
+        selectedIndex = tabs.indexOf(selectedTab),
+        onSelect = { index -> onTabClick(tabs[index]) },
+        modifier = modifier,
+    )
+}
+
+@StringRes
+private fun ProfileTab.labelRes(): Int = when (this) {
+    ProfileTab.Thanks -> R.string.profile_tab_thanks
+    ProfileTab.Achievements -> R.string.profile_tab_achievements
 }
 
 @Composable

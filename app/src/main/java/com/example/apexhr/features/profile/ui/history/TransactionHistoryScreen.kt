@@ -1,7 +1,6 @@
 package com.example.apexhr.features.profile.ui.history
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,13 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
@@ -35,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadingState
@@ -183,30 +180,13 @@ private fun HistoryFilters(
     selected: TransactionFilter,
     onFilterClick: (TransactionFilter) -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
-            .padding(horizontal = ApexDimens.spacing20.dp),
-        horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing8.dp),
-    ) {
-        TransactionFilter.entries.forEach { filter ->
-            FilterChip(
-                selected = filter == selected,
-                onClick = { onFilterClick(filter) },
-                label = {
-                    Text(
-                        text = stringResource(filter.labelRes()),
-                        fontSize = ApexDimens.text14.sp,
-                    )
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = primaryBlueColor,
-                    selectedLabelColor = backgroundColor,
-                ),
-            )
-        }
-    }
+    val filters = TransactionFilter.entries
+    ApexPillTabs(
+        labels = filters.map { stringResource(it.labelRes()) },
+        selectedIndex = filters.indexOf(selected),
+        onSelect = { index -> onFilterClick(filters[index]) },
+        contentPadding = PaddingValues(horizontal = ApexDimens.spacing20.dp),
+    )
 }
 
 @Composable
