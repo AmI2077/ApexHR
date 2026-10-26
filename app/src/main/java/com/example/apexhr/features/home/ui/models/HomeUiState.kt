@@ -31,9 +31,14 @@ data class HomeUiState(
                 LeaderboardEntryUiModel(id = "7", rank = 7, name = "Юрий Т.", thanksCount = "0"),
             ),
             achievements = listOf(
-                AchievementUiModel(id = "steps", title = "10K шагов"),
-                AchievementUiModel(id = "activity", title = "Активность"),
-                AchievementUiModel(id = "goal", title = "Целеустремлённость"),
+                AchievementUiModel(id = "1", title = "Первая благодарность", description = null, isEarned = true),
+                AchievementUiModel(id = "2", title = "Активность", description = null, isEarned = true),
+                AchievementUiModel(
+                    id = "3",
+                    title = "Целеустремлённость",
+                    description = "Завершите 5 квестов",
+                    isEarned = false,
+                ),
             ),
         )
     }
@@ -54,9 +59,15 @@ data class LeaderboardEntryUiModel(
     val thanksCount: String,
 )
 
+/**
+ * @param description описание из каталога; показывается у ещё не полученных.
+ * @param isEarned получено ли достижение: залитая синяя звезда или светлый контур.
+ */
 data class AchievementUiModel(
     val id: String,
     val title: String,
+    val description: String?,
+    val isEarned: Boolean,
 )
 
 /** Состояние главной целиком. */

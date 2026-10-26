@@ -45,6 +45,7 @@
     <string name="home_challenges_empty">Сейчас нет активных вызовов</string>
     <string name="home_leaderboard_empty">В рейтинге пока никого нет</string>
     <string name="home_achievements_empty">Достижений пока нет</string>
+    <string name="home_achievement_earned">Открыто</string>
 
     <string name="shop_title">Каталог</string>
     <string name="shop_search_placeholder">Поиск по каталогу…</string>

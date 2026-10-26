@@ -1,5 +1,6 @@
 package com.example.apexhr.features.home.ui
 
+import com.example.apexhr.features.home.domain.HomeAchievement
 import com.example.apexhr.features.home.domain.HomeData
 import com.example.apexhr.features.home.domain.LeaderboardEntry
 import com.example.apexhr.features.home.domain.Quest
@@ -7,7 +8,6 @@ import com.example.apexhr.features.home.ui.models.AchievementUiModel
 import com.example.apexhr.features.home.ui.models.ChallengeUiModel
 import com.example.apexhr.features.home.ui.models.LeaderboardEntryUiModel
 import com.example.apexhr.features.home.ui.models.toUiState
-import com.example.apexhr.features.profile.domain.EarnedAchievement
 import com.example.apexhr.features.profile.domain.UserProfile
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -31,7 +31,8 @@ class HomeUiMapperTest {
             LeaderboardEntry(rank = 2, userId = null, name = null, thanksCount = 3),
         ),
         achievements = listOf(
-            EarnedAchievement(id = 4, title = "Первое мероприятие", description = null, iconUrl = null),
+            HomeAchievement(id = 4, title = "Первое мероприятие", description = "Посетите мероприятие", isEarned = true),
+            HomeAchievement(id = 5, title = null, description = "Завершите квест", isEarned = false),
         ),
     )
 
@@ -42,7 +43,22 @@ class HomeUiMapperTest {
         assertEquals("Анна", state.userName)
         assertEquals(1_250L, state.balance)
         assertEquals(listOf(ChallengeUiModel(id = "7", title = "7 дней активности", prizeAmount = 300)), state.challenges)
-        assertEquals(listOf(AchievementUiModel(id = "4", title = "Первое мероприятие")), state.achievements)
+    }
+
+    @Test
+    fun `achievements keep earned flag and description`() {
+        assertEquals(
+            listOf(
+                AchievementUiModel(
+                    id = "4",
+                    title = "Первое мероприятие",
+                    description = "Посетите мероприятие",
+                    isEarned = true,
+                ),
+                AchievementUiModel(id = "5", title = "", description = "Завершите квест", isEarned = false),
+            ),
+            data.toUiState().achievements,
+        )
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.example.apexhr.features.home.domain
 
-import com.example.apexhr.features.profile.domain.EarnedAchievement
 import com.example.apexhr.features.profile.domain.UserProfile
 
 data class HomeData(
@@ -8,7 +7,7 @@ data class HomeData(
     val balance: Long,
     val quests: List<Quest>,
     val leaderboard: List<LeaderboardEntry>,
-    val achievements: List<EarnedAchievement>,
+    val achievements: List<HomeAchievement>,
 )
 
 data class Quest(
@@ -23,4 +22,12 @@ data class LeaderboardEntry(
     val userId: String?,
     val name: String?,
     val thanksCount: Long,
+)
+
+/** Достижение из каталога и получено ли оно текущим пользователем. */
+data class HomeAchievement(
+    val id: Int,
+    val title: String?,
+    val description: String?,
+    val isEarned: Boolean,
 )

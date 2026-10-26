@@ -3,6 +3,7 @@ package com.example.apexhr.features.home.data
 import com.example.apexhr.core.data.network.ApiStatusException
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.home.data.dto.HomeAchievementDto
 import com.example.apexhr.features.home.data.dto.HomeUserDto
 import com.example.apexhr.features.home.data.dto.LeaderboardEntryDto
 import com.example.apexhr.features.home.data.dto.QuestListItemDto
@@ -104,10 +105,24 @@ class HomeRepositoryImplTest {
     }
 
     @Test
-    fun `only first achievements are kept`() = runBlocking {
-        profileApi.achievements = (1L..5L).map { UserAchievementDto(id = it) }
+    fun `all catalog achievements are shown with earned flag`() = runBlocking {
+        homeApi.achievements = (1..5).map { HomeAchievementDto(id = it, name = "Достижение $it") }
+        profileApi.achievements = listOf(
+            UserAchievementDto(id = 10, achievementId = 4),
+            UserAchievementDto(id = 11, achievementId = 2),
+        )
 
-        assertEquals(listOf(1L, 2L, 3L), loadData().achievements.map { it.id })
+        val achievements = loadData().achievements
+
+        assertEquals(listOf(2, 4, 1, 3, 5), achievements.map { it.id })
+        assertEquals(listOf(true, true, false, false, false), achievements.map { it.isEarned })
+    }
+
+    @Test
+    fun `achievements catalog failure fails the whole screen`() = runBlocking {
+        homeApi.achievementsError = ApiStatusException(500)
+
+        assertEquals(DataResult.Failure(DataError.Server), repository.loadHome())
     }
 
     @Test
@@ -139,6 +154,8 @@ private class FakeHomeApi : HomeApi {
     var questsError: Throwable? = null
     var leaderboardError: Throwable? = null
     var usersError: Throwable? = null
+    var achievements = listOf(HomeAchievementDto(id = 1, name = "Первая покупка"))
+    var achievementsError: Throwable? = null
 
     var questsPage: Int? = null
     var questsPageSize: Int? = null
@@ -163,12 +180,17 @@ private class FakeHomeApi : HomeApi {
         usersError?.let { throw it }
         return users
     }
+
+    override suspend fun getAchievements(): List<HomeAchievementDto> {
+        achievementsError?.let { throw it }
+        return achievements
+    }
 }
 
 private class FakeProfileApi : ProfileApi {
     var userError: Throwable? = null
     var achievements = listOf(
-        UserAchievementDto(id = 1, achievement = AchievementDto(id = 1, name = "Первая покупка")),
+        UserAchievementDto(id = 1, achievementId = 1, achievement = AchievementDto(id = 1, name = "Первая покупка")),
     )
     var achievementsUserId: String? = null
 

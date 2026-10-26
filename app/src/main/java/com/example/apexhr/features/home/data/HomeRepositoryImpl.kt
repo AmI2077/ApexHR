@@ -10,8 +10,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 /**
- * Главная собирает данные из шести запросов. Пользователь, баланс
- * и достижения — те же запросы, что у профиля, поэтому берутся из ProfileApi.
+ * Главная собирает данные из семи запросов. Пользователь, баланс
+ * и полученные достижения — те же запросы, что у профиля, поэтому берутся
+ * из ProfileApi; каталог достижений, квесты, лидерборд и сотрудники — из HomeApi.
  */
 class HomeRepositoryImpl(
     private val homeApi: HomeApi,
@@ -30,9 +31,10 @@ class HomeRepositoryImpl(
                 val limit = maxOf(users.await().size, LEADERBOARD_MIN_LIMIT)
                 homeApi.getLeaderboard(days = LEADERBOARD_DAYS, limit = limit)
             }
-            // Достижениям нужен id пользователя из профиля.
+            val achievementsCatalog = async { homeApi.getAchievements() }
+            // Полученным достижениям нужен id пользователя из профиля (GET /api/users/me).
             val user = profileApi.getCurrentUser().toDomain()
-            val achievements = profileApi.getUserAchievements(user.id)
+            val earnedAchievements = profileApi.getUserAchievements(user.id)
 
             HomeData(
                 user = user,
@@ -45,9 +47,10 @@ class HomeRepositoryImpl(
                     entries = leaderboard.await().map { it.toDomain() },
                     users = users.await(),
                 ),
-                achievements = achievements
-                    .take(HOME_ACHIEVEMENTS_LIMIT)
-                    .map { it.toDomain() },
+                achievements = mergeAchievements(
+                    catalog = achievementsCatalog.await(),
+                    earned = earnedAchievements,
+                ),
             )
         }
     }
@@ -63,7 +66,5 @@ class HomeRepositoryImpl(
         /** Нижняя граница limit для лидерборда (значение по умолчанию на сервере). */
         const val LEADERBOARD_MIN_LIMIT = 10
 
-        /** В ряд на главной помещаются три карточки. */
-        const val HOME_ACHIEVEMENTS_LIMIT = 3
     }
 }

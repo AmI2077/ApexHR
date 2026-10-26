@@ -18,6 +18,18 @@ data class QuestListItemDto(
 )
 
 /**
+ * Элемент ответа GET /api/achievements — каталог всех достижений
+ * (сервер отдаёт и неактивные, по возрастанию id).
+ */
+@Serializable
+data class HomeAchievementDto(
+    val id: Int,
+    val name: String? = null,
+    val description: String? = null,
+    val isActive: Boolean = true,
+)
+
+/**
  * Элемент ответа GET /api/users (на сервере это CurrentUserProfileDto).
  * Главной нужны только id, имя и признак активности — для нулевых строк лидерборда.
  */

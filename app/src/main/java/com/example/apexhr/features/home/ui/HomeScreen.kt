@@ -20,7 +20,7 @@ import com.example.apexhr.core.ui.composables.LoadingState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.features.home.ui.composables.ChallengeCard
-import com.example.apexhr.features.home.ui.composables.HomeAchievementsRow
+import com.example.apexhr.features.home.ui.composables.HomeAchievementsList
 import com.example.apexhr.features.home.ui.composables.HomeGreeting
 import com.example.apexhr.features.home.ui.composables.HomeHeader
 import com.example.apexhr.features.home.ui.composables.HomeLeaderboardCard
@@ -143,7 +143,7 @@ fun HomeScreenContent(
             if (uiState.achievements.isEmpty()) {
                 EmptyState(text = stringResource(R.string.home_achievements_empty))
             } else {
-                HomeAchievementsRow(
+                HomeAchievementsList(
                     achievements = uiState.achievements,
                     onAchievementClick = callbacks::onAchievementClick,
                 )

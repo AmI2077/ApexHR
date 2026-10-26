@@ -17,6 +17,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -286,40 +288,57 @@ private fun LeaderboardRankBadge(
     }
 }
 
+/**
+ * Строка достижения в стиле карточки профиля: звезда, жирное название и
+ * подпись. Полученное — залитая синяя звезда и «Открыто», ещё не полученное —
+ * светлая контурная звезда и описание условия из каталога.
+ */
 @Composable
-fun AchievementCard(
+fun HomeAchievementRow(
     achievement: AchievementUiModel,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    val subtitle = if (achievement.isEarned) {
+        stringResource(R.string.home_achievement_earned)
+    } else {
+        achievement.description?.takeIf { it.isNotBlank() }
+    }
+    Row(
         modifier = modifier
+            .fillMaxWidth()
             .clip(RoundedCornerShape(ApexDimens.radius16.dp))
             .background(secondaryBlueColor.copy(alpha = 0.28f))
             .clickable(onClick = onClick)
             .padding(
-                horizontal = ApexDimens.spacing8.dp,
-                vertical = ApexDimens.spacing16.dp,
-            )
-            .height(ApexDimens.achievementMinHeight.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+                horizontal = ApexDimens.spacing16.dp,
+                vertical = ApexDimens.spacing12.dp,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-//        Icon(
-//            imageVector = Icons.Filled.Star,
-//            contentDescription = null,
-//            tint = primaryBlueColor,
-//            modifier = Modifier.size(ApexDimens.icon28.dp),
-//        )
-        Spacer(modifier = Modifier.height(ApexDimens.spacing12.dp))
-        Text(
-            text = achievement.title.ifBlank { stringResource(R.string.home_achievement_untitled) },
-            color = primaryTextColor,
-            fontSize = ApexDimens.text12.sp,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
+        Icon(
+            imageVector = if (achievement.isEarned) Icons.Filled.Star else Icons.Outlined.StarOutline,
+            contentDescription = null,
+            tint = if (achievement.isEarned) primaryBlueColor else secondaryBlueColor,
+            modifier = Modifier.size(ApexDimens.icon28.dp),
         )
+        Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = achievement.title.ifBlank { stringResource(R.string.home_achievement_untitled) },
+                color = primaryTextColor,
+                fontSize = ApexDimens.text14.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            if (subtitle != null) {
+                Spacer(modifier = Modifier.height(ApexDimens.spacing2.dp))
+                Text(
+                    text = subtitle,
+                    color = secondaryTextColor,
+                    fontSize = ApexDimens.text12.sp,
+                )
+            }
+        }
     }
 }
 
@@ -337,25 +356,26 @@ fun SectionTitle(
     )
 }
 
+/**
+ * Все достижения списком: в строке помещаются и звезда, и название целиком,
+ * и подпись, чего не дала бы сетка из узких карточек. Строки идут одним
+ * элементом ленты главной с промежутком 8 dp, как в профиле.
+ */
 @Composable
-fun HomeAchievementsRow(
+fun HomeAchievementsList(
     achievements: List<AchievementUiModel>,
     onAchievementClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing8.dp),
+        verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing8.dp),
     ) {
         achievements.forEach { achievement ->
-            AchievementCard(
+            HomeAchievementRow(
                 achievement = achievement,
                 onClick = { onAchievementClick(achievement.id) },
-                modifier = Modifier.weight(1f),
             )
-        }
-        if (achievements.isEmpty()) {
-            Box(modifier = Modifier.weight(1f))
         }
     }
 }

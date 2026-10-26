@@ -1,11 +1,15 @@
 package com.example.apexhr.features.home.data
 
+import com.example.apexhr.features.home.data.dto.HomeAchievementDto
 import com.example.apexhr.features.home.data.dto.HomeUserDto
 import com.example.apexhr.features.home.data.dto.LeaderboardEntryDto
 import com.example.apexhr.features.home.data.dto.QuestListItemDto
 import com.example.apexhr.features.home.data.dto.QuestPageDto
+import com.example.apexhr.features.home.domain.HomeAchievement
 import com.example.apexhr.features.home.domain.LeaderboardEntry
 import com.example.apexhr.features.home.domain.Quest
+import com.example.apexhr.features.profile.data.dto.AchievementDto
+import com.example.apexhr.features.profile.data.dto.UserAchievementDto
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -164,5 +168,81 @@ class HomeMappersTest {
         )
 
         assertEquals("Иван Петров", merged.single().name)
+    }
+
+    @Test
+    fun `achievements catalog json is parsed`() {
+        val catalog = json.decodeFromString<List<HomeAchievementDto>>(
+            """
+            [{"id":1,"code":"first_thanks","name":"Первая благодарность","description":"Отправьте благодарность",
+              "iconUrl":null,"rewardAmount":50,"conditionType":"thanks_sent","conditionValue":1,
+              "isActive":true,"createdAt":"2026-10-01T00:00:00Z"}]
+            """.trimIndent()
+        )
+
+        assertEquals(
+            listOf(HomeAchievementDto(id = 1, name = "Первая благодарность", description = "Отправьте благодарность")),
+            catalog,
+        )
+    }
+
+    @Test
+    fun `catalog achievements are marked earned or not and earned go first`() {
+        val merged = mergeAchievements(
+            catalog = listOf(
+                HomeAchievementDto(id = 1, name = " Первая благодарность ", description = "Отправьте благодарность"),
+                HomeAchievementDto(id = 2, name = "Активность", description = "  "),
+                HomeAchievementDto(id = 3, name = "Квестоман", description = "Завершите 5 квестов"),
+            ),
+            earned = listOf(UserAchievementDto(id = 100, achievementId = 2)),
+        )
+
+        assertEquals(
+            listOf(
+                HomeAchievement(id = 2, title = "Активность", description = null, isEarned = true),
+                HomeAchievement(id = 1, title = "Первая благодарность", description = "Отправьте благодарность", isEarned = false),
+                HomeAchievement(id = 3, title = "Квестоман", description = "Завершите 5 квестов", isEarned = false),
+            ),
+            merged,
+        )
+    }
+
+    @Test
+    fun `inactive achievement is shown only when earned`() {
+        val merged = mergeAchievements(
+            catalog = listOf(
+                HomeAchievementDto(id = 1, name = "Старое полученное", isActive = false),
+                HomeAchievementDto(id = 2, name = "Старое", isActive = false),
+                HomeAchievementDto(id = 3, name = "Новое"),
+            ),
+            earned = listOf(UserAchievementDto(id = 100, achievementId = 1)),
+        )
+
+        assertEquals(listOf(1 to true, 3 to false), merged.map { it.id to it.isEarned })
+    }
+
+    @Test
+    fun `earned achievement missing in catalog is still shown`() {
+        val merged = mergeAchievements(
+            catalog = listOf(HomeAchievementDto(id = 1, name = "Из каталога")),
+            earned = listOf(
+                // achievementId не пришёл — берём id из вложенного achievement.
+                UserAchievementDto(id = 100, achievement = AchievementDto(id = 7, name = "Секретное")),
+                UserAchievementDto(id = 101, achievementId = 7),
+            ),
+        )
+
+        assertEquals(
+            listOf(
+                HomeAchievement(id = 7, title = "Секретное", description = null, isEarned = true),
+                HomeAchievement(id = 1, title = "Из каталога", description = null, isEarned = false),
+            ),
+            merged,
+        )
+    }
+
+    @Test
+    fun `empty catalog and nothing earned gives empty list`() {
+        assertEquals(emptyList<HomeAchievement>(), mergeAchievements(emptyList(), emptyList()))
     }
 }

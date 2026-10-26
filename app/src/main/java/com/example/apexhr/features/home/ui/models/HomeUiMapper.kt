@@ -27,6 +27,8 @@ fun HomeData.toUiState(): HomeUiState = HomeUiState(
         AchievementUiModel(
             id = achievement.id.toString(),
             title = achievement.title.orEmpty(),
+            description = achievement.description,
+            isEarned = achievement.isEarned,
         )
     },
 )
