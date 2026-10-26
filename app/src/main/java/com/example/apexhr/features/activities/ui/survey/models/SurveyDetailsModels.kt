@@ -6,8 +6,8 @@ import com.example.apexhr.features.activities.domain.SurveyQuestionType
 import com.example.apexhr.features.activities.ui.common.ActivityMessage
 
 data class SurveyDetailsUiModel(
+    /** Название для шапки экрана; null или пустое — в шапке «Опрос». */
     val title: String?,
-    val description: String?,
     val questions: List<SurveyQuestionUiModel>,
     /** Показывать форму и кнопку «Отправить». */
     val canAnswer: Boolean,
@@ -17,7 +17,6 @@ data class SurveyDetailsUiModel(
     companion object {
         val Preview = SurveyDetailsUiModel(
             title = "Пульс команды",
-            description = "Пара вопросов о работе в команде",
             questions = listOf(
                 SurveyQuestionUiModel(1, "Как настроение?", SurveyQuestionType.Rating, emptyList(), isRequired = true),
                 SurveyQuestionUiModel(

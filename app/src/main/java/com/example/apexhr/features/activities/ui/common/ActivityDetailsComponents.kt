@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
@@ -46,12 +47,16 @@ import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
 import kotlinx.coroutines.flow.Flow
 
-/** Шапка экрана деталей: «Назад» и заголовок. */
+/**
+ * Шапка экрана деталей: «Назад» и заголовок.
+ * @param titleMaxLines сколько строк занимает заголовок; лишнее обрезается многоточием.
+ */
 @Composable
 fun ActivitySubscreenHeader(
     title: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    titleMaxLines: Int = Int.MAX_VALUE,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     Row(
@@ -70,6 +75,8 @@ fun ActivitySubscreenHeader(
             color = primaryTextColor,
             fontSize = ApexDimens.text20.sp,
             fontWeight = FontWeight.Bold,
+            maxLines = titleMaxLines,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f),
         )
         actions()
@@ -79,6 +86,7 @@ fun ActivitySubscreenHeader(
 /**
  * Каркас экрана деталей: шапка, содержимое и snackbar снизу.
  * Содержимое — Loading/Error/контент, его выбирает вызывающий.
+ * @param titleMaxLines см. [ActivitySubscreenHeader]; по умолчанию без ограничения.
  */
 @Composable
 fun ActivityDetailsLayout(
@@ -86,6 +94,7 @@ fun ActivityDetailsLayout(
     onBackClick: () -> Unit,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    titleMaxLines: Int = Int.MAX_VALUE,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Box(
@@ -98,6 +107,7 @@ fun ActivityDetailsLayout(
                 title = title,
                 onBackClick = onBackClick,
                 modifier = Modifier.padding(ApexDimens.spacing8.dp),
+                titleMaxLines = titleMaxLines,
             )
             content()
         }

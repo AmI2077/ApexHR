@@ -36,7 +36,6 @@ fun SurveyDetails.toUiModel(zone: ZoneId = ZoneId.systemDefault()): SurveyDetail
     }
     return SurveyDetailsUiModel(
         title = title,
-        description = description,
         questions = if (canAnswer) questions.map { it.toUiModel() } else emptyList(),
         canAnswer = canAnswer,
         note = note,

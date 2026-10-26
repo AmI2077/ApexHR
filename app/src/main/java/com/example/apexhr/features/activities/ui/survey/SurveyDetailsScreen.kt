@@ -45,10 +45,8 @@ import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.transparent
 import com.example.apexhr.features.activities.domain.SurveyQuestionType
 import com.example.apexhr.features.activities.ui.common.ActivityActionButton
-import com.example.apexhr.features.activities.ui.common.ActivityDescription
 import com.example.apexhr.features.activities.ui.common.ActivityDetailsContent
 import com.example.apexhr.features.activities.ui.common.ActivityDetailsLayout
-import com.example.apexhr.features.activities.ui.common.ActivityDetailsTitle
 import com.example.apexhr.features.activities.ui.common.ActivityMessage
 import com.example.apexhr.features.activities.ui.common.ActivityMessagesEffect
 import com.example.apexhr.features.activities.ui.common.ActivityNoteText
@@ -86,6 +84,7 @@ fun SurveyDetailsScreenClosedPreview() {
         SurveyDetailsScreen(
             screenState = SurveyDetailsScreenState.Content(
                 survey = SurveyDetailsUiModel.Preview.copy(
+                    title = "Ежеквартальный опрос о вовлечённости сотрудников и удобстве рабочих процессов",
                     questions = emptyList(),
                     canAnswer = false,
                     note = ActivityMessage(R.string.survey_note_answered, listOf("23.10.2026 01:46")),
@@ -110,6 +109,9 @@ fun SurveyDetailsScreenErrorPreview() {
     }
 }
 
+/** Длинное название опроса в шапке переносится на вторую строку, дальше — многоточие. */
+private const val SURVEY_TITLE_MAX_LINES = 2
+
 /**
  * Опрос: вопросы всех поддерживаемых типов и отправка ответов.
  * @param messages итог отправки и ошибки, показываются в snackbar.
@@ -124,11 +126,16 @@ fun SurveyDetailsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     ActivityMessagesEffect(messages = messages, snackbarHostState = snackbarHostState)
 
+    // Пока опрос грузится или не загрузился, в шапке общее «Опрос», потом — его название.
+    val title = (screenState as? SurveyDetailsScreenState.Content)?.survey?.title
+        ?.takeIf { it.isNotBlank() }
+        ?: stringResource(R.string.survey_details_title)
     ActivityDetailsLayout(
-        title = stringResource(R.string.survey_details_title),
+        title = title,
         onBackClick = callbacks::onBackClick,
         snackbarHostState = snackbarHostState,
         modifier = modifier,
+        titleMaxLines = SURVEY_TITLE_MAX_LINES,
     ) {
         when (screenState) {
             SurveyDetailsScreenState.Loading -> LoadingState()
@@ -152,8 +159,6 @@ private fun SurveyDetailsBody(
 ) {
     val survey = state.survey
     ActivityDetailsContent {
-        ActivityDetailsTitle(title = survey.title)
-        survey.description?.takeIf { it.isNotBlank() }?.let { ActivityDescription(text = it) }
         survey.note?.let { note ->
             ActivityNoteText(text = stringResource(note.textRes, *note.args.toTypedArray()))
         }
