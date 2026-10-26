@@ -109,7 +109,6 @@
     <string name="profile_tab_thanks">Благодарности</string>
     <string name="profile_tab_achievements">Достижения</string>
     <string name="profile_avatar">Аватар</string>
-    <string name="profile_transactions_empty">Операций по балансу пока нет</string>
     <string name="profile_achievements_empty">Достижений пока нет</string>
     <string name="profile_transaction_untitled">Операция по балансу</string>
     <string name="profile_achievement_untitled">Достижение</string>

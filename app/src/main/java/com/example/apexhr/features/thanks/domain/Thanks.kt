@@ -25,9 +25,8 @@ data class Thank(
     val createdAt: Instant?,
 )
 
-data class ThanksOverview(
-    /** Активные сотрудники, кроме текущего пользователя. */
-    val colleagues: List<Colleague>,
+/** Полученные и отправленные благодарности текущего пользователя. */
+data class ThanksHistory(
     val received: List<Thank>,
     val sent: List<Thank>,
 )

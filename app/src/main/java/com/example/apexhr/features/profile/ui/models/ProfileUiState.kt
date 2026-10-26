@@ -14,7 +14,10 @@ data class ProfileUiState(
     val department: List<UserLabel>,
     val balance: Long,
     val selectedTab: ProfileTab,
-    val transactions: List<TransactionUiModel>,
+    /** Полученные благодарности, от новых к старым. */
+    val received: List<ThankUiModel>,
+    /** Отправленные благодарности, от новых к старым. */
+    val sent: List<ThankUiModel>,
     val achievements: List<ProfileAchievementUiModel>,
     val avatarUrl: String? = null,
 ) {
@@ -27,14 +30,17 @@ data class ProfileUiState(
             ),
             balance = 1_250,
             selectedTab = ProfileTab.Thanks,
-            transactions = listOf(
-                TransactionUiModel(id = "1", title = "Monthly Bonus", amount = 300),
-                TransactionUiModel(id = "2", title = "Cafeteria Lunch", amount = -45),
-                TransactionUiModel(id = "3", title = "Peer Recognition", amount = 150),
-                TransactionUiModel(id = "4", title = "Wellness Workshop", amount = -75),
-                TransactionUiModel(id = "5", title = "Referral Bonus", amount = 200),
-                TransactionUiModel(id = "6", title = "Gift Card Redemption", amount = -150),
+            received = listOf(
+                ThankUiModel(
+                    id = "1",
+                    name = "Иван Соколов",
+                    amount = 30,
+                    message = "Спасибо за помощь с релизом",
+                    date = "25.10.2026",
+                ),
+                ThankUiModel(id = "2", name = null, amount = 10, message = null, date = "24.10.2026"),
             ),
+            sent = emptyList(),
             achievements = listOf(
                 ProfileAchievementUiModel(id = "steps", title = "10K шагов"),
                 ProfileAchievementUiModel(id = "activity", title = "Активность"),
@@ -49,10 +55,17 @@ data class ProfileUiState(
     }
 }
 
-data class TransactionUiModel(
+/**
+ * Благодарность в списке полученных или отправленных.
+ * @param name отправитель или получатель; null, если сотрудник не найден.
+ * @param date дата в часовом поясе устройства; null, если сервер не прислал.
+ */
+data class ThankUiModel(
     val id: String,
-    val title: String,
+    val name: String?,
     val amount: Long,
+    val message: String?,
+    val date: String?,
 )
 
 data class ProfileAchievementUiModel(

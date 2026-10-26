@@ -8,9 +8,14 @@ import com.example.apexhr.features.thanks.data.dto.ThankDto
 import com.example.apexhr.features.thanks.data.dto.ThanksUserDto
 import com.example.apexhr.features.thanks.domain.ThanksSendError
 import com.example.apexhr.features.thanks.domain.ThanksSendResult
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.UnknownHostException
 
@@ -21,14 +26,14 @@ class ThanksRepositoryImplTest {
 
     @Test
     fun `colleagues exclude current user and inactive users`() = runBlocking {
-        val overview = (repository.loadThanks() as DataResult.Success).data
+        val colleagues = (repository.loadColleagues() as DataResult.Success).data
 
-        assertEquals(listOf(ANNA, IVAN), overview.colleagues.map { it.id })
+        assertEquals(listOf(ANNA, IVAN), colleagues.map { it.id })
     }
 
     @Test
     fun `thanks names are resolved from users`() = runBlocking {
-        val overview = (repository.loadThanks() as DataResult.Success).data
+        val overview = (repository.loadHistory() as DataResult.Success).data
 
         assertEquals(listOf("Анна Иванова", "Ольга Уволена"), overview.received.map { it.counterpartName })
         assertEquals(listOf("Иван Петров"), overview.sent.map { it.counterpartName })
@@ -38,7 +43,7 @@ class ThanksRepositoryImplTest {
     fun `thank from unknown user has no name`() = runBlocking {
         api.received = listOf(ThankDto(id = 9, fromUserId = UNKNOWN, fromUserName = UNKNOWN, toUserId = ME))
 
-        val overview = (repository.loadThanks() as DataResult.Success).data
+        val overview = (repository.loadHistory() as DataResult.Success).data
 
         assertEquals(UNKNOWN, overview.received.single().counterpartId)
         assertNull(overview.received.single().counterpartName)
@@ -48,14 +53,43 @@ class ThanksRepositoryImplTest {
     fun `failure of any request fails loading`() = runBlocking {
         api.usersError = ApiStatusException(500)
 
-        assertEquals(DataResult.Failure(DataError.Server), repository.loadThanks())
+        assertEquals(DataResult.Failure(DataError.Server), repository.loadHistory())
+        assertEquals(DataResult.Failure(DataError.Server), repository.loadColleagues())
     }
 
     @Test
     fun `network error is mapped`() = runBlocking {
         api.sentError = UnknownHostException("no network")
 
-        assertEquals(DataResult.Failure(DataError.Network), repository.loadThanks())
+        assertEquals(DataResult.Failure(DataError.Network), repository.loadHistory())
+    }
+
+    @Test
+    fun `colleagues do not request thanks`() = runBlocking {
+        api.sentError = UnknownHostException("no network")
+
+        assertTrue(repository.loadColleagues() is DataResult.Success)
+    }
+
+    @Test
+    fun `successful send notifies subscribers`() = runBlocking {
+        val event = async(start = CoroutineStart.UNDISPATCHED) { repository.thanksSent.first() }
+
+        repository.sendThanks(toUserId = ANNA, amount = 10, message = null)
+
+        assertEquals(Unit, withTimeoutOrNull(1_000) { event.await() })
+    }
+
+    @Test
+    fun `failed send does not notify`() = runBlocking {
+        api.sendError = ThanksApiException(400, "Лимит")
+        val event = async(start = CoroutineStart.UNDISPATCHED) {
+            withTimeoutOrNull(200) { repository.thanksSent.first() }
+        }
+
+        repository.sendThanks(toUserId = ANNA, amount = 10, message = null)
+
+        assertNull(event.await())
     }
 
     @Test

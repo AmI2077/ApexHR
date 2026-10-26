@@ -25,8 +25,6 @@ data class ThanksUiState(
     val isSending: Boolean,
     /** Итог последней отправки; null, пока ничего не отправляли. */
     val notice: ThanksNotice?,
-    val received: List<ThankUiModel>,
-    val sent: List<ThankUiModel>,
 ) {
     val canSend: Boolean
         get() = selectedColleagueId != null && !isSending
@@ -72,16 +70,6 @@ data class ThanksUiState(
                 args = listOf("Weekly thanks limit exceeded"),
                 isError = true,
             ),
-            received = listOf(
-                ThankUiModel(
-                    id = "1",
-                    name = "Иван Соколов",
-                    amount = 30,
-                    message = "Спасибо за помощь с релизом",
-                    date = "25.10.2026",
-                ),
-            ),
-            sent = emptyList(),
         )
     }
 }
@@ -92,18 +80,6 @@ data class ColleagueUiModel(
     val name: String?,
     /** «Должность · Отдел» по частям, как в профиле. */
     val position: List<UserLabel>,
-)
-
-/**
- * Благодарность в списке полученных или отправленных.
- * @param name отправитель или получатель; null, если сотрудник не найден.
- */
-data class ThankUiModel(
-    val id: String,
-    val name: String?,
-    val amount: Long,
-    val message: String?,
-    val date: String?,
 )
 
 /**

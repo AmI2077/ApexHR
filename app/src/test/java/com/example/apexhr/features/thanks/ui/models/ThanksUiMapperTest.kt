@@ -4,16 +4,12 @@ import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.features.profile.ui.models.UserLabel
 import com.example.apexhr.features.thanks.domain.Colleague
-import com.example.apexhr.features.thanks.domain.Thank
-import com.example.apexhr.features.thanks.domain.ThanksOverview
 import com.example.apexhr.features.thanks.domain.ThanksSendError
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.Instant
-import java.time.ZoneOffset
 
 class ThanksUiMapperTest {
 
@@ -22,24 +18,7 @@ class ThanksUiMapperTest {
     private val noName = Colleague(id = "x", name = null, position = "Employee", department = null)
     private val colleagues = listOf(anna, ivan, noName)
 
-    private val overview = ThanksOverview(
-        colleagues = colleagues,
-        received = listOf(
-            Thank(
-                id = 5,
-                counterpartId = "ivan",
-                counterpartName = "Иван Петров",
-                amount = 20,
-                message = "Спасибо",
-                createdAt = Instant.parse("2026-10-25T22:30:00Z"),
-            ),
-        ),
-        sent = listOf(
-            Thank(id = 6, counterpartId = "gone", counterpartName = null, amount = 10, message = null, createdAt = null),
-        ),
-    )
-
-    private fun state(form: ThanksForm = ThanksForm()) = overview.toUiState(form, zone = ZoneOffset.ofHours(3))
+    private fun state(form: ThanksForm = ThanksForm()) = colleagues.toUiState(form)
 
     @Test
     fun `empty query keeps all colleagues`() {
@@ -117,20 +96,6 @@ class ThanksUiMapperTest {
                 position = listOf(UserLabel.Resource(R.string.profile_position_employee)),
             ),
             noName.toUiModel(),
-        )
-    }
-
-    @Test
-    fun `thanks are mapped with local date and unknown name`() {
-        val state = state()
-
-        assertEquals(
-            listOf(ThankUiModel(id = "5", name = "Иван Петров", amount = 20, message = "Спасибо", date = "26.10.2026")),
-            state.received,
-        )
-        assertEquals(
-            listOf(ThankUiModel(id = "6", name = null, amount = 10, message = null, date = null)),
-            state.sent,
         )
     }
 

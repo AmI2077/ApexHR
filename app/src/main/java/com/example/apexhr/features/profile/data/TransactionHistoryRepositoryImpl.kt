@@ -19,7 +19,7 @@ class TransactionHistoryRepositoryImpl(
     }
 
     companion object {
-        /** Столько же, сколько профиль показывает одной страницей. */
-        const val PAGE_SIZE = ProfileRepositoryImpl.TRANSACTIONS_PAGE_SIZE
+        /** Операций за один запрос. */
+        const val PAGE_SIZE = 50
     }
 }

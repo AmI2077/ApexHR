@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
-import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.composables.ApexCurrencyIcon
 import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.theme.ApexDimens
@@ -41,7 +40,6 @@ import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.core.ui.theme.transparent
 import com.example.apexhr.features.profile.ui.models.joinedText
 import com.example.apexhr.features.thanks.ui.models.ColleagueUiModel
-import com.example.apexhr.features.thanks.ui.models.ThankUiModel
 import com.example.apexhr.features.thanks.ui.models.ThanksNotice
 
 @Composable
@@ -319,60 +317,4 @@ fun ThanksNoticeText(
         fontSize = ApexDimens.text14.sp,
         modifier = modifier.fillMaxWidth(),
     )
-}
-
-@Composable
-fun ThankRow(
-    thank: ThankUiModel,
-    received: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(ApexDimens.radius16.dp))
-            .background(secondaryBlueColor.copy(alpha = 0.28f))
-            .padding(
-                horizontal = ApexDimens.spacing16.dp,
-                vertical = ApexDimens.spacing12.dp,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = thank.name ?: stringResource(R.string.thanks_unknown_colleague),
-                color = primaryTextColor,
-                fontSize = ApexDimens.text14.sp,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            thank.message?.let { message ->
-                Spacer(modifier = Modifier.height(ApexDimens.spacing2.dp))
-                Text(
-                    text = message,
-                    color = primaryTextColor,
-                    fontSize = ApexDimens.text13.sp,
-                )
-            }
-            thank.date?.let { date ->
-                Spacer(modifier = Modifier.height(ApexDimens.spacing2.dp))
-                Text(
-                    text = date,
-                    color = secondaryTextColor,
-                    fontSize = ApexDimens.text12.sp,
-                )
-            }
-        }
-        Spacer(modifier = Modifier.width(ApexDimens.spacing8.dp))
-        val amountColor = if (received) primaryBlueColor else secondaryTextColor
-        ApexAmount(
-            amount = thank.amount,
-            color = amountColor,
-            fontSize = ApexDimens.text14.sp,
-            fontWeight = FontWeight.Bold,
-            iconTint = amountColor,
-            showSign = received,
-        )
-    }
 }

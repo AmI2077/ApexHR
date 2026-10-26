@@ -31,7 +31,7 @@ val vmModule = module {
     }
 
     viewModel {
-        ProfileViewModel(get())
+        ProfileViewModel(get(), get())
     }
 
     viewModel {

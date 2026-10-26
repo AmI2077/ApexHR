@@ -3,7 +3,6 @@ package com.example.apexhr.features.profile.data
 import com.example.apexhr.features.profile.data.dto.CurrentUserProfileDto
 import com.example.apexhr.features.profile.data.dto.TransactionDto
 import com.example.apexhr.features.profile.data.dto.UserAchievementDto
-import com.example.apexhr.features.profile.domain.BalanceTransaction
 import com.example.apexhr.features.profile.domain.EarnedAchievement
 import com.example.apexhr.features.profile.domain.HistoryTransaction
 import com.example.apexhr.features.profile.domain.TransactionType
@@ -20,12 +19,6 @@ fun CurrentUserProfileDto.toDomain() = UserProfile(
     avatarUrl = avatarUrl.cleaned(),
     department = department.cleaned(),
     position = position.cleaned(),
-)
-
-fun TransactionDto.toDomain() = BalanceTransaction(
-    id = id,
-    amount = amount,
-    description = description.cleaned(),
 )
 
 fun TransactionDto.toHistoryDomain() = HistoryTransaction(

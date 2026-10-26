@@ -3,7 +3,7 @@ package com.example.apexhr.features.thanks.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apexhr.core.domain.DataResult
-import com.example.apexhr.features.thanks.domain.ThanksOverview
+import com.example.apexhr.features.thanks.domain.Colleague
 import com.example.apexhr.features.thanks.domain.ThanksRepository
 import com.example.apexhr.features.thanks.domain.ThanksSendResult
 import com.example.apexhr.features.thanks.ui.models.THANKS_AMOUNTS
@@ -21,8 +21,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * Отправка благодарности коллеге и списки полученных и отправленных.
- * После успешной отправки форма очищается, а данные тихо перечитываются.
+ * Форма отправки благодарности коллеге. После успешной отправки форма
+ * очищается; историю благодарностей показывает и обновляет профиль.
  * Назад обрабатывает навигация (onBackClick переопределяется в AppNavigation).
  */
 class ThanksViewModel(
@@ -32,7 +32,7 @@ class ThanksViewModel(
     private val _state = MutableStateFlow<ThanksScreenState>(ThanksScreenState.Loading)
     val state: StateFlow<ThanksScreenState> = _state.asStateFlow()
 
-    private var overview: ThanksOverview? = null
+    private var colleagues: List<Colleague>? = null
     private var form = ThanksForm()
     private var loadJob: Job? = null
 
@@ -44,24 +44,12 @@ class ThanksViewModel(
         loadJob?.cancel()
         _state.value = ThanksScreenState.Loading
         loadJob = viewModelScope.launch {
-            when (val result = repository.loadThanks()) {
+            when (val result = repository.loadColleagues()) {
                 is DataResult.Success -> {
-                    overview = result.data
+                    colleagues = result.data
                     publish()
                 }
                 is DataResult.Failure -> _state.value = ThanksScreenState.Error(result.error)
-            }
-        }
-    }
-
-    /** Перечитывает данные без экрана загрузки; ошибку молча игнорирует. */
-    private fun refresh() {
-        loadJob?.cancel()
-        loadJob = viewModelScope.launch {
-            val result = repository.loadThanks()
-            if (result is DataResult.Success) {
-                overview = result.data
-                publish()
             }
         }
     }
@@ -85,7 +73,7 @@ class ThanksViewModel(
 
     override fun onSendClick() {
         val toUserId = form.selectedColleagueId ?: return
-        if (form.isSending || overview == null) return
+        if (form.isSending || colleagues == null) return
         updateForm { copy(isSending = true, notice = null) }
         viewModelScope.launch {
             val result = repository.sendThanks(
@@ -102,7 +90,6 @@ class ThanksViewModel(
                         notice = THANKS_SENT_NOTICE,
                     )
                     publish()
-                    refresh()
                 }
                 is ThanksSendResult.Failure -> updateForm {
                     copy(isSending = false, notice = result.error.toNotice())
@@ -119,7 +106,7 @@ class ThanksViewModel(
     }
 
     private fun publish() {
-        val data = overview ?: return
+        val data = colleagues ?: return
         _state.value = ThanksScreenState.Content(data.toUiState(form))
     }
 }

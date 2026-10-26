@@ -10,6 +10,7 @@ import com.example.apexhr.features.profile.data.dto.TransactionDto
 import com.example.apexhr.features.profile.data.dto.UserAchievementDto
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.UnknownHostException
@@ -27,7 +28,6 @@ class ProfileRepositoryImplTest {
         val profile = (result as DataResult.Success).data
         assertEquals("user-1", profile.user.id)
         assertEquals(250L, profile.balance)
-        assertEquals(listOf(1L, 2L), profile.transactions.map { it.id })
         assertEquals(listOf("Первая покупка"), profile.achievements.map { it.title })
     }
 
@@ -39,11 +39,10 @@ class ProfileRepositoryImplTest {
     }
 
     @Test
-    fun `transactions are requested with first page`() = runBlocking {
+    fun `transactions are not requested`() = runBlocking {
         repository.loadProfile()
 
-        assertEquals(0, api.transactionsSkip)
-        assertEquals(ProfileRepositoryImpl.TRANSACTIONS_PAGE_SIZE, api.transactionsTake)
+        assertNull(api.transactionsSkip)
     }
 
     @Test
@@ -75,7 +74,6 @@ private class FakeProfileApi : ProfileApi {
 
     var achievementsUserId: String? = null
     var transactionsSkip: Int? = null
-    var transactionsTake: Int? = null
 
     override suspend fun getCurrentUser(): CurrentUserProfileDto {
         userError?.let { throw it }
@@ -89,11 +87,7 @@ private class FakeProfileApi : ProfileApi {
 
     override suspend fun getTransactions(skip: Int, take: Int): List<TransactionDto> {
         transactionsSkip = skip
-        transactionsTake = take
-        return listOf(
-            TransactionDto(id = 1, amount = 100, description = "Благодарность"),
-            TransactionDto(id = 2, amount = -50, description = "Заказ"),
-        )
+        return emptyList()
     }
 
     override suspend fun getUserAchievements(userId: String): List<UserAchievementDto> {

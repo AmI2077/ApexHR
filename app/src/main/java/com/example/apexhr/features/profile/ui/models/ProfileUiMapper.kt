@@ -3,19 +3,24 @@ package com.example.apexhr.features.profile.ui.models
 import com.example.apexhr.core.ui.model.takeIfHttpUrl
 import com.example.apexhr.features.profile.domain.Profile
 import com.example.apexhr.features.profile.domain.UserProfile
+import com.example.apexhr.features.thanks.domain.Thank
+import com.example.apexhr.features.thanks.domain.ThanksHistory
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
-fun Profile.toUiState(selectedTab: ProfileTab): ProfileUiState = ProfileUiState(
+private val THANK_DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+fun Profile.toUiState(
+    selectedTab: ProfileTab,
+    thanks: ThanksHistory,
+    zone: ZoneId = ZoneId.systemDefault(),
+): ProfileUiState = ProfileUiState(
     name = user.displayName(),
     department = user.displayDepartment(),
     balance = balance,
     selectedTab = selectedTab,
-    transactions = transactions.map { transaction ->
-        TransactionUiModel(
-            id = transaction.id.toString(),
-            title = transaction.description.orEmpty(),
-            amount = transaction.amount,
-        )
-    },
+    received = thanks.received.map { it.toUiModel(zone) },
+    sent = thanks.sent.map { it.toUiModel(zone) },
     achievements = achievements.map { achievement ->
         ProfileAchievementUiModel(
             id = achievement.id.toString(),
@@ -26,6 +31,14 @@ fun Profile.toUiState(selectedTab: ProfileTab): ProfileUiState = ProfileUiState(
         )
     },
     avatarUrl = user.avatarUrl.takeIfHttpUrl(),
+)
+
+fun Thank.toUiModel(zone: ZoneId = ZoneId.systemDefault()) = ThankUiModel(
+    id = id.toString(),
+    name = counterpartName,
+    amount = amount,
+    message = message,
+    date = createdAt?.atZone(zone)?.format(THANK_DATE_FORMAT),
 )
 
 /** «Имя Фамилия». Пустая строка, если сервер не прислал ни того, ни другого. */

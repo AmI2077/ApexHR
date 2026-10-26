@@ -30,7 +30,6 @@ import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.features.thanks.ui.composables.ColleagueRow
 import com.example.apexhr.features.thanks.ui.composables.SendThanksButton
-import com.example.apexhr.features.thanks.ui.composables.ThankRow
 import com.example.apexhr.features.thanks.ui.composables.ThanksAmountSelector
 import com.example.apexhr.features.thanks.ui.composables.ThanksHeader
 import com.example.apexhr.features.thanks.ui.composables.ThanksMessageCounter
@@ -38,7 +37,6 @@ import com.example.apexhr.features.thanks.ui.composables.ThanksMessageField
 import com.example.apexhr.features.thanks.ui.composables.ThanksNoticeText
 import com.example.apexhr.features.thanks.ui.composables.ThanksSearchField
 import com.example.apexhr.features.thanks.ui.composables.ThanksSectionLabel
-import com.example.apexhr.features.thanks.ui.models.ThankUiModel
 import com.example.apexhr.features.thanks.ui.models.ThanksScreenCallbacks
 import com.example.apexhr.features.thanks.ui.models.ThanksScreenState
 import com.example.apexhr.features.thanks.ui.models.ThanksUiState
@@ -55,7 +53,7 @@ fun ThanksScreenPreview() {
     }
 }
 
-/** Отправка благодарности коллеге и списки полученных и отправленных благодарностей. */
+/** Отправка благодарности коллеге; история благодарностей — в профиле. */
 @Composable
 fun ThanksScreen(
     screenState: ThanksScreenState,
@@ -161,18 +159,6 @@ fun ThanksScreenContent(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
         }
-        ThanksList(
-            title = stringResource(R.string.thanks_received_section),
-            emptyText = stringResource(R.string.thanks_received_empty),
-            thanks = uiState.received,
-            received = true,
-        )
-        ThanksList(
-            title = stringResource(R.string.thanks_sent_section),
-            emptyText = stringResource(R.string.thanks_sent_empty),
-            thanks = uiState.sent,
-            received = false,
-        )
         Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
     }
 }
@@ -197,31 +183,5 @@ private fun ThanksScreenFrame(
     ) {
         ThanksHeader(onBackClick = callbacks::onBackClick)
         content()
-    }
-}
-
-@Composable
-private fun ThanksList(
-    title: String,
-    emptyText: String,
-    thanks: List<ThankUiModel>,
-    received: Boolean,
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing8.dp),
-    ) {
-        Text(
-            text = title,
-            color = primaryTextColor,
-            fontSize = ApexDimens.text18.sp,
-            fontWeight = FontWeight.Bold,
-        )
-        if (thanks.isEmpty()) {
-            EmptyState(text = emptyText)
-        }
-        thanks.forEach { thank ->
-            ThankRow(thank = thank, received = received)
-        }
     }
 }

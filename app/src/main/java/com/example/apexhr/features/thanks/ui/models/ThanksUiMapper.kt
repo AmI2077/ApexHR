@@ -5,19 +5,13 @@ import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.model.messageRes
 import com.example.apexhr.features.profile.ui.models.userInfoLabels
 import com.example.apexhr.features.thanks.domain.Colleague
-import com.example.apexhr.features.thanks.domain.Thank
-import com.example.apexhr.features.thanks.domain.ThanksOverview
 import com.example.apexhr.features.thanks.domain.ThanksSendError
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 /** Суммы благодарности на выбор; первая — по умолчанию. */
 val THANKS_AMOUNTS: List<Long> = listOf(10, 20, 30, 50)
 
 /** Ограничение длины сообщения, как в веб-версии. */
 const val THANKS_MESSAGE_MAX_LENGTH = 120
-
-private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
 /** Введённые пользователем данные формы и состояние отправки. */
 data class ThanksForm(
@@ -29,15 +23,13 @@ data class ThanksForm(
     val notice: ThanksNotice? = null,
 )
 
-fun ThanksOverview.toUiState(
-    form: ThanksForm,
-    zone: ZoneId = ZoneId.systemDefault(),
-): ThanksUiState {
+/** Форма отправки по списку коллег (активные сотрудники, кроме текущего пользователя). */
+fun List<Colleague>.toUiState(form: ThanksForm): ThanksUiState {
     // Выбранного ищем среди всех коллег: поиск не должен сбрасывать получателя.
-    val selected = colleagues.firstOrNull { it.id == form.selectedColleagueId }
+    val selected = firstOrNull { it.id == form.selectedColleagueId }
     return ThanksUiState(
         searchQuery = form.searchQuery,
-        colleagues = colleagues.search(form.searchQuery).map { it.toUiModel() },
+        colleagues = search(form.searchQuery).map { it.toUiModel() },
         selectedColleagueId = selected?.id,
         selectedColleagueName = selected?.name,
         amountOptions = THANKS_AMOUNTS,
@@ -46,8 +38,6 @@ fun ThanksOverview.toUiState(
         messageMaxLength = THANKS_MESSAGE_MAX_LENGTH,
         isSending = form.isSending,
         notice = form.notice,
-        received = received.map { it.toUiModel(zone) },
-        sent = sent.map { it.toUiModel(zone) },
     )
 }
 
@@ -72,14 +62,6 @@ fun Colleague.toUiModel() = ColleagueUiModel(
     id = id,
     name = name,
     position = userInfoLabels(position, department),
-)
-
-fun Thank.toUiModel(zone: ZoneId) = ThankUiModel(
-    id = id.toString(),
-    name = counterpartName,
-    amount = amount,
-    message = message,
-    date = createdAt?.atZone(zone)?.format(DATE_FORMATTER),
 )
 
 /** Сообщение об успешной отправке. */

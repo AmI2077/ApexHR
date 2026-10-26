@@ -46,14 +46,13 @@ import com.example.apexhr.R
 import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.theme.ApexDimens
-import com.example.apexhr.core.ui.theme.negativeRedColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.features.profile.ui.models.ProfileAchievementUiModel
 import com.example.apexhr.features.profile.ui.models.ProfileTab
-import com.example.apexhr.features.profile.ui.models.TransactionUiModel
+import com.example.apexhr.features.profile.ui.models.ThankUiModel
 
 @Composable
 fun ProfileHeader(
@@ -207,41 +206,77 @@ private fun ProfileTab.labelRes(): Int = when (this) {
     ProfileTab.Achievements -> R.string.profile_tab_achievements
 }
 
+/** Заголовок блока «Полученные»/«Отправленные» на вкладке благодарностей. */
 @Composable
-fun TransactionRow(
-    transaction: TransactionUiModel,
-    onClick: () -> Unit,
+fun ProfileSectionTitle(
+    text: String,
     modifier: Modifier = Modifier,
 ) {
-    val isPositive = transaction.amount >= 0
+    Text(
+        text = text,
+        color = primaryTextColor,
+        fontSize = ApexDimens.text18.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = modifier,
+    )
+}
+
+/**
+ * Полученная или отправленная благодарность. Полученная — со знаком «+»
+ * и акцентным цветом, отправленная — без знака и приглушённо.
+ */
+@Composable
+fun ProfileThankRow(
+    thank: ThankUiModel,
+    received: Boolean,
+    modifier: Modifier = Modifier,
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(ApexDimens.radius16.dp))
             .background(secondaryBlueColor.copy(alpha = 0.28f))
-            .clickable(onClick = onClick)
             .padding(
                 horizontal = ApexDimens.spacing16.dp,
                 vertical = ApexDimens.spacing12.dp,
             ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = transaction.title.ifBlank { stringResource(R.string.profile_transaction_untitled) },
-            color = primaryTextColor,
-            fontSize = ApexDimens.text14.sp,
-            modifier = Modifier.weight(1f),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        val amountColor = if (isPositive) primaryBlueColor else negativeRedColor
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = thank.name ?: stringResource(R.string.thanks_unknown_colleague),
+                color = primaryTextColor,
+                fontSize = ApexDimens.text14.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            thank.message?.let { message ->
+                Spacer(modifier = Modifier.height(ApexDimens.spacing2.dp))
+                Text(
+                    text = message,
+                    color = primaryTextColor,
+                    fontSize = ApexDimens.text13.sp,
+                )
+            }
+            thank.date?.let { date ->
+                Spacer(modifier = Modifier.height(ApexDimens.spacing2.dp))
+                Text(
+                    text = date,
+                    color = secondaryTextColor,
+                    fontSize = ApexDimens.text12.sp,
+                )
+            }
+        }
+        Spacer(modifier = Modifier.width(ApexDimens.spacing8.dp))
+        val amountColor = if (received) primaryBlueColor else secondaryTextColor
         ApexAmount(
-            amount = transaction.amount,
+            amount = thank.amount,
             color = amountColor,
             fontSize = ApexDimens.text14.sp,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Bold,
             iconTint = amountColor,
-            showSign = true,
+            showSign = received,
         )
     }
 }

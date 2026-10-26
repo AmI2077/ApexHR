@@ -5,7 +5,6 @@ import com.example.apexhr.features.profile.data.dto.BalanceDto
 import com.example.apexhr.features.profile.data.dto.CurrentUserProfileDto
 import com.example.apexhr.features.profile.data.dto.TransactionDto
 import com.example.apexhr.features.profile.data.dto.UserAchievementDto
-import com.example.apexhr.features.profile.domain.BalanceTransaction
 import com.example.apexhr.features.profile.domain.EarnedAchievement
 import com.example.apexhr.features.profile.domain.UserProfile
 import kotlinx.serialization.json.Json
@@ -73,10 +72,10 @@ class ProfileMappersTest {
         assertEquals(110L, balance.amount)
         assertEquals(
             listOf(
-                BalanceTransaction(id = 10, amount = 10, description = "Получено достижение"),
-                BalanceTransaction(id = 9, amount = -100, description = "Заказ"),
+                10L to "Получено достижение",
+                9L to "Заказ",
             ),
-            transactions.map { it.toDomain() },
+            transactions.map { it.toHistoryDomain() }.map { it.id to it.description },
         )
     }
 
