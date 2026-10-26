@@ -6,12 +6,12 @@ import com.example.apexhr.features.home.domain.HomeData
 fun HomeData.toUiState(): HomeUiState = HomeUiState(
     // В приветствии только имя; если его нет, UI подставит запасной текст.
     userName = user.firstName.orEmpty(),
-    points = formatAmount(balance),
+    balance = balance,
     challenges = quests.map { quest ->
         ChallengeUiModel(
             id = quest.id.toString(),
             title = quest.title.orEmpty(),
-            prizePoints = quest.rewardAmount,
+            prizeAmount = quest.rewardAmount,
         )
     },
     leaderboard = leaderboard.mapIndexed { index, entry ->

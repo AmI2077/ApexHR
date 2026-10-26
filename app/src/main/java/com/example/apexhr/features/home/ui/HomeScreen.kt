@@ -80,11 +80,11 @@ fun HomeScreen(
             modifier = modifier,
         )
 
-        HomeScreenState.Loading -> HomeScreenFrame(points = null, callbacks, modifier) {
+        HomeScreenState.Loading -> HomeScreenFrame(balance = null, callbacks, modifier) {
             item { LoadingState() }
         }
 
-        is HomeScreenState.Error -> HomeScreenFrame(points = null, callbacks, modifier) {
+        is HomeScreenState.Error -> HomeScreenFrame(balance = null, callbacks, modifier) {
             item {
                 ErrorState(
                     error = screenState.error,
@@ -114,7 +114,7 @@ fun HomeScreenContent(
     callbacks: HomeScreenCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    HomeScreenFrame(points = uiState.points, callbacks, modifier) {
+    HomeScreenFrame(balance = uiState.balance, callbacks, modifier) {
         item {
             HomeGreeting(userName = uiState.userName)
         }
@@ -155,7 +155,7 @@ fun HomeScreenContent(
 /** Общий каркас: фон, отступы и шапка с логотипом и балансом (если он уже загружен). */
 @Composable
 private fun HomeScreenFrame(
-    points: String?,
+    balance: Long?,
     callbacks: HomeScreenCallbacks,
     modifier: Modifier = Modifier,
     content: LazyListScope.() -> Unit,
@@ -172,7 +172,7 @@ private fun HomeScreenFrame(
     ) {
         item {
             HomeHeader(
-                points = points,
+                balance = balance,
                 onPointsClick = callbacks::onPointsClick,
             )
         }

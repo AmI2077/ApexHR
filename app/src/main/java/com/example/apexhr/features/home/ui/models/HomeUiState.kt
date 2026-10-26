@@ -4,7 +4,8 @@ import com.example.apexhr.core.domain.DataError
 
 data class HomeUiState(
     val userName: String,
-    val points: String,
+    /** Баланс в апексах. */
+    val balance: Long,
     val challenges: List<ChallengeUiModel>,
     val leaderboard: List<LeaderboardEntryUiModel>,
     val achievements: List<AchievementUiModel>,
@@ -12,12 +13,12 @@ data class HomeUiState(
     companion object {
         val Preview = HomeUiState(
             userName = "Анна",
-            points = "1 250",
+            balance = 1_250,
             challenges = listOf(
                 ChallengeUiModel(
                     id = "streak_7",
                     title = "7 дней активности",
-                    prizePoints = 300,
+                    prizeAmount = 300,
                 )
             ),
             leaderboard = listOf(
@@ -37,7 +38,8 @@ data class HomeUiState(
 data class ChallengeUiModel(
     val id: String,
     val title: String,
-    val prizePoints: Long,
+    /** Приз за вызов в апексах. */
+    val prizeAmount: Long,
 )
 
 /** @param thanksCount число полученных благодарностей (по нему сервер строит рейтинг), уже отформатированное. */

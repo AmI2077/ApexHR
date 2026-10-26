@@ -40,8 +40,8 @@ class HomeUiMapperTest {
         val state = data.toUiState()
 
         assertEquals("Анна", state.userName)
-        assertEquals("1\u00A0250", state.points)
-        assertEquals(listOf(ChallengeUiModel(id = "7", title = "7 дней активности", prizePoints = 300)), state.challenges)
+        assertEquals(1_250L, state.balance)
+        assertEquals(listOf(ChallengeUiModel(id = "7", title = "7 дней активности", prizeAmount = 300)), state.challenges)
         assertEquals(listOf(AchievementUiModel(id = "4", title = "Первое мероприятие")), state.achievements)
     }
 

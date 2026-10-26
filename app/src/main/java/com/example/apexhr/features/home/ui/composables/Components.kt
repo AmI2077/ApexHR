@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
+import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
@@ -43,7 +44,7 @@ import com.example.apexhr.features.home.ui.models.LeaderboardEntryUiModel
 
 @Composable
 fun HomeHeader(
-    points: String?,
+    balance: Long?,
     onPointsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -69,28 +70,18 @@ fun HomeHeader(
                 fontWeight = FontWeight.Bold,
             )
         }
-        // Пока баланс не загружен, блок баллов не показываем.
-        if (points != null) {
-            Row(
+        // Пока баланс не загружен, блок апексов не показываем.
+        if (balance != null) {
+            ApexAmount(
+                amount = balance,
                 modifier = Modifier.clickable(
                     onClick = onPointsClick,
-                    onClickLabel = stringResource(R.string.home_points_content_description),
+                    onClickLabel = stringResource(R.string.home_balance_content_description),
                 ),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(R.string.points_diamond),
-                    color = darkBlueColor,
-                    fontSize = ApexDimens.text16.sp,
-                )
-                Spacer(modifier = Modifier.width(ApexDimens.spacing6.dp))
-                Text(
-                    text = points,
-                    color = primaryTextColor,
-                    fontSize = ApexDimens.text16.sp,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
+                color = primaryTextColor,
+                fontSize = ApexDimens.text16.sp,
+                fontWeight = FontWeight.Medium,
+            )
         }
     }
 }
@@ -143,12 +134,23 @@ fun ChallengeCard(
             fontWeight = FontWeight.SemiBold,
         )
         Spacer(modifier = Modifier.height(ApexDimens.spacing12.dp))
-        Text(
-            text = stringResource(R.string.home_challenge_prize, challenge.prizePoints),
-            color = primaryBlueColor,
-            fontSize = ApexDimens.text14.sp,
-            fontWeight = FontWeight.Medium,
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(R.string.home_challenge_prize),
+                color = primaryBlueColor,
+                fontSize = ApexDimens.text14.sp,
+                fontWeight = FontWeight.Medium,
+            )
+            ApexAmount(
+                amount = challenge.prizeAmount,
+                color = primaryBlueColor,
+                fontSize = ApexDimens.text14.sp,
+                fontWeight = FontWeight.Medium,
+            )
+        }
     }
 }
 
