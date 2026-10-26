@@ -74,6 +74,10 @@ data class QuestDetailsRoute(val questId: Long) : NavKey
 @Serializable
 data class SurveyDetailsRoute(val surveyId: Long) : NavKey
 
+/** История операций по балансу: открывается из профиля. */
+@Serializable
+data object TransactionHistoryRoute : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {

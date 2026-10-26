@@ -54,9 +54,11 @@ class ProfileViewModel(
         }
     }
 
-    // Экранов истории, назад и деталей операций/достижений пока нет.
-    override fun onBackClick() = Unit
+    // История открывается навигацией (onHistoryClick переопределяется в AppNavigation).
     override fun onHistoryClick() = Unit
+
+    // Экранов назад и деталей операций/достижений пока нет.
+    override fun onBackClick() = Unit
     override fun onTransactionClick(transactionId: String) = Unit
     override fun onAchievementClick(achievementId: String) = Unit
 }

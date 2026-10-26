@@ -100,6 +100,24 @@
     <string name="profile_transaction_untitled">Операция по балансу</string>
     <string name="profile_achievement_untitled">Достижение</string>
     <string name="profile_name_unknown">Сотрудник</string>
+    <string name="profile_history_title">История операций</string>
+    <string name="profile_history_filter_all">Все</string>
+    <string name="profile_history_filter_activities">Активности</string>
+    <string name="profile_history_filter_thanks">Благодарности</string>
+    <string name="profile_history_filter_bonuses">Поощрения</string>
+    <string name="profile_history_filter_purchases">Покупки</string>
+    <string name="profile_history_filter_adjustments">Корректировки</string>
+    <string name="profile_history_type_activity">Активность</string>
+    <string name="profile_history_type_thanks">Благодарность</string>
+    <string name="profile_history_type_bonus">Поощрение</string>
+    <string name="profile_history_type_purchase">Покупка</string>
+    <string name="profile_history_type_refund">Возврат</string>
+    <string name="profile_history_type_adjustment">Корректировка</string>
+    <string name="profile_history_type_other">Операция</string>
+    <string name="profile_history_empty">Операций по балансу пока нет</string>
+    <string name="profile_history_filter_empty">Операций с таким фильтром нет</string>
+    <string name="profile_history_filter_empty_loaded">Среди загруженных операций таких нет</string>
+    <string name="profile_history_load_more">Показать ещё</string>
 
     <string name="activities_title">Активности</string>
     <string name="activities_search_placeholder">Поиск по активностям…</string>

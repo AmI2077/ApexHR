@@ -28,6 +28,9 @@ import com.example.apexhr.features.home.ui.HomeScreen
 import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.profile.ui.ProfileScreen
 import com.example.apexhr.features.profile.ui.ProfileViewModel
+import com.example.apexhr.features.profile.ui.history.TransactionHistoryScreen
+import com.example.apexhr.features.profile.ui.history.TransactionHistoryViewModel
+import com.example.apexhr.features.profile.ui.history.models.TransactionHistoryScreenCallbacks
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
 import com.example.apexhr.features.shop.ui.ShopScreen
 import com.example.apexhr.features.shop.ui.ShopViewModel
@@ -75,14 +78,28 @@ fun AppNavigation(
             entry<TopLevelRoute.Profile> {
                 val viewModel: ProfileViewModel = koinViewModel()
                 val screenState by viewModel.state.collectAsStateWithLifecycle()
-                val profileCallbacks = remember(viewModel, onLogout) {
+                val profileCallbacks = remember(viewModel, navigator, onLogout) {
                     object : ProfileScreenCallbacks by viewModel {
                         override fun onLogoutClick() = onLogout()
+                        override fun onHistoryClick() = navigator.navigate(TransactionHistoryRoute)
                     }
                 }
                 ProfileScreen(
                     screenState = screenState,
                     callbacks = profileCallbacks,
+                )
+            }
+            entry<TransactionHistoryRoute> {
+                val viewModel: TransactionHistoryViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val historyCallbacks = remember(viewModel, navigator) {
+                    object : TransactionHistoryScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                TransactionHistoryScreen(
+                    screenState = screenState,
+                    callbacks = historyCallbacks,
                 )
             }
             entry<TopLevelRoute.Activities> {
