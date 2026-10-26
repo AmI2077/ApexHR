@@ -49,4 +49,5 @@ object ApexDimens {
     const val buttonHeight = 48
     const val messageFieldHeight = 96
     const val tabIndicatorHeight = 2
+    const val pillTabHeight = 36
 }

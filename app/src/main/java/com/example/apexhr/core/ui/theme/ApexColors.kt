@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.Color
 val darkBlueColor = Color(0xFF1E4A8A)
 val primaryBlueColor = Color(0xFF306CC0)
 val secondaryBlueColor = Color(0xFFB7D1F2)
+/** Светлый фон невыбранных вкладок-«таблеток» (ApexPillTabs). */
+val pillBackgroundColor = Color(0xFFF3F7FC)
 
 val backgroundColor = Color.White
 val transparent = Color.Transparent
