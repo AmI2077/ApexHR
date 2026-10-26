@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.CardGiftcard
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Remove
 import androidx.compose.material3.Button
@@ -23,6 +24,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.apexhr.R
+import com.example.apexhr.core.ui.composables.ApexAmount
+import com.example.apexhr.core.ui.composables.apexAmountText
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.negativeRedColor
@@ -101,10 +105,11 @@ fun CartItemCard(
             contentAlignment = Alignment.Center,
         ) {
             if (item.imageUrl == null) {
-                Text(
-                    text = stringResource(R.string.points_diamond),
-                    color = primaryBlueColor,
-                    fontSize = ApexDimens.text20.sp,
+                Icon(
+                    imageVector = Icons.Outlined.CardGiftcard,
+                    contentDescription = null,
+                    tint = primaryBlueColor,
+                    modifier = Modifier.size(ApexDimens.icon24.dp),
                 )
             } else {
                 AsyncImage(
@@ -126,14 +131,21 @@ fun CartItemCard(
                 overflow = TextOverflow.Ellipsis,
             )
             Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
-            Text(
-                text = stringResource(R.string.cart_item_unit_price, item.unitPrice),
-                color = secondaryTextColor,
-                fontSize = ApexDimens.text12.sp,
-            )
-            Text(
-                text = stringResource(R.string.cart_amount, item.total),
-                color = primaryTextColor,
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                ApexAmount(
+                    amount = item.unitPrice,
+                    color = secondaryTextColor,
+                    fontSize = ApexDimens.text12.sp,
+                )
+                Text(
+                    text = stringResource(R.string.cart_item_per_piece),
+                    color = secondaryTextColor,
+                    fontSize = ApexDimens.text12.sp,
+                    modifier = Modifier.padding(start = ApexDimens.spacing4.dp),
+                )
+            }
+            ApexAmount(
+                amount = item.total,
                 fontSize = ApexDimens.text14.sp,
                 fontWeight = FontWeight.Medium,
             )
@@ -246,17 +258,18 @@ fun CartSummaryCard(
     ) {
         CartSummaryRow(
             label = stringResource(R.string.cart_total),
-            value = stringResource(R.string.cart_amount, uiState.total),
+            amount = uiState.total,
             isAccent = true,
         )
         CartSummaryRow(
             label = stringResource(R.string.cart_balance),
-            value = stringResource(R.string.cart_amount, uiState.balance),
+            amount = uiState.balance,
             isAccent = false,
         )
         if (!uiState.isBalanceEnough) {
             Text(
-                text = stringResource(R.string.cart_not_enough_balance, uiState.missingAmount),
+                // «Не хватает 1 апекса / 3 апексов / 25 апексов…»: склонение через plurals apex_amount.
+                text = stringResource(R.string.cart_not_enough_balance, apexAmountText(uiState.missingAmount)),
                 color = negativeRedColor,
                 fontSize = ApexDimens.text13.sp,
                 fontWeight = FontWeight.Medium,
@@ -268,7 +281,7 @@ fun CartSummaryCard(
 @Composable
 private fun CartSummaryRow(
     label: String,
-    value: String,
+    amount: Long,
     isAccent: Boolean,
 ) {
     Row(
@@ -281,8 +294,8 @@ private fun CartSummaryRow(
             color = if (isAccent) primaryTextColor else secondaryTextColor,
             fontSize = ApexDimens.text14.sp,
         )
-        Text(
-            text = value,
+        ApexAmount(
+            amount = amount,
             color = primaryTextColor,
             fontSize = if (isAccent) ApexDimens.text16.sp else ApexDimens.text14.sp,
             fontWeight = if (isAccent) FontWeight.Bold else FontWeight.Medium,
@@ -290,7 +303,7 @@ private fun CartSummaryRow(
     }
 }
 
-/** «Оформить за N апексов»; во время оформления — индикатор. */
+/** «Оформить за ◇ N» (сумма — [ApexAmount]); во время оформления — индикатор. */
 @Composable
 fun CartCheckoutButton(
     uiState: CartUiState,
@@ -316,10 +329,20 @@ fun CartCheckoutButton(
                 strokeWidth = 2.dp,
             )
         } else {
+            // Цвет берём из кнопки, чтобы сумма тускнела вместе с неактивной кнопкой.
+            val contentColor = LocalContentColor.current
             Text(
-                text = stringResource(R.string.cart_checkout, uiState.total),
+                text = stringResource(R.string.cart_checkout),
                 fontSize = ApexDimens.text16.sp,
                 fontWeight = FontWeight.SemiBold,
+            )
+            ApexAmount(
+                amount = uiState.total,
+                modifier = Modifier.padding(start = ApexDimens.spacing6.dp),
+                color = contentColor,
+                fontSize = ApexDimens.text16.sp,
+                fontWeight = FontWeight.SemiBold,
+                iconTint = contentColor,
             )
         }
     }

@@ -11,7 +11,8 @@ data class OrderUiModel(
     /** Известный приложению статус; null — показываем [rawStatus] как есть. */
     @StringRes val statusRes: Int?,
     val rawStatus: String?,
-    val total: String,
+    /** Сумма заказа в апексах. */
+    val total: Long,
     val items: List<OrderItemUiModel>,
 ) {
     companion object {
@@ -21,18 +22,18 @@ data class OrderUiModel(
                 createdAt = "25.10.2026 23:16",
                 statusRes = R.string.order_status_paid,
                 rawStatus = "Paid",
-                total = "50",
-                items = listOf(OrderItemUiModel(title = "Тестовый товар", quantity = 1, price = "50")),
+                total = 50,
+                items = listOf(OrderItemUiModel(title = "Тестовый товар", quantity = 1, total = 50)),
             ),
             OrderUiModel(
                 id = 5,
                 createdAt = "20.10.2026 10:05",
                 statusRes = null,
                 rawStatus = "OnHold",
-                total = "4\u00A0480",
+                total = 4_480,
                 items = listOf(
-                    OrderItemUiModel(title = "Худи Supabase", quantity = 2, price = "1\u00A0990"),
-                    OrderItemUiModel(title = "Сертификат в книжный", quantity = 1, price = "500"),
+                    OrderItemUiModel(title = "Худи Supabase", quantity = 2, total = 3_980),
+                    OrderItemUiModel(title = "Сертификат в книжный", quantity = 1, total = 500),
                 ),
             ),
         )
@@ -42,8 +43,8 @@ data class OrderUiModel(
 data class OrderItemUiModel(
     val title: String,
     val quantity: Int,
-    /** Цена за штуку на момент покупки. */
-    val price: String,
+    /** Сумма строки (цена на момент покупки × количество) в апексах. */
+    val total: Long,
 )
 
 sealed interface OrdersScreenState {

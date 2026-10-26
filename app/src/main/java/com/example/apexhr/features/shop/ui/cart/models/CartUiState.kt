@@ -4,13 +4,13 @@ import com.example.apexhr.core.domain.DataError
 
 data class CartUiState(
     val items: List<CartItemUiModel>,
-    /** Сумма корзины, уже отформатированная. */
-    val total: String,
-    val balance: String,
+    /** Сумма корзины в апексах. */
+    val total: Long,
+    val balance: Long,
     /** Хватает ли баланса на всю корзину. */
     val isBalanceEnough: Boolean,
     /** Сколько апексов не хватает; показывается, только если [isBalanceEnough] = false. */
-    val missingAmount: String,
+    val missingAmount: Long,
     /** Идёт оформление заказа: кнопки корзины неактивны. */
     val isCheckoutInProgress: Boolean = false,
 ) {
@@ -28,8 +28,8 @@ data class CartUiState(
                     id = 1,
                     title = "Худи Supabase",
                     imageUrl = null,
-                    unitPrice = "1\u00A0990",
-                    total = "3\u00A0980",
+                    unitPrice = 1_990,
+                    total = 3_980,
                     quantity = 2,
                     canDecrease = true,
                 ),
@@ -37,16 +37,16 @@ data class CartUiState(
                     id = 2,
                     title = "Сертификат в книжный",
                     imageUrl = null,
-                    unitPrice = "500",
-                    total = "500",
+                    unitPrice = 500,
+                    total = 500,
                     quantity = 1,
                     canDecrease = false,
                 ),
             ),
-            total = "4\u00A0480",
-            balance = "5\u00A0000",
+            total = 4_480,
+            balance = 5_000,
             isBalanceEnough = true,
-            missingAmount = "0",
+            missingAmount = 0,
         )
     }
 }
@@ -57,8 +57,10 @@ data class CartItemUiModel(
     val title: String,
     /** null — показываем значок вместо картинки. */
     val imageUrl: String?,
-    val unitPrice: String,
-    val total: String,
+    /** Цена за штуку в апексах. */
+    val unitPrice: Long,
+    /** Сумма позиции (цена × количество) в апексах. */
+    val total: Long,
     val quantity: Int,
     /** Уменьшать можно до 1 шт., дальше — только удалить. */
     val canDecrease: Boolean,

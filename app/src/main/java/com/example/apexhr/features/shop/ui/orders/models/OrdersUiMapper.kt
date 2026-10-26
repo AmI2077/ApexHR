@@ -2,7 +2,6 @@ package com.example.apexhr.features.shop.ui.orders.models
 
 import androidx.annotation.StringRes
 import com.example.apexhr.R
-import com.example.apexhr.core.ui.model.formatAmount
 import com.example.apexhr.features.shop.domain.Order
 import com.example.apexhr.features.shop.domain.OrderItem
 import com.example.apexhr.features.shop.domain.OrderStatus
@@ -18,7 +17,7 @@ fun Order.toUiModel(zone: ZoneId = ZoneId.systemDefault()): OrderUiModel =
         createdAt = createdAt?.atZone(zone)?.format(ORDER_DATE_FORMAT),
         statusRes = status.labelRes(),
         rawStatus = rawStatus?.takeIf { it.isNotBlank() },
-        total = formatAmount(totalAmount),
+        total = totalAmount,
         items = items.map { it.toUiModel() },
     )
 
@@ -26,7 +25,7 @@ fun OrderItem.toUiModel(): OrderItemUiModel =
     OrderItemUiModel(
         title = name.orEmpty(),
         quantity = quantity,
-        price = formatAmount(price),
+        total = price * quantity,
     )
 
 @StringRes

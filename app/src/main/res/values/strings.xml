@@ -73,15 +73,16 @@
 
     <string name="cart_empty">Пока пусто. Награды ждут в каталоге.</string>
     <string name="cart_go_to_catalog">В каталог</string>
-    <string name="cart_amount">%1$s апексов</string>
-    <string name="cart_item_unit_price">%1$s апексов за шт.</string>
+    <string name="cart_item_per_piece">за шт.</string>
     <string name="cart_increase">Добавить ещё одну</string>
     <string name="cart_decrease">Убрать одну</string>
     <string name="cart_remove">Удалить из корзины</string>
     <string name="cart_total">Итого</string>
     <string name="cart_balance">Ваш баланс</string>
-    <string name="cart_not_enough_balance">Не хватает %1$s апексов для оформления</string>
-    <string name="cart_checkout">Оформить за %1$s апексов</string>
+    <!-- %1$s — сумма со склонением: apexAmountText (plurals apex_amount). -->
+    <string name="cart_not_enough_balance">Не хватает %1$s для оформления</string>
+    <!-- Сумма рисуется рядом через ApexAmount. -->
+    <string name="cart_checkout">Оформить за</string>
     <string name="cart_checkout_success">Заказ №%1$d оформлен</string>
     <string name="cart_checkout_success_no_number">Заказ оформлен</string>
     <string name="cart_orders">Мои заказы</string>
@@ -89,8 +90,8 @@
     <string name="orders_title">Мои заказы</string>
     <string name="orders_empty">Заказов пока нет</string>
     <string name="orders_number">Заказ №%1$d</string>
-    <string name="orders_item">%1$s × %2$d по %3$s апексов</string>
-    <string name="orders_total">Итого: %1$s апексов</string>
+    <string name="orders_item">%1$s × %2$d</string>
+    <string name="orders_total">Итого</string>
     <string name="order_status_pending">Ожидает оплаты</string>
     <string name="order_status_paid">Оплачен</string>
     <string name="order_status_processing">В обработке</string>

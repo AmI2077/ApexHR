@@ -38,14 +38,21 @@ class OrdersUiMapperTest {
                 createdAt = "25.10.2026 23:16",
                 statusRes = R.string.order_status_paid,
                 rawStatus = "Paid",
-                total = "1\u00A0050",
+                total = 1050,
                 items = listOf(
-                    OrderItemUiModel(title = "Тестовый товар", quantity = 1, price = "50"),
-                    OrderItemUiModel(title = "", quantity = 2, price = "500"),
+                    OrderItemUiModel(title = "Тестовый товар", quantity = 1, total = 50),
+                    OrderItemUiModel(title = "", quantity = 2, total = 1000),
                 ),
             ),
             paidOrder.toUiModel(moscow),
         )
+    }
+
+    @Test
+    fun `order line total is price times quantity`() {
+        val item = OrderItem(id = 3, productId = 3, name = "Кружка", quantity = 3, price = 1_250)
+
+        assertEquals(OrderItemUiModel(title = "Кружка", quantity = 3, total = 3_750), item.toUiModel())
     }
 
     @Test

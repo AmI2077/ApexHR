@@ -2,7 +2,6 @@ package com.example.apexhr.features.shop.ui.cart.models
 
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
-import com.example.apexhr.core.ui.model.formatAmount
 import com.example.apexhr.core.ui.model.takeIfHttpUrl
 import com.example.apexhr.features.shop.domain.CartActionError
 import com.example.apexhr.features.shop.domain.CartItem
@@ -22,10 +21,10 @@ fun CartSummary.toUiState(
 ): CartUiState =
     CartUiState(
         items = cart.items.map { it.toUiModel(isUpdating = it.id in updatingItemIds) },
-        total = formatAmount(cart.total),
-        balance = formatAmount(balance),
+        total = cart.total,
+        balance = balance,
         isBalanceEnough = isBalanceEnough,
-        missingAmount = formatAmount(missingAmount),
+        missingAmount = missingAmount,
         isCheckoutInProgress = isCheckoutInProgress,
     )
 
@@ -56,8 +55,8 @@ fun CartItem.toUiModel(isUpdating: Boolean = false): CartItemUiModel =
         id = id,
         title = name.orEmpty(),
         imageUrl = imageUrl.takeIfHttpUrl(),
-        unitPrice = formatAmount(unitPrice),
-        total = formatAmount(total),
+        unitPrice = unitPrice,
+        total = total,
         quantity = quantity,
         canDecrease = quantity > 1,
         isUpdating = isUpdating,

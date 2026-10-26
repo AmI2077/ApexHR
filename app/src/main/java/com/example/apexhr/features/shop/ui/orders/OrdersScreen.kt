@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadingState
@@ -158,22 +159,48 @@ private fun OrderCard(
             )
         }
         order.items.forEach { item ->
-            Text(
-                text = stringResource(
+            OrderAmountRow(
+                label = stringResource(
                     R.string.orders_item,
                     item.title.ifBlank { stringResource(R.string.shop_product_untitled) },
                     item.quantity,
-                    item.price,
                 ),
-                color = primaryTextColor,
-                fontSize = ApexDimens.text14.sp,
+                amount = item.total,
+                isTotal = false,
             )
         }
+        OrderAmountRow(
+            label = stringResource(R.string.orders_total),
+            amount = order.total,
+            isTotal = true,
+        )
+    }
+}
+
+/** Строка заказа: подпись слева, сумма в апексах справа. */
+@Composable
+private fun OrderAmountRow(
+    label: String,
+    amount: Long,
+    isTotal: Boolean,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         Text(
-            text = stringResource(R.string.orders_total, order.total),
+            text = label,
             color = primaryTextColor,
             fontSize = ApexDimens.text14.sp,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = if (isTotal) FontWeight.SemiBold else null,
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = ApexDimens.spacing8.dp),
+        )
+        ApexAmount(
+            amount = amount,
+            fontSize = ApexDimens.text14.sp,
+            fontWeight = if (isTotal) FontWeight.Bold else FontWeight.Medium,
         )
     }
 }

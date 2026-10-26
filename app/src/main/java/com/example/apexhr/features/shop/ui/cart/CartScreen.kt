@@ -63,9 +63,9 @@ fun CartScreenNotEnoughBalancePreview() {
                     items = CartUiState.Preview.items.mapIndexed { index, item ->
                         item.copy(isUpdating = index == 1)
                     },
-                    balance = "1\u00A0000",
+                    balance = 1_000,
                     isBalanceEnough = false,
-                    missingAmount = "3\u00A0480",
+                    missingAmount = 3_480,
                 ),
             ),
             callbacks = CartScreenCallbacks.Empty,
@@ -92,7 +92,7 @@ fun CartScreenEmptyPreview() {
     ApexHRTheme(dynamicColor = false, darkTheme = false) {
         CartScreen(
             screenState = CartScreenState.Content(
-                CartUiState.Preview.copy(items = emptyList(), total = "0"),
+                CartUiState.Preview.copy(items = emptyList(), total = 0),
             ),
             callbacks = CartScreenCallbacks.Empty,
         )

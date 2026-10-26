@@ -41,14 +41,14 @@ class CartUiMapperTest {
     )
 
     @Test
-    fun `cart item is mapped with formatted amounts`() {
+    fun `cart item keeps raw amounts for ApexAmount`() {
         assertEquals(
             CartItemUiModel(
                 id = 58,
                 title = "Худи",
                 imageUrl = "https://cdn.example.com/hoodie.png",
-                unitPrice = "1\u00A0990",
-                total = "3\u00A0980",
+                unitPrice = 1990,
+                total = 3980,
                 quantity = 2,
                 canDecrease = true,
                 isUpdating = false,
@@ -71,10 +71,10 @@ class CartUiMapperTest {
     fun `enough balance has no missing amount`() {
         val state = CartSummary(Cart(listOf(hoodie, sticker)), balance = 5000).toUiState()
 
-        assertEquals("4\u00A0030", state.total)
-        assertEquals("5\u00A0000", state.balance)
+        assertEquals(4030L, state.total)
+        assertEquals(5000L, state.balance)
         assertTrue(state.isBalanceEnough)
-        assertEquals("0", state.missingAmount)
+        assertEquals(0L, state.missingAmount)
     }
 
     @Test
@@ -82,7 +82,17 @@ class CartUiMapperTest {
         val state = CartSummary(Cart(listOf(sticker)), balance = 21).toUiState()
 
         assertFalse(state.isBalanceEnough)
-        assertEquals("29", state.missingAmount)
+        assertEquals(29L, state.missingAmount)
+    }
+
+    @Test
+    fun `missing amount of one apex is kept as number for plurals`() {
+        val state = CartSummary(Cart(listOf(sticker)), balance = 49).toUiState()
+
+        assertFalse(state.isBalanceEnough)
+        assertEquals(1L, state.missingAmount)
+        assertEquals(50L, state.total)
+        assertEquals(49L, state.balance)
     }
 
     @Test
