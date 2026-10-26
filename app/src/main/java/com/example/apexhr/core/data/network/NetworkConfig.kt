@@ -13,6 +13,12 @@ object NetworkConfig {
     const val BALANCE_TRANSACTIONS_URL = "$BASE_URL/api/balances/me/transactions"
     fun userAchievementsUrl(userId: String) = "$BASE_URL/api/achievements/users/$userId"
 
+    // Благодарности (текущий пользователь — тот же USER_PROFILE_URL, что у профиля)
+    const val USERS_URL = "$BASE_URL/api/users"
+    const val THANKS_URL = "$BASE_URL/api/thanks"
+    const val THANKS_FOR_ME_URL = "$THANKS_URL/for-me"
+    const val THANKS_FROM_ME_URL = "$THANKS_URL/from-me"
+
     // Каталог
     const val CATEGORIES_URL = "$BASE_URL/api/categories"
     const val PRODUCTS_URL = "$BASE_URL/api/products"
