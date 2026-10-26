@@ -4,6 +4,7 @@ import com.example.apexhr.R
 import com.example.apexhr.features.profile.domain.EarnedAchievement
 import com.example.apexhr.features.profile.domain.Profile
 import com.example.apexhr.features.profile.domain.UserProfile
+import com.example.apexhr.features.profile.ui.history.models.TransactionHistoryState
 import com.example.apexhr.features.profile.ui.models.ProfileAchievementUiModel
 import com.example.apexhr.features.profile.ui.models.ProfileTab
 import com.example.apexhr.features.profile.ui.models.ThankUiModel
@@ -90,6 +91,19 @@ class ProfileUiMapperTest {
 
         assertEquals(emptyList<ThankUiModel>(), state.received)
         assertEquals(emptyList<ThankUiModel>(), state.sent)
+    }
+
+    @Test
+    fun `tabs go in order thanks, achievements, operations`() {
+        assertEquals(
+            listOf(ProfileTab.Thanks, ProfileTab.Achievements, ProfileTab.Operations),
+            ProfileTab.entries.toList(),
+        )
+    }
+
+    @Test
+    fun `operations tab starts in loading state`() {
+        assertEquals(TransactionHistoryState.Loading, profile.toUiState(ProfileTab.Operations).operations)
     }
 
     @Test

@@ -9,7 +9,6 @@ import com.example.apexhr.features.auth.ui.LoginViewModel
 import com.example.apexhr.features.auth.ui.SessionViewModel
 import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.profile.ui.ProfileViewModel
-import com.example.apexhr.features.profile.ui.history.TransactionHistoryViewModel
 import com.example.apexhr.features.shop.ui.ShopViewModel
 import com.example.apexhr.features.shop.ui.cart.CartViewModel
 import com.example.apexhr.features.shop.ui.orders.OrdersViewModel
@@ -31,11 +30,7 @@ val vmModule = module {
     }
 
     viewModel {
-        ProfileViewModel(get(), get())
-    }
-
-    viewModel {
-        TransactionHistoryViewModel(get())
+        ProfileViewModel(get(), get(), get())
     }
 
     viewModel {

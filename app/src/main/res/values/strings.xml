@@ -108,6 +108,7 @@
     <string name="profile_current_balance">Текущий баланс</string>
     <string name="profile_tab_thanks">Благодарности</string>
     <string name="profile_tab_achievements">Достижения</string>
+    <string name="profile_tab_operations">Операции</string>
     <string name="profile_avatar">Аватар</string>
     <string name="profile_achievements_empty">Достижений пока нет</string>
     <string name="profile_transaction_untitled">Операция по балансу</string>
@@ -120,7 +121,6 @@
     <string name="profile_position_superadmin">Суперадминистратор</string>
     <string name="profile_position_unassigned">Не назначено</string>
     <string name="profile_department_unassigned">Без отдела</string>
-    <string name="profile_history_title">История операций</string>
     <string name="profile_history_filter_all">Все</string>
     <string name="profile_history_filter_activities">Активности</string>
     <string name="profile_history_filter_thanks">Благодарности</string>

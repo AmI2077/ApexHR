@@ -2,10 +2,16 @@ package com.example.apexhr.features.profile.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
 import com.example.apexhr.core.domain.map
 import com.example.apexhr.features.profile.domain.Profile
 import com.example.apexhr.features.profile.domain.ProfileRepository
+import com.example.apexhr.features.profile.domain.TransactionFilter
+import com.example.apexhr.features.profile.domain.TransactionHistoryRepository
+import com.example.apexhr.features.profile.ui.history.models.LoadedTransactions
+import com.example.apexhr.features.profile.ui.history.models.TransactionHistoryState
+import com.example.apexhr.features.profile.ui.history.models.toUiState
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
 import com.example.apexhr.features.profile.ui.models.ProfileScreenState
 import com.example.apexhr.features.profile.ui.models.ProfileTab
@@ -21,37 +27,57 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * Загружает профиль и историю благодарностей из API. После отправки
- * благодарности (экран остаётся в стеке под формой) данные тихо
- * перечитываются, и к возврату список отправленных уже обновлён.
+ * Профиль: шапка с балансом и вкладки «Благодарности», «Достижения», «Операции».
+ * Профиль и история благодарностей загружаются сразу; операции — постранично
+ * при первом открытии вкладки. После отправки благодарности (экран остаётся
+ * в стеке под формой) данные тихо перечитываются, и к возврату список
+ * отправленных, баланс и операции уже обновлены.
  * Выход из аккаунта обрабатывает навигация (onLogoutClick переопределяется
  * в AppNavigation), здесь его нет.
  */
 class ProfileViewModel(
     private val repository: ProfileRepository,
     private val thanksRepository: ThanksRepository,
+    private val historyRepository: TransactionHistoryRepository,
 ) : ViewModel(), ProfileScreenCallbacks {
 
     private val _state = MutableStateFlow<ProfileScreenState>(ProfileScreenState.Loading)
     val state: StateFlow<ProfileScreenState> = _state.asStateFlow()
 
     private var selectedTab = ProfileTab.Thanks
+    private var data: Pair<Profile, ThanksHistory>? = null
     private var loadJob: Job? = null
+
+    // Вкладка «Операции».
+    private var operations: TransactionHistoryState = TransactionHistoryState.Loading
+    private var operationsRequested = false
+    private var loaded = LoadedTransactions.Empty
+    private var filter = TransactionFilter.All
+    private var isLoadingMore = false
+    private var loadMoreError: DataError? = null
+    private var operationsJob: Job? = null
 
     init {
         load()
         viewModelScope.launch {
-            thanksRepository.thanksSent.collect { refresh() }
+            thanksRepository.thanksSent.collect {
+                refresh()
+                if (operationsRequested) loadOperations()
+            }
         }
     }
 
     private fun load() {
         loadJob?.cancel()
+        data = null
         _state.value = ProfileScreenState.Loading
         loadJob = viewModelScope.launch {
-            _state.value = when (val result = loadAll()) {
-                is DataResult.Success -> content(result.data)
-                is DataResult.Failure -> ProfileScreenState.Error(result.error)
+            when (val result = loadAll()) {
+                is DataResult.Success -> {
+                    data = result.data
+                    publish()
+                }
+                is DataResult.Failure -> _state.value = ProfileScreenState.Error(result.error)
             }
         }
     }
@@ -61,7 +87,10 @@ class ProfileViewModel(
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             val result = loadAll()
-            if (result is DataResult.Success) _state.value = content(result.data)
+            if (result is DataResult.Success) {
+                data = result.data
+                publish()
+            }
         }
     }
 
@@ -76,23 +105,84 @@ class ProfileViewModel(
         }
     }
 
-    private fun content(data: Pair<Profile, ThanksHistory>) =
-        ProfileScreenState.Content(data.first.toUiState(selectedTab, data.second))
+    /** Первая страница операций; фильтр сохраняется. */
+    private fun loadOperations() {
+        operationsRequested = true
+        operationsJob?.cancel()
+        loaded = LoadedTransactions.Empty
+        isLoadingMore = false
+        loadMoreError = null
+        operations = TransactionHistoryState.Loading
+        publish()
+        operationsJob = viewModelScope.launch {
+            when (val result = historyRepository.loadPage(skip = 0)) {
+                is DataResult.Success -> {
+                    loaded += result.data
+                    publishOperations()
+                }
+                is DataResult.Failure -> {
+                    operations = TransactionHistoryState.Error(result.error)
+                    publish()
+                }
+            }
+        }
+    }
 
     override fun onRetryClick() = load()
 
     override fun onTabClick(tab: ProfileTab) {
         selectedTab = tab
-        val current = _state.value
-        if (current is ProfileScreenState.Content) {
-            _state.value = current.copy(uiState = current.uiState.copy(selectedTab = tab))
+        if (tab == ProfileTab.Operations && !operationsRequested) {
+            loadOperations()
+        } else {
+            publish()
         }
     }
 
-    // История открывается навигацией (onHistoryClick переопределяется в AppNavigation).
-    override fun onHistoryClick() = Unit
+    override fun onOperationsRetryClick() = loadOperations()
+
+    override fun onOperationsLoadMoreClick() {
+        if (operations !is TransactionHistoryState.Content) return
+        if (isLoadingMore || !loaded.hasMore) return
+        isLoadingMore = true
+        loadMoreError = null
+        publishOperations()
+        operationsJob = viewModelScope.launch {
+            val result = historyRepository.loadPage(skip = loaded.nextSkip)
+            isLoadingMore = false
+            when (result) {
+                is DataResult.Success -> loaded += result.data
+                is DataResult.Failure -> loadMoreError = result.error
+            }
+            publishOperations()
+        }
+    }
+
+    override fun onOperationsFilterClick(filter: TransactionFilter) {
+        this.filter = filter
+        if (operations is TransactionHistoryState.Content) publishOperations()
+    }
 
     // Экранов назад и деталей достижений пока нет.
     override fun onBackClick() = Unit
     override fun onAchievementClick(achievementId: String) = Unit
+
+    private fun publishOperations() {
+        operations = TransactionHistoryState.Content(
+            loaded.toUiState(
+                filter = filter,
+                isLoadingMore = isLoadingMore,
+                loadMoreError = loadMoreError,
+            )
+        )
+        publish()
+    }
+
+    /** Показывает текущее состояние; пока профиль не загружен, экран остаётся в загрузке или ошибке. */
+    private fun publish() {
+        val (profile, thanks) = data ?: return
+        _state.value = ProfileScreenState.Content(
+            profile.toUiState(selectedTab, thanks).copy(operations = operations)
+        )
+    }
 }

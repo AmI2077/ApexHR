@@ -74,10 +74,6 @@ data class QuestDetailsRoute(val questId: Long) : NavKey
 @Serializable
 data class SurveyDetailsRoute(val surveyId: Long) : NavKey
 
-/** История операций по балансу: открывается из профиля. */
-@Serializable
-data object TransactionHistoryRoute : NavKey
-
 /** Отправка благодарности коллеге: открывается из профиля. */
 @Serializable
 data object ThanksRoute : NavKey

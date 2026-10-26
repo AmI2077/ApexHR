@@ -2,10 +2,12 @@ package com.example.apexhr.features.profile.ui.models
 
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.features.profile.ui.history.models.TransactionHistoryState
 
 enum class ProfileTab {
     Thanks,
     Achievements,
+    Operations,
 }
 
 data class ProfileUiState(
@@ -20,6 +22,8 @@ data class ProfileUiState(
     val sent: List<ThankUiModel>,
     val achievements: List<ProfileAchievementUiModel>,
     val avatarUrl: String? = null,
+    /** Вкладка «Операции»: загружается при первом открытии вкладки. */
+    val operations: TransactionHistoryState = TransactionHistoryState.Loading,
 ) {
     companion object {
         val Preview = ProfileUiState(

@@ -57,7 +57,6 @@ import com.example.apexhr.features.profile.ui.models.ThankUiModel
 @Composable
 fun ProfileHeader(
     onBackClick: () -> Unit,
-    onHistoryClick: () -> Unit,
     modifier: Modifier = Modifier,
     onLogoutClick: () -> Unit = {},
 ) {
@@ -79,21 +78,12 @@ fun ProfileHeader(
             fontSize = ApexDimens.text18.sp,
             fontWeight = FontWeight.Bold,
         )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onHistoryClick) {
-//                Icon(
-//                    imageVector = Icons.Filled.DateRange,
-//                    contentDescription = stringResource(R.string.history),
-//                    tint = primaryTextColor,
-//                )
-            }
-            IconButton(onClick = onLogoutClick) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.Logout,
-                    contentDescription = stringResource(R.string.logout),
-                    tint = primaryTextColor,
-                )
-            }
+        IconButton(onClick = onLogoutClick) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.Logout,
+                contentDescription = stringResource(R.string.logout),
+                tint = primaryTextColor,
+            )
         }
     }
 }
@@ -204,6 +194,7 @@ fun ProfileTabs(
 private fun ProfileTab.labelRes(): Int = when (this) {
     ProfileTab.Thanks -> R.string.profile_tab_thanks
     ProfileTab.Achievements -> R.string.profile_tab_achievements
+    ProfileTab.Operations -> R.string.profile_tab_operations
 }
 
 /** Заголовок блока «Полученные»/«Отправленные» на вкладке благодарностей. */

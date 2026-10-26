@@ -23,11 +23,16 @@ import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.features.profile.ui.composables.ProfileAchievementRow
 import com.example.apexhr.features.profile.ui.composables.ProfileBalanceBlock
 import com.example.apexhr.features.profile.ui.composables.ProfileHeader
+import com.example.apexhr.features.profile.ui.composables.ProfileOperationRow
+import com.example.apexhr.features.profile.ui.composables.ProfileOperationsFilters
+import com.example.apexhr.features.profile.ui.composables.ProfileOperationsLoadMore
 import com.example.apexhr.features.profile.ui.composables.ProfileSendThanksButton
 import com.example.apexhr.features.profile.ui.composables.ProfileTabs
 import com.example.apexhr.features.profile.ui.composables.ProfileUserInfo
 import com.example.apexhr.features.profile.ui.composables.ProfileSectionTitle
 import com.example.apexhr.features.profile.ui.composables.ProfileThankRow
+import com.example.apexhr.features.profile.ui.history.models.TransactionHistoryState
+import com.example.apexhr.features.profile.ui.history.models.TransactionHistoryUiState
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
 import com.example.apexhr.features.profile.ui.models.ProfileScreenState
 import com.example.apexhr.features.profile.ui.models.ProfileTab
@@ -42,6 +47,20 @@ fun ProfileScreenPreview() {
     ApexHRTheme(dynamicColor = false, darkTheme = false) {
         ProfileScreen(
             uiState = ProfileUiState.Preview,
+            callbacks = ProfileScreenCallbacks.Empty,
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360)
+@Composable
+fun ProfileScreenOperationsPreview() {
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        ProfileScreen(
+            uiState = ProfileUiState.Preview.copy(
+                selectedTab = ProfileTab.Operations,
+                operations = TransactionHistoryState.Content(TransactionHistoryUiState.Preview),
+            ),
             callbacks = ProfileScreenCallbacks.Empty,
         )
     }
@@ -152,7 +171,7 @@ fun ProfileScreenContent(
                 thanks = uiState.sent,
                 received = false,
             )
-        } else {
+        } else if (uiState.selectedTab == ProfileTab.Achievements) {
             if (uiState.achievements.isEmpty()) {
                 item {
                     EmptyState(text = stringResource(R.string.profile_achievements_empty))
@@ -162,6 +181,49 @@ fun ProfileScreenContent(
                 ProfileAchievementRow(
                     achievement = achievement,
                     onClick = { callbacks.onAchievementClick(achievement.id) },
+                )
+            }
+        } else {
+            operationsTab(state = uiState.operations, callbacks = callbacks)
+        }
+    }
+}
+
+/** Вкладка «Операции»: фильтры, операции со знаком и «Показать ещё». */
+private fun LazyListScope.operationsTab(
+    state: TransactionHistoryState,
+    callbacks: ProfileScreenCallbacks,
+) {
+    when (state) {
+        TransactionHistoryState.Loading -> item(key = "operations_loading") { LoadingState() }
+
+        is TransactionHistoryState.Error -> item(key = "operations_error") {
+            ErrorState(
+                error = state.error,
+                onRetry = callbacks::onOperationsRetryClick,
+            )
+        }
+
+        is TransactionHistoryState.Content -> {
+            val uiState = state.uiState
+            item(key = "operations_filters") {
+                ProfileOperationsFilters(
+                    selected = uiState.selectedFilter,
+                    onFilterClick = callbacks::onOperationsFilterClick,
+                )
+            }
+            if (uiState.transactions.isEmpty()) {
+                item(key = "operations_empty") {
+                    EmptyState(text = stringResource(uiState.emptyTextRes))
+                }
+            }
+            items(uiState.transactions, key = { "operation_${it.id}" }) { transaction ->
+                ProfileOperationRow(transaction = transaction)
+            }
+            item(key = "operations_load_more") {
+                ProfileOperationsLoadMore(
+                    state = uiState.loadMore,
+                    onLoadMoreClick = callbacks::onOperationsLoadMoreClick,
                 )
             }
         }
@@ -209,7 +271,6 @@ private fun ProfileScreenFrame(
         item {
             ProfileHeader(
                 onBackClick = callbacks::onBackClick,
-                onHistoryClick = callbacks::onHistoryClick,
                 onLogoutClick = callbacks::onLogoutClick,
             )
         }

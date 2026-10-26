@@ -65,8 +65,9 @@ sealed interface LoadMoreState {
     data class Error(val error: DataError) : LoadMoreState
 }
 
-sealed interface TransactionHistoryScreenState {
-    data object Loading : TransactionHistoryScreenState
-    data class Error(val error: DataError) : TransactionHistoryScreenState
-    data class Content(val uiState: TransactionHistoryUiState) : TransactionHistoryScreenState
+/** Состояние вкладки «Операции» с учётом загрузки первой страницы. */
+sealed interface TransactionHistoryState {
+    data object Loading : TransactionHistoryState
+    data class Error(val error: DataError) : TransactionHistoryState
+    data class Content(val uiState: TransactionHistoryUiState) : TransactionHistoryState
 }
