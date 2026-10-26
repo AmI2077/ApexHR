@@ -45,7 +45,8 @@ fun LoadingScreen(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
-        ApexLogo()
+        // Как на экране входа: логотип по центру, текст и прогресс — на всю ширину.
+        ApexLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
 
         Spacer(Modifier.height(28.dp))
 

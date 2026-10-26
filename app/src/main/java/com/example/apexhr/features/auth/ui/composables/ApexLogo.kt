@@ -1,11 +1,12 @@
 package com.example.apexhr.features.auth.ui.composables
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -14,13 +15,14 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
+import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
 
 /**
- * Логотип «Апекс»: фирменная «А» из app_logo (с градиентом, поэтому Image,
- * а не Icon с tint) и надпись «ПЕКС», выровненная по нижнему краю буквы.
+ * Логотип «Апекс» экранов авторизации (вход и пробуждение сервера):
+ * значок app_logo фирменного синего цвета и надпись «Апекс» по нижнему краю значка.
+ * Для чтения с экрана весь логотип озвучивается одним словом «Апекс».
  */
 @Composable
 fun ApexLogo(
@@ -29,22 +31,20 @@ fun ApexLogo(
     val description = stringResource(R.string.auth_brand)
 
     Row(
-        modifier = modifier.clearAndSetSemantics { contentDescription = description },
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
+        modifier = modifier.clearAndSetSemantics { contentDescription = description }
     ) {
-        Image(
-            modifier = Modifier
-                .height(52.dp)
-                .alignBy { it.measuredHeight },
+        Icon(
+            modifier = Modifier.size(48.dp),
+            tint = primaryBlueColor,
             painter = painterResource(R.drawable.app_logo),
             contentDescription = null,
         )
         Text(
-            modifier = Modifier.alignByBaseline(),
-            text = stringResource(R.string.auth_brand_wordmark),
+            modifier = Modifier.align(Alignment.Bottom),
+            text = description,
+            style = MaterialTheme.typography.headlineMedium,
             color = primaryTextColor,
-            fontSize = 38.sp,
-            fontWeight = FontWeight.ExtraBold,
+            fontWeight = FontWeight.Bold
         )
     }
 }

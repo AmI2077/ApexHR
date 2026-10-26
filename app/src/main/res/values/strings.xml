@@ -265,7 +265,6 @@
     <string name="auth_login_button">Войти</string>
     <string name="auth_retry">Повторить</string>
     <string name="auth_loading">Проверяем вход…</string>
-    <string name="auth_brand_wordmark">ПЕКС</string>
     <string name="auth_server_waking_up">Подключаемся к базе Апекс. Если сервер спал, первый ответ занимает около минуты.</string>
 
     <!-- Авторизация: ошибки -->
