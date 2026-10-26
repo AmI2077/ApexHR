@@ -38,7 +38,6 @@ import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.core.ui.theme.transparent
-import com.example.apexhr.features.activities.ui.models.ActivityCategoryUiModel
 import com.example.apexhr.features.activities.ui.models.ActivitySubtitle
 import com.example.apexhr.features.activities.ui.models.ActivityUiModel
 
@@ -96,30 +95,6 @@ fun ActivitiesSearchField(
             unfocusedTextColor = primaryTextColor,
         ),
     )
-}
-
-@Composable
-fun ActivityCategoryTabs(
-    categories: List<ActivityCategoryUiModel>,
-    selectedCategoryId: String,
-    onCategoryClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing24.dp),
-    ) {
-        categories.forEach { category ->
-            val selected = category.id == selectedCategoryId
-            Text(
-                text = stringResource(category.titleRes),
-                color = if (selected) primaryBlueColor else secondaryTextColor,
-                fontSize = ApexDimens.text14.sp,
-                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-                modifier = Modifier.clickable { onCategoryClick(category.id) },
-            )
-        }
-    }
 }
 
 @Composable

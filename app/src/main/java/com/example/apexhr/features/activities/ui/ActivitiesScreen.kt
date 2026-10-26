@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadingState
@@ -23,7 +24,6 @@ import com.example.apexhr.features.activities.ui.composables.ActivitiesHeader
 import com.example.apexhr.features.activities.ui.composables.ActivitiesPopularTitle
 import com.example.apexhr.features.activities.ui.composables.ActivitiesSearchField
 import com.example.apexhr.features.activities.ui.composables.ActivityCard
-import com.example.apexhr.features.activities.ui.composables.ActivityCategoryTabs
 import com.example.apexhr.features.activities.ui.models.ActivitiesContentState
 import com.example.apexhr.features.activities.ui.models.ActivitiesScreenCallbacks
 import com.example.apexhr.features.activities.ui.models.ActivitiesUiState
@@ -109,10 +109,11 @@ fun ActivitiesScreenContent(
             )
         }
         item {
-            ActivityCategoryTabs(
-                categories = uiState.categories,
-                selectedCategoryId = uiState.selectedCategoryId,
-                onCategoryClick = callbacks::onCategoryClick,
+            val categories = uiState.categories
+            ApexPillTabs(
+                labels = categories.map { stringResource(it.titleRes) },
+                selectedIndex = categories.indexOfFirst { it.id == uiState.selectedCategoryId },
+                onSelect = { index -> categories.getOrNull(index)?.let { callbacks.onCategoryClick(it.id) } },
             )
         }
         when (val content = uiState.content) {
