@@ -127,12 +127,38 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `login keeps mustChangePassword flag in session`() = runBlocking {
+    fun `login with temporary password requires password change`() = runBlocking {
         client.loginResponse = LoginResponseDto(accessToken = "access", mustChangePassword = true)
 
-        repository.login("user@example.com", "temporary")
+        val result = repository.login("user@example.com", "temporary")
 
+        assertEquals(LoginResult.PasswordChangeRequired, result)
         assertEquals(true, storage.tokens?.mustChangePassword)
+    }
+
+    @Test
+    fun `saved flag requires password change after restart`() = runBlocking {
+        storage.tokens = AuthTokens("access", null, now + 3_600_000L, mustChangePassword = true)
+
+        assertEquals(SessionStatus.PasswordChangeRequired, repository.checkSession())
+        assertEquals(1, client.meCalls)
+    }
+
+    @Test
+    fun `expired session with flag is still expired`() = runBlocking {
+        storage.tokens = AuthTokens("access", null, now - 1L, mustChangePassword = true)
+
+        assertEquals(SessionStatus.Expired, repository.checkSession())
+        assertNull(storage.tokens)
+    }
+
+    @Test
+    fun `session is active after password change`() = runBlocking {
+        storage.tokens = AuthTokens("access", null, now + 3_600_000L, mustChangePassword = true)
+
+        repository.changePassword("new-secret")
+
+        assertEquals(SessionStatus.Active, repository.checkSession())
     }
 
     @Test

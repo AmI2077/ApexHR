@@ -25,12 +25,15 @@ class AuthRepositoryImpl(
                 )
             )
 
-            tokenStorage.saveTokens(
-                response.toAuthTokens(nowMillis = clock())
-            )
+            val tokens = response.toAuthTokens(nowMillis = clock())
+            tokenStorage.saveTokens(tokens)
             networkAuthClient.clearCachedTokens()
 
-            LoginResult.Success
+            if (tokens.mustChangePassword) {
+                LoginResult.PasswordChangeRequired
+            } else {
+                LoginResult.Success
+            }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -76,7 +79,13 @@ class AuthRepositoryImpl(
             }
 
             networkAuthClient.getCurrentUser()
-            SessionStatus.Active
+
+            // Флаг приходит только в ответе входа, поэтому берём сохранённый.
+            if (tokens.mustChangePassword) {
+                SessionStatus.PasswordChangeRequired
+            } else {
+                SessionStatus.Active
+            }
         } catch (e: CancellationException) {
             throw e
         } catch (e: ApiStatusException) {

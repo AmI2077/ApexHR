@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 
 /**
  * Отвечает за состояние сессии всего приложения: проверка при старте,
- * переход после входа, выход и реакция на 401 от сервера.
+ * переход после входа, обязательная смена пароля, выход и реакция на 401
+ * от сервера.
  */
 class SessionViewModel(
     private val authRepository: AuthRepository,
@@ -30,7 +31,11 @@ class SessionViewModel(
         viewModelScope.launch {
             sessionEventBus.sessionExpired.collect {
                 val current = _authState.value
-                if (current is AuthState.Authorized || current is AuthState.Checking) {
+                if (
+                    current is AuthState.Authorized ||
+                    current is AuthState.Checking ||
+                    current is AuthState.PasswordChangeRequired
+                ) {
                     checkJob?.cancel()
                     _authState.value = AuthState.Unauthorized(isSessionExpired = true)
                 }
@@ -47,6 +52,7 @@ class SessionViewModel(
 
             _authState.value = when (val status = authRepository.checkSession()) {
                 SessionStatus.Active -> AuthState.Authorized
+                SessionStatus.PasswordChangeRequired -> AuthState.PasswordChangeRequired
                 SessionStatus.NotAuthorized -> AuthState.Unauthorized()
                 SessionStatus.Expired -> AuthState.Unauthorized(isSessionExpired = true)
                 is SessionStatus.CheckFailed -> AuthState.Error(status.error)
@@ -55,6 +61,17 @@ class SessionViewModel(
     }
 
     fun onLoginSuccess() {
+        checkJob?.cancel()
+        _authState.value = AuthState.Authorized
+    }
+
+    fun onPasswordChangeRequired() {
+        checkJob?.cancel()
+        _authState.value = AuthState.PasswordChangeRequired
+    }
+
+    /** Пароль сменён: токен прежний, пускаем в приложение без перелогина. */
+    fun onPasswordChanged() {
         checkJob?.cancel()
         _authState.value = AuthState.Authorized
     }

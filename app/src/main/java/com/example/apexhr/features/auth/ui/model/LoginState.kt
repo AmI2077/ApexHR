@@ -16,4 +16,5 @@ data class LoginUiState(
 
 sealed interface LoginUiActions {
     data object Success: LoginUiActions
+    data object PasswordChangeRequired: LoginUiActions
 }

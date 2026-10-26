@@ -261,6 +261,17 @@
     <string name="auth_error_password_empty">Введите пароль</string>
     <string name="auth_session_expired">Сессия истекла, войдите снова</string>
     <string name="auth_error_unknown">Что-то пошло не так. Попробуйте ещё раз</string>
+    <string name="change_password_title">Смените пароль</string>
+    <string name="change_password_subtitle">Это первый вход. Придумайте свой пароль</string>
+    <string name="change_password_new_label">Новый пароль</string>
+    <string name="change_password_confirm_label">Повторите пароль</string>
+    <string name="change_password_save">Сохранить</string>
+    <string name="change_password_logout">Выйти</string>
+    <string name="change_password_error_new_empty">Введите новый пароль</string>
+    <string name="change_password_error_too_short">Пароль короче %1$d символов</string>
+    <string name="change_password_error_confirm_empty">Повторите новый пароль</string>
+    <string name="change_password_error_mismatch">Пароли не совпадают</string>
+    <string name="change_password_error_rejected">Сервер не принял новый пароль</string>
 
     <!-- Загрузка данных -->
     <string name="retry">Повторить</string>

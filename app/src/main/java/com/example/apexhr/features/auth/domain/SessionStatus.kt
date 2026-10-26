@@ -4,6 +4,9 @@ sealed interface SessionStatus {
     /** Токен есть и сервер его принимает. */
     data object Active : SessionStatus
 
+    /** Токен действителен, но временный пароль ещё не сменён. */
+    data object PasswordChangeRequired : SessionStatus
+
     /** Токена нет (или его не удалось расшифровать). */
     data object NotAuthorized : SessionStatus
 

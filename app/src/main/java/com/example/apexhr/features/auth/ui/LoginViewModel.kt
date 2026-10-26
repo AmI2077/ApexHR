@@ -91,6 +91,11 @@ class LoginViewModel(
                     _actions.send(LoginUiActions.Success)
                 }
 
+                LoginResult.PasswordChangeRequired -> {
+                    _uiState.value = LoginUiState()
+                    _actions.send(LoginUiActions.PasswordChangeRequired)
+                }
+
                 is LoginResult.Failure -> {
                     _uiState.update {
                         it.copy(
