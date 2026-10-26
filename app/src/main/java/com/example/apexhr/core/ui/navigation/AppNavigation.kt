@@ -26,6 +26,7 @@ import com.example.apexhr.features.activities.ui.survey.SurveyDetailsViewModel
 import com.example.apexhr.features.activities.ui.survey.models.SurveyDetailsScreenCallbacks
 import com.example.apexhr.features.home.ui.HomeScreen
 import com.example.apexhr.features.home.ui.HomeViewModel
+import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
 import com.example.apexhr.features.profile.ui.ProfileScreen
 import com.example.apexhr.features.profile.ui.ProfileViewModel
 import com.example.apexhr.features.profile.ui.history.TransactionHistoryScreen
@@ -73,9 +74,17 @@ fun AppNavigation(
             entry<TopLevelRoute.Home> {
                 val viewModel: HomeViewModel = koinViewModel()
                 val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val homeCallbacks = remember(viewModel, navigator) {
+                    object : HomeScreenCallbacks by viewModel {
+                        // «Активные вызовы» на Главной — это квесты, открываем их экран из Активностей.
+                        override fun onChallengeClick(challengeId: String) {
+                            challengeId.toLongOrNull()?.let { navigator.navigate(QuestDetailsRoute(it)) }
+                        }
+                    }
+                }
                 HomeScreen(
                     screenState = screenState,
-                    callbacks = viewModel,
+                    callbacks = homeCallbacks,
                 )
             }
             entry<TopLevelRoute.Profile> {

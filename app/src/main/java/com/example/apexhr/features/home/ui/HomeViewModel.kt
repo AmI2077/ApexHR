@@ -39,7 +39,8 @@ class HomeViewModel(
 
     override fun onRetryClick() = load()
 
-    // Экранов баланса, квеста, пользователя и достижения пока нет.
+    // Экранов баланса, пользователя и достижения пока нет. Экран квеста открывает
+    // AppNavigation (onChallengeClick там переопределён).
     override fun onPointsClick() = Unit
     override fun onChallengeClick(challengeId: String) = Unit
     override fun onLeaderboardEntryClick(entryId: String) = Unit
