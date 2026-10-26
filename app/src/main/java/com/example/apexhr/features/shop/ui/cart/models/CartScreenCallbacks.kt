@@ -9,6 +9,9 @@ interface CartScreenCallbacks {
     fun onCheckoutClick()
     fun onOrdersClick()
 
+    /** «В каталог» в пустой корзине. */
+    fun onCatalogClick()
+
     companion object {
         val Empty = object : CartScreenCallbacks {
             override fun onBackClick() = Unit
@@ -18,6 +21,7 @@ interface CartScreenCallbacks {
             override fun onRemoveClick(itemId: Long) = Unit
             override fun onCheckoutClick() = Unit
             override fun onOrdersClick() = Unit
+            override fun onCatalogClick() = Unit
         }
     }
 }

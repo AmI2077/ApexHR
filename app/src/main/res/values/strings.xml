@@ -71,7 +71,8 @@
     <string name="cart_error_server_message">Сервер отклонил запрос: %1$s</string>
     <string name="cart_error_action">Не удалось выполнить действие. Попробуйте ещё раз</string>
 
-    <string name="cart_empty">В корзине пока ничего нет. Выберите награду в каталоге</string>
+    <string name="cart_empty">Пока пусто. Награды ждут в каталоге.</string>
+    <string name="cart_go_to_catalog">В каталог</string>
     <string name="cart_amount">%1$s апексов</string>
     <string name="cart_item_unit_price">%1$s апексов за шт.</string>
     <string name="cart_increase">Добавить ещё одну</string>

@@ -73,9 +73,10 @@ class CartViewModel(
         )
     }
 
-    // Переходы «Назад» и «Мои заказы» задаёт навигация.
+    // Переходы «Назад», «Мои заказы» и «В каталог» задаёт навигация.
     override fun onBackClick() = Unit
     override fun onOrdersClick() = Unit
+    override fun onCatalogClick() = Unit
 
     override fun onRetryClick() = load()
 

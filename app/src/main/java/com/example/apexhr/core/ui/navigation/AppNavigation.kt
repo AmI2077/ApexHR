@@ -202,6 +202,8 @@ fun AppNavigation(
                     object : CartScreenCallbacks by viewModel {
                         override fun onBackClick() = navigator.goBack()
                         override fun onOrdersClick() = navigator.navigate(OrdersRoute)
+                        // Корзина открывается из каталога, поэтому «В каталог» — шаг назад.
+                        override fun onCatalogClick() = navigator.goBack()
                     }
                 }
                 CartScreen(

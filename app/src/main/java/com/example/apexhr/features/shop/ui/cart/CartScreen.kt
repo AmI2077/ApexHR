@@ -22,13 +22,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
-import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadingState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.features.shop.ui.cart.composables.CartCheckoutButton
+import com.example.apexhr.features.shop.ui.cart.composables.CartEmptyCard
 import com.example.apexhr.features.shop.ui.cart.composables.CartItemCard
 import com.example.apexhr.features.shop.ui.cart.composables.CartSummaryCard
 import com.example.apexhr.features.shop.ui.cart.composables.ShopSubscreenHeader
@@ -166,7 +166,10 @@ fun CartScreen(
                 )
 
                 is CartScreenState.Content -> if (screenState.uiState.items.isEmpty()) {
-                    EmptyState(text = stringResource(R.string.cart_empty))
+                    CartEmptyCard(
+                        onCatalogClick = callbacks::onCatalogClick,
+                        modifier = Modifier.padding(horizontal = ApexDimens.spacing20.dp),
+                    )
                 } else {
                     CartContent(
                         uiState = screenState.uiState,

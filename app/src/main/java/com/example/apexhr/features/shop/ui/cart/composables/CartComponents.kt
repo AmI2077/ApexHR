@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -186,6 +187,45 @@ fun CartItemCard(
                     )
                 }
             }
+        }
+    }
+}
+
+/** Пустая корзина: светлая карточка с подсказкой и кнопкой «В каталог». */
+@Composable
+fun CartEmptyCard(
+    onCatalogClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(ApexDimens.radius20.dp))
+            .background(secondaryBlueColor.copy(alpha = 0.28f))
+            .padding(ApexDimens.spacing20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing16.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.cart_empty),
+            color = primaryTextColor,
+            fontSize = ApexDimens.text16.sp,
+            fontWeight = FontWeight.Medium,
+            textAlign = TextAlign.Center,
+        )
+        Button(
+            onClick = onCatalogClick,
+            shape = RoundedCornerShape(ApexDimens.radius16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = primaryBlueColor,
+                contentColor = backgroundColor,
+            ),
+        ) {
+            Text(
+                text = stringResource(R.string.cart_go_to_catalog),
+                fontSize = ApexDimens.text14.sp,
+                fontWeight = FontWeight.SemiBold,
+            )
         }
     }
 }
