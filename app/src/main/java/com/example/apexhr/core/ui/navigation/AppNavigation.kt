@@ -41,6 +41,9 @@ import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import com.example.apexhr.features.shop.ui.orders.OrdersScreen
 import com.example.apexhr.features.shop.ui.orders.OrdersViewModel
 import com.example.apexhr.features.shop.ui.orders.models.OrdersScreenCallbacks
+import com.example.apexhr.features.thanks.ui.ThanksScreen
+import com.example.apexhr.features.thanks.ui.ThanksViewModel
+import com.example.apexhr.features.thanks.ui.models.ThanksScreenCallbacks
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -82,6 +85,7 @@ fun AppNavigation(
                     object : ProfileScreenCallbacks by viewModel {
                         override fun onLogoutClick() = onLogout()
                         override fun onHistoryClick() = navigator.navigate(TransactionHistoryRoute)
+                        override fun onSendThanksClick() = navigator.navigate(ThanksRoute)
                     }
                 }
                 ProfileScreen(
@@ -100,6 +104,19 @@ fun AppNavigation(
                 TransactionHistoryScreen(
                     screenState = screenState,
                     callbacks = historyCallbacks,
+                )
+            }
+            entry<ThanksRoute> {
+                val viewModel: ThanksViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val thanksCallbacks = remember(viewModel, navigator) {
+                    object : ThanksScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                ThanksScreen(
+                    screenState = screenState,
+                    callbacks = thanksCallbacks,
                 )
             }
             entry<TopLevelRoute.Activities> {

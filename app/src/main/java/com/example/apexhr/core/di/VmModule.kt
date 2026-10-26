@@ -12,6 +12,7 @@ import com.example.apexhr.features.profile.ui.history.TransactionHistoryViewMode
 import com.example.apexhr.features.shop.ui.ShopViewModel
 import com.example.apexhr.features.shop.ui.cart.CartViewModel
 import com.example.apexhr.features.shop.ui.orders.OrdersViewModel
+import com.example.apexhr.features.thanks.ui.ThanksViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -30,6 +31,10 @@ val vmModule = module {
 
     viewModel {
         TransactionHistoryViewModel(get())
+    }
+
+    viewModel {
+        ThanksViewModel(get())
     }
 
     viewModel {

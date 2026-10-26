@@ -22,6 +22,7 @@ import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.features.profile.ui.composables.ProfileAchievementRow
 import com.example.apexhr.features.profile.ui.composables.ProfileBalanceBlock
 import com.example.apexhr.features.profile.ui.composables.ProfileHeader
+import com.example.apexhr.features.profile.ui.composables.ProfileSendThanksButton
 import com.example.apexhr.features.profile.ui.composables.ProfileTabs
 import com.example.apexhr.features.profile.ui.composables.ProfileUserInfo
 import com.example.apexhr.features.profile.ui.composables.TransactionRow
@@ -133,6 +134,9 @@ fun ProfileScreenContent(
             )
         }
         if (uiState.selectedTab == ProfileTab.Thanks) {
+            item {
+                ProfileSendThanksButton(onClick = callbacks::onSendThanksClick)
+            }
             if (uiState.transactions.isEmpty()) {
                 item {
                     EmptyState(text = stringResource(R.string.profile_transactions_empty))

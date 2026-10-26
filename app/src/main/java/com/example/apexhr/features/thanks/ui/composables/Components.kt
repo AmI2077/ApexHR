@@ -2,6 +2,7 @@ package com.example.apexhr.features.thanks.ui.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -30,12 +33,15 @@ import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
+import com.example.apexhr.core.ui.theme.negativeRedColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.core.ui.theme.transparent
 import com.example.apexhr.features.thanks.ui.models.ColleagueUiModel
+import com.example.apexhr.features.thanks.ui.models.ThankUiModel
+import com.example.apexhr.features.thanks.ui.models.ThanksNotice
 
 @Composable
 fun ThanksHeader(
@@ -134,7 +140,7 @@ fun ColleagueRow(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = colleague.name,
+                text = colleague.name ?: stringResource(R.string.thanks_unknown_colleague),
                 color = primaryTextColor,
                 fontSize = ApexDimens.text16.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -253,4 +259,125 @@ fun ThanksSectionLabel(
         fontWeight = FontWeight.Bold,
         modifier = modifier,
     )
+}
+
+@Composable
+fun ThanksAmountSelector(
+    options: List<Long>,
+    selected: Long,
+    onAmountClick: (Long) -> Unit,
+    enabled: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Text(
+            text = stringResource(R.string.thanks_amount_label),
+            color = secondaryTextColor,
+            fontSize = ApexDimens.text13.sp,
+        )
+        Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing8.dp)) {
+            options.forEach { amount ->
+                FilterChip(
+                    selected = amount == selected,
+                    onClick = { onAmountClick(amount) },
+                    enabled = enabled,
+                    label = {
+                        Text(
+                            text = stringResource(R.string.thanks_amount_option, amount),
+                            fontSize = ApexDimens.text14.sp,
+                        )
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = primaryBlueColor,
+                        selectedLabelColor = backgroundColor,
+                        labelColor = primaryTextColor,
+                    ),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ThanksMessageCounter(
+    length: Int,
+    maxLength: Int,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = stringResource(R.string.thanks_message_counter, length, maxLength),
+        color = secondaryTextColor,
+        fontSize = ApexDimens.text12.sp,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun ThanksNoticeText(
+    notice: ThanksNotice,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = stringResource(notice.textRes, *notice.args.toTypedArray()),
+        color = if (notice.isError) negativeRedColor else primaryBlueColor,
+        fontSize = ApexDimens.text14.sp,
+        modifier = modifier.fillMaxWidth(),
+    )
+}
+
+@Composable
+fun ThankRow(
+    thank: ThankUiModel,
+    received: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(ApexDimens.radius16.dp))
+            .background(secondaryBlueColor.copy(alpha = 0.28f))
+            .padding(
+                horizontal = ApexDimens.spacing16.dp,
+                vertical = ApexDimens.spacing12.dp,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = thank.name ?: stringResource(R.string.thanks_unknown_colleague),
+                color = primaryTextColor,
+                fontSize = ApexDimens.text14.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            thank.message?.let { message ->
+                Spacer(modifier = Modifier.height(ApexDimens.spacing2.dp))
+                Text(
+                    text = message,
+                    color = primaryTextColor,
+                    fontSize = ApexDimens.text13.sp,
+                )
+            }
+            thank.date?.let { date ->
+                Spacer(modifier = Modifier.height(ApexDimens.spacing2.dp))
+                Text(
+                    text = date,
+                    color = secondaryTextColor,
+                    fontSize = ApexDimens.text12.sp,
+                )
+            }
+        }
+        Spacer(modifier = Modifier.width(ApexDimens.spacing8.dp))
+        Text(
+            text = stringResource(
+                if (received) R.string.thanks_amount_received else R.string.thanks_amount_sent,
+                thank.amount,
+            ),
+            color = if (received) primaryBlueColor else secondaryTextColor,
+            fontSize = ApexDimens.text14.sp,
+            fontWeight = FontWeight.Bold,
+        )
+    }
 }

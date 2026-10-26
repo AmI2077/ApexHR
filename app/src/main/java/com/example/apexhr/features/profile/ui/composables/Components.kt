@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -281,6 +282,27 @@ fun ProfileAchievementRow(
             text = achievement.title.ifBlank { stringResource(R.string.profile_achievement_untitled) },
             color = primaryTextColor,
             fontSize = ApexDimens.text14.sp,
+        )
+    }
+}
+
+/** Переход к отправке благодарности коллеге. */
+@Composable
+fun ProfileSendThanksButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(ApexDimens.buttonHeight.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.profile_send_thanks),
+            color = primaryBlueColor,
+            fontSize = ApexDimens.text14.sp,
+            fontWeight = FontWeight.Medium,
         )
     }
 }

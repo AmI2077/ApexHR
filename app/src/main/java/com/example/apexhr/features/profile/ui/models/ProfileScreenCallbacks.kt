@@ -10,6 +10,9 @@ interface ProfileScreenCallbacks {
     /** Выход из аккаунта. По умолчанию ничего не делает. */
     fun onLogoutClick() = Unit
 
+    /** Переход к отправке благодарности. По умолчанию ничего не делает. */
+    fun onSendThanksClick() = Unit
+
     /** Повторная загрузка после ошибки. По умолчанию ничего не делает. */
     fun onRetryClick() = Unit
 

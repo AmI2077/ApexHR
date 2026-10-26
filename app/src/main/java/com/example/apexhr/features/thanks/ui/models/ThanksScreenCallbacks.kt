@@ -5,8 +5,10 @@ interface ThanksScreenCallbacks {
     fun onSearchQueryChange(query: String)
     fun onColleagueClick(colleagueId: String)
     fun onQuickThanksClick(colleagueId: String)
+    fun onAmountClick(amount: Long)
     fun onMessageChange(message: String)
     fun onSendClick()
+    fun onRetryClick()
 
     companion object {
         val Empty = object : ThanksScreenCallbacks {
@@ -14,8 +16,10 @@ interface ThanksScreenCallbacks {
             override fun onSearchQueryChange(query: String) = Unit
             override fun onColleagueClick(colleagueId: String) = Unit
             override fun onQuickThanksClick(colleagueId: String) = Unit
+            override fun onAmountClick(amount: Long) = Unit
             override fun onMessageChange(message: String) = Unit
             override fun onSendClick() = Unit
+            override fun onRetryClick() = Unit
         }
     }
 }

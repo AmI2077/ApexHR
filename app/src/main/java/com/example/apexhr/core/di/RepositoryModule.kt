@@ -14,6 +14,8 @@ import com.example.apexhr.features.shop.data.CartRepositoryImpl
 import com.example.apexhr.features.shop.data.ShopRepositoryImpl
 import com.example.apexhr.features.shop.domain.CartRepository
 import com.example.apexhr.features.shop.domain.ShopRepository
+import com.example.apexhr.features.thanks.data.ThanksRepositoryImpl
+import com.example.apexhr.features.thanks.domain.ThanksRepository
 import org.koin.dsl.module
 
 val repoModule = module {
@@ -24,4 +26,5 @@ val repoModule = module {
     single<CartRepository> { CartRepositoryImpl(get(), get()) }
     single<HomeRepository> { HomeRepositoryImpl(get(), get()) }
     single<ActivitiesRepository> { ActivitiesRepositoryImpl(get()) }
+    single<ThanksRepository> { ThanksRepositoryImpl(get()) }
 }

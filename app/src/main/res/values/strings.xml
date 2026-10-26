@@ -118,6 +118,7 @@
     <string name="profile_history_filter_empty">Операций с таким фильтром нет</string>
     <string name="profile_history_filter_empty_loaded">Среди загруженных операций таких нет</string>
     <string name="profile_history_load_more">Показать ещё</string>
+    <string name="profile_send_thanks">Поблагодарить коллегу</string>
 
     <string name="activities_title">Активности</string>
     <string name="activities_search_placeholder">Поиск по активностям…</string>
@@ -216,6 +217,24 @@
     <string name="thanks_message_label">Сообщение (необязательно)</string>
     <string name="thanks_message_placeholder">Напишите несколько слов благодарности…</string>
     <string name="thanks_send">Отправить благодарность</string>
+    <string name="thanks_sending">Отправляем…</string>
+    <string name="thanks_unknown_colleague">Неизвестный сотрудник</string>
+    <string name="thanks_nothing_found">Никого не нашли</string>
+    <string name="thanks_no_colleagues">Пока некого благодарить</string>
+    <string name="thanks_amount_label">Сумма</string>
+    <string name="thanks_amount_option">%1$d</string>
+    <string name="thanks_message_counter">%1$d / %2$d</string>
+    <string name="thanks_sent">Благодарность отправлена</string>
+    <string name="thanks_error_server_message">%1$s</string>
+    <string name="thanks_error_send">Не удалось отправить благодарность. Попробуйте ещё раз</string>
+    <string name="thanks_error_not_found">Коллега не найден: возможно, его учётная запись отключена</string>
+    <string name="thanks_error_forbidden">Недостаточно прав для отправки благодарности</string>
+    <string name="thanks_received_section">Полученные</string>
+    <string name="thanks_sent_section">Отправленные</string>
+    <string name="thanks_received_empty">Вас пока никто не благодарил</string>
+    <string name="thanks_sent_empty">Вы пока никого не благодарили</string>
+    <string name="thanks_amount_received">+%1$d</string>
+    <string name="thanks_amount_sent">%1$d</string>
 
     <!-- Авторизация -->
     <string name="logout">Выйти</string>

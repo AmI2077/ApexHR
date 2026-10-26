@@ -78,6 +78,10 @@ data class SurveyDetailsRoute(val surveyId: Long) : NavKey
 @Serializable
 data object TransactionHistoryRoute : NavKey
 
+/** Отправка благодарности коллеге: открывается из профиля. */
+@Serializable
+data object ThanksRoute : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {
