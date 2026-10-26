@@ -19,12 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadingState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
-import com.example.apexhr.features.shop.ui.composables.ShopCategoryTabs
 import com.example.apexhr.features.shop.ui.composables.ShopHeader
 import com.example.apexhr.features.shop.ui.composables.ShopMessagesEffect
 import com.example.apexhr.features.shop.ui.composables.ShopPopularTitle
@@ -168,10 +168,21 @@ fun ShopScreenContent(
             )
         }
         item {
-            ShopCategoryTabs(
-                categories = uiState.categories,
-                selectedCategoryId = uiState.selectedCategoryId,
-                onCategoryClick = callbacks::onCategoryClick,
+            val allTitle = stringResource(R.string.shop_category_all)
+            val untitled = stringResource(R.string.shop_category_untitled)
+            ApexPillTabs(
+                labels = uiState.categories.map { category ->
+                    when {
+                        category.id == ShopUiState.CATEGORY_ALL -> allTitle
+                        category.title.isNullOrBlank() -> untitled
+                        else -> category.title
+                    }
+                },
+                selectedIndex = uiState.categories.indexOfFirst { it.id == uiState.selectedCategoryId },
+                onSelect = { index ->
+                    // Повторное нажатие на выбранную вкладку отсекает ViewModel.
+                    uiState.categories.getOrNull(index)?.let { callbacks.onCategoryClick(it.id) }
+                },
             )
         }
         when {

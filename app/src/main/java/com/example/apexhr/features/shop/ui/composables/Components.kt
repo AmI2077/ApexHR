@@ -2,7 +2,6 @@ package com.example.apexhr.features.shop.ui.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ShoppingCart
@@ -46,9 +44,7 @@ import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.core.ui.theme.transparent
-import com.example.apexhr.features.shop.ui.models.ShopCategoryUiModel
 import com.example.apexhr.features.shop.ui.models.ShopProductUiModel
-import com.example.apexhr.features.shop.ui.models.ShopUiState
 
 @Composable
 fun ShopHeader(
@@ -118,38 +114,6 @@ fun ShopSearchField(
             unfocusedTextColor = primaryTextColor,
         ),
     )
-}
-
-@Composable
-fun ShopCategoryTabs(
-    categories: List<ShopCategoryUiModel>,
-    selectedCategoryId: String,
-    onCategoryClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    // Категорий с сервера может быть больше, чем помещается в ширину экрана.
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing24.dp),
-    ) {
-        categories.forEach { category ->
-            val selected = category.id == selectedCategoryId
-            val title = when {
-                category.id == ShopUiState.CATEGORY_ALL -> stringResource(R.string.shop_category_all)
-                category.title.isNullOrBlank() -> stringResource(R.string.shop_category_untitled)
-                else -> category.title
-            }
-            Text(
-                text = title,
-                color = if (selected) primaryBlueColor else secondaryTextColor,
-                fontSize = ApexDimens.text14.sp,
-                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-                modifier = Modifier.clickable { onCategoryClick(category.id) },
-            )
-        }
-    }
 }
 
 @Composable
