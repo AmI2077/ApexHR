@@ -10,6 +10,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.http.HttpStatusCode
 
 /** Запросы профиля. Все идут от имени пользователя, с bearer-токеном. */
 interface ProfileApi {
@@ -29,8 +30,16 @@ class KtorProfileApi(
     override suspend fun getCurrentUser(): CurrentUserProfileDto =
         client.get(NetworkConfig.USER_PROFILE_URL).requireSuccess().body()
 
-    override suspend fun getBalance(): BalanceDto =
-        client.get(NetworkConfig.BALANCE_URL).requireSuccess().body()
+    /**
+     * У нового сотрудника записи баланса ещё нет, и сервер отвечает
+     * 404 «Balance was not found.» — это нулевой баланс, а не ошибка.
+     * Остальные ошибки (в том числе 401) пробрасываются как раньше.
+     */
+    override suspend fun getBalance(): BalanceDto {
+        val response = client.get(NetworkConfig.BALANCE_URL)
+        if (response.status == HttpStatusCode.NotFound) return BalanceDto(amount = 0)
+        return response.requireSuccess().body()
+    }
 
     override suspend fun getTransactions(skip: Int, take: Int): List<TransactionDto> =
         client.get(NetworkConfig.BALANCE_TRANSACTIONS_URL) {
