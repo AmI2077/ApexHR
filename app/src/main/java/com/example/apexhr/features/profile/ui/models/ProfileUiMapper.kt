@@ -1,7 +1,5 @@
 package com.example.apexhr.features.profile.ui.models
 
-import com.example.apexhr.R
-import com.example.apexhr.core.ui.model.formatAmount
 import com.example.apexhr.core.ui.model.takeIfHttpUrl
 import com.example.apexhr.features.profile.domain.Profile
 import com.example.apexhr.features.profile.domain.UserProfile
@@ -9,12 +7,7 @@ import com.example.apexhr.features.profile.domain.UserProfile
 fun Profile.toUiState(selectedTab: ProfileTab): ProfileUiState = ProfileUiState(
     name = user.displayName(),
     department = user.displayDepartment(),
-    balance = formatAmount(balance),
-    balanceHintRes = if (balance > 0) {
-        R.string.profile_balance_hint
-    } else {
-        R.string.profile_balance_hint_empty
-    },
+    balance = balance,
     selectedTab = selectedTab,
     transactions = transactions.map { transaction ->
         TransactionUiModel(

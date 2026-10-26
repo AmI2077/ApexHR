@@ -1,6 +1,5 @@
 package com.example.apexhr.features.profile.ui.models
 
-import androidx.annotation.StringRes
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 
@@ -13,8 +12,7 @@ data class ProfileUiState(
     val name: String,
     /** «Должность · Отдел» по частям; служебные английские значения переведены. */
     val department: List<UserLabel>,
-    val balance: String,
-    @StringRes val balanceHintRes: Int,
+    val balance: Long,
     val selectedTab: ProfileTab,
     val transactions: List<TransactionUiModel>,
     val achievements: List<ProfileAchievementUiModel>,
@@ -27,8 +25,7 @@ data class ProfileUiState(
                 UserLabel.Resource(R.string.profile_position_employee),
                 UserLabel.Text("Marketing Department"),
             ),
-            balance = "1,250",
-            balanceHintRes = R.string.profile_balance_hint,
+            balance = 1_250,
             selectedTab = ProfileTab.Thanks,
             transactions = listOf(
                 TransactionUiModel(id = "1", title = "Monthly Bonus", amount = 300),

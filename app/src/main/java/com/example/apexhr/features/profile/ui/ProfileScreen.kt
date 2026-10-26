@@ -123,10 +123,7 @@ fun ProfileScreenContent(
             )
         }
         item {
-            ProfileBalanceBlock(
-                balance = uiState.balance,
-                hint = stringResource(uiState.balanceHintRes),
-            )
+            ProfileBalanceBlock(balance = uiState.balance)
         }
         item {
             ProfileTabs(

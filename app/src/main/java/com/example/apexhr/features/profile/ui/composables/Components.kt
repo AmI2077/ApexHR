@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.apexhr.R
+import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.negativeRedColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
@@ -137,50 +138,31 @@ fun ProfileUserInfo(
     }
 }
 
+/** Текущий баланс одной сплошной карточкой. */
 @Composable
 fun ProfileBalanceBlock(
-    balance: String,
-    hint: String,
+    balance: Long,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(ApexDimens.radius16.dp))
+            .background(secondaryBlueColor.copy(alpha = 0.28f))
+            .padding(ApexDimens.spacing16.dp),
+    ) {
         Text(
             text = stringResource(R.string.profile_current_balance),
             color = secondaryTextColor,
             fontSize = ApexDimens.text14.sp,
         )
         Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
-        Text(
-            text = stringResource(R.string.profile_balance_value, balance),
+        ApexAmount(
+            amount = balance,
             color = primaryBlueColor,
             fontSize = ApexDimens.text28.sp,
             fontWeight = FontWeight.Bold,
         )
-        Spacer(modifier = Modifier.height(ApexDimens.spacing12.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(ApexDimens.radius16.dp))
-                .background(secondaryBlueColor.copy(alpha = 0.28f))
-                .padding(
-                    horizontal = ApexDimens.spacing12.dp,
-                    vertical = ApexDimens.spacing12.dp,
-                ),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-//            Icon(
-//                imageVector = Icons.Filled.Star,
-//                contentDescription = stringResource(R.string.profile_balance_hint_icon),
-//                tint = primaryBlueColor,
-//                modifier = Modifier.size(ApexDimens.icon16.dp),
-//            )
-            Spacer(modifier = Modifier.width(ApexDimens.spacing8.dp))
-            Text(
-                text = hint,
-                color = secondaryTextColor,
-                fontSize = ApexDimens.text13.sp,
-            )
-        }
     }
 }
 

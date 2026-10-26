@@ -47,8 +47,7 @@ class ProfileUiMapperTest {
             listOf(UserLabel.Text("Аналитик"), UserLabel.Text("Маркетинг")),
             state.department,
         )
-        assertEquals("1\u00A0250", state.balance)
-        assertEquals(R.string.profile_balance_hint, state.balanceHintRes)
+        assertEquals(1_250L, state.balance)
         assertEquals(ProfileTab.Achievements, state.selectedTab)
         assertEquals("https://example.com/avatar.png", state.avatarUrl)
         assertEquals(
@@ -87,13 +86,6 @@ class ProfileUiMapperTest {
             ),
             state.achievements,
         )
-    }
-
-    @Test
-    fun `zero balance uses empty balance hint`() {
-        val state = profile.copy(balance = 0).toUiState(ProfileTab.Thanks)
-
-        assertEquals(R.string.profile_balance_hint_empty, state.balanceHintRes)
     }
 
     @Test

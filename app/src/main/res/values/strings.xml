@@ -104,15 +104,11 @@
 
     <string name="profile_title">Профиль</string>
     <string name="profile_current_balance">Текущий баланс</string>
-    <string name="profile_balance_value">%1$s апексов</string>
     <string name="profile_tab_thanks">Благодарности</string>
     <string name="profile_tab_achievements">Достижения</string>
     <string name="profile_amount_positive">+%1$d</string>
     <string name="profile_amount_negative">−%1$d</string>
     <string name="profile_avatar">Аватар</string>
-    <string name="profile_balance_hint_icon">Подсказка по балансу</string>
-    <string name="profile_balance_hint">Тратьте апексы на награды в каталоге</string>
-    <string name="profile_balance_hint_empty">Зарабатывайте апексы за активности и благодарности коллег</string>
     <string name="profile_transactions_empty">Операций по балансу пока нет</string>
     <string name="profile_achievements_empty">Достижений пока нет</string>
     <string name="profile_transaction_untitled">Операция по балансу</string>
