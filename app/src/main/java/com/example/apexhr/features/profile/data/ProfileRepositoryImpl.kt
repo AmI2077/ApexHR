@@ -30,7 +30,7 @@ class ProfileRepositoryImpl(
     }
 
     companion object {
-        /** Пагинации в UI нет: показываем последние операции одной страницей. */
+        /** Профиль показывает последние операции одной страницей, остальные — экран истории. */
         const val TRANSACTIONS_PAGE_SIZE = 50
     }
 }
