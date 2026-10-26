@@ -1,7 +1,5 @@
 package com.example.apexhr.core.ui.model
 
-import kotlin.math.abs
-
 private const val GROUP_SEPARATOR = '\u00A0'
 private const val MINUS_SIGN = '\u2212'
 
@@ -23,15 +21,6 @@ fun formatSignedAmount(amount: Long): String {
         else -> grouped
     }
 }
-
-/**
- * Количество для выбора формы слова «апекс» через Android plurals.
- *
- * Plurals принимают Int, а суммы у нас Long. Для русского языка форма зависит только от двух
- * последних цифр модуля числа (1 — «апекс», 2–4 — «апекса», 0, 5–20 — «апексов»),
- * поэтому достаточно передать их — так не будет переполнения при больших суммах.
- */
-fun apexPluralQuantity(amount: Long): Int = abs(amount % 100).toInt()
 
 private fun groupDigits(amount: Long): String {
     // abs(Long.MIN_VALUE) отрицателен, поэтому берём цифры из строки без знака.

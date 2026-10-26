@@ -7,20 +7,21 @@
     <string name="shop">Магазин</string>
 
     <string name="apex_brand">АПЕКС</string>
-    <!-- Валюта «апексы». %1$s — уже отформатированное число (formatAmount), количество — apexPluralQuantity. -->
-    <plurals name="apex_amount">
-        <item quantity="one">%1$s апекс</item>
-        <item quantity="few">%1$s апекса</item>
-        <item quantity="many">%1$s апексов</item>
-        <item quantity="other">%1$s апекса</item>
-    </plurals>
-    <!-- Только слово, без числа: «апекс / апекса / апексов». -->
-    <plurals name="apex_word">
-        <item quantity="one">апекс</item>
-        <item quantity="few">апекса</item>
-        <item quantity="many">апексов</item>
-        <item quantity="other">апекса</item>
-    </plurals>
+    <!-- Валюта «апексы». Форму выбирает apexAmountRes / apexWordRes (core/ui/model/ApexWordForms.kt),
+         а не plurals: правила plurals зависят от языка устройства. %1$s — число после formatAmount. -->
+    <!-- Именительный: 1 апекс, 2 апекса, 5 апексов. -->
+    <string name="apex_amount_one">%1$s апекс</string>
+    <string name="apex_amount_few">%1$s апекса</string>
+    <string name="apex_amount_many">%1$s апексов</string>
+    <!-- Родительный: 1 апекса, 2 апексов, 5 апексов, 21 апекса. -->
+    <string name="apex_amount_genitive_one">%1$s апекса</string>
+    <string name="apex_amount_genitive_many">%1$s апексов</string>
+    <!-- Только слово, без числа. -->
+    <string name="apex_word_one">апекс</string>
+    <string name="apex_word_few">апекса</string>
+    <string name="apex_word_many">апексов</string>
+    <string name="apex_word_genitive_one">апекса</string>
+    <string name="apex_word_genitive_many">апексов</string>
     <string name="search">Поиск</string>
     <string name="back">Назад</string>
     <string name="popular">ПОПУЛЯРНОЕ</string>
@@ -79,7 +80,7 @@
     <string name="cart_remove">Удалить из корзины</string>
     <string name="cart_total">Итого</string>
     <string name="cart_balance">Ваш баланс</string>
-    <!-- %1$s — сумма со склонением: apexAmountText (plurals apex_amount). -->
+    <!-- %1$s — сумма в родительном падеже: apexAmountTextGenitive («1 апекса», «5 апексов»). -->
     <string name="cart_not_enough_balance">Не хватает %1$s для оформления</string>
     <!-- Сумма рисуется рядом через ApexAmount. -->
     <string name="cart_checkout">Оформить за</string>

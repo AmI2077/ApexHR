@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -28,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
-import com.example.apexhr.core.ui.model.apexPluralQuantity
+import com.example.apexhr.core.ui.model.ApexCase
+import com.example.apexhr.core.ui.model.apexAmountRes
+import com.example.apexhr.core.ui.model.apexWordRes
 import com.example.apexhr.core.ui.model.formatAmount
 import com.example.apexhr.core.ui.model.formatSignedAmount
 import com.example.apexhr.core.ui.theme.ApexDimens
@@ -46,7 +48,7 @@ private val DefaultFontSize = ApexDimens.text14.sp
 /**
  * Сумма в апексах: число + значок валюты (Material Symbols «Diamond Shine»).
  *
- * Для чтения с экрана весь блок озвучивается как «1 250 апексов» (plurals apex_amount).
+ * Для чтения с экрана весь блок озвучивается как «1 250 апексов» (падеж — [case]).
  *
  * @param amount сумма; форматируется через [formatAmount] (или [formatSignedAmount] при [showSign]).
  * @param style базовый стиль текста; [fontSize], [fontWeight] и [color] переопределяют его.
@@ -54,6 +56,7 @@ private val DefaultFontSize = ApexDimens.text14.sp
  * @param iconTint цвет значка; по умолчанию фирменный синий.
  * @param iconPosition значок перед числом ([ApexIconPosition.Start]) или после него.
  * @param showSign показывать «+» у положительных сумм и «−» у отрицательных (история операций).
+ * @param case падеж слова «апекс» в озвучке: Genitive для «Не хватает …», «из …» и т. п.
  */
 @Composable
 fun ApexAmount(
@@ -67,6 +70,7 @@ fun ApexAmount(
     iconTint: Color = primaryBlueColor,
     iconPosition: ApexIconPosition = ApexIconPosition.Start,
     showSign: Boolean = false,
+    case: ApexCase = ApexCase.Nominative,
 ) {
     val formatted = if (showSign) formatSignedAmount(amount) else formatAmount(amount)
     ApexAmount(
@@ -79,11 +83,7 @@ fun ApexAmount(
         iconSize = iconSize,
         iconTint = iconTint,
         iconPosition = iconPosition,
-        contentDescription = pluralStringResource(
-            R.plurals.apex_amount,
-            apexPluralQuantity(amount),
-            formatted,
-        ),
+        contentDescription = stringResource(apexAmountRes(amount, case), formatted),
     )
 }
 
@@ -163,17 +163,26 @@ fun ApexCurrencyIcon(
     )
 }
 
-/** Текст суммы со словом в нужной форме: 1 -> «1 апекс», 3 -> «3 апекса», 1250 -> «1 250 апексов». */
+/**
+ * Текст суммы со словом в нужной форме.
+ * Именительный: 1 -> «1 апекс», 3 -> «3 апекса», 1250 -> «1 250 апексов».
+ * Родительный: 1 -> «1 апекса», 3 -> «3 апексов», 21 -> «21 апекса».
+ */
 @Composable
 @ReadOnlyComposable
-fun apexAmountText(amount: Long): String =
-    pluralStringResource(R.plurals.apex_amount, apexPluralQuantity(amount), formatAmount(amount))
+fun apexAmountText(amount: Long, case: ApexCase = ApexCase.Nominative): String =
+    stringResource(apexAmountRes(amount, case), formatAmount(amount))
 
-/** Только слово в нужной форме, без числа: «апекс» / «апекса» / «апексов». */
+/** Сумма в родительном падеже: «Не хватает 1 апекса», «… 5 апексов», «… 21 апекса». */
 @Composable
 @ReadOnlyComposable
-fun apexWord(amount: Long): String =
-    pluralStringResource(R.plurals.apex_word, apexPluralQuantity(amount))
+fun apexAmountTextGenitive(amount: Long): String = apexAmountText(amount, ApexCase.Genitive)
+
+/** Только слово в нужной форме, без числа: «апекс» / «апекса» / «апексов» (или родительный). */
+@Composable
+@ReadOnlyComposable
+fun apexWord(amount: Long, case: ApexCase = ApexCase.Nominative): String =
+    stringResource(apexWordRes(amount, case))
 
 @Preview(showBackground = true)
 @Composable
@@ -191,5 +200,6 @@ private fun ApexAmountPreview() {
         ApexAmount(amount = -50, showSign = true, color = negativeRedColor, iconTint = negativeRedColor)
         ApexAmount(formattedAmount = "300", iconSize = ApexDimens.icon24.dp)
         Text(text = apexAmountText(21) + ", " + apexAmountText(3) + ", " + apexAmountText(11))
+        Text(text = "Не хватает " + apexAmountTextGenitive(1) + ", " + apexAmountTextGenitive(2) + ", " + apexAmountTextGenitive(21))
     }
 }

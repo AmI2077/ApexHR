@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.apexhr.R
 import com.example.apexhr.core.ui.composables.ApexAmount
-import com.example.apexhr.core.ui.composables.apexAmountText
+import com.example.apexhr.core.ui.composables.apexAmountTextGenitive
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.negativeRedColor
@@ -268,8 +268,8 @@ fun CartSummaryCard(
         )
         if (!uiState.isBalanceEnough) {
             Text(
-                // «Не хватает 1 апекса / 3 апексов / 25 апексов…»: склонение через plurals apex_amount.
-                text = stringResource(R.string.cart_not_enough_balance, apexAmountText(uiState.missingAmount)),
+                // «Не хватает 1 апекса / 3 апексов / 21 апекса…»: родительный падеж.
+                text = stringResource(R.string.cart_not_enough_balance, apexAmountTextGenitive(uiState.missingAmount)),
                 color = negativeRedColor,
                 fontSize = ApexDimens.text13.sp,
                 fontWeight = FontWeight.Medium,

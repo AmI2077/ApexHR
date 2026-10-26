@@ -44,25 +44,4 @@ class AmountFormatterTest {
         assertEquals("0", formatSignedAmount(0))
     }
 
-    @Test
-    fun `plural quantity keeps last two digits`() {
-        assertEquals(1, apexPluralQuantity(1))
-        assertEquals(21, apexPluralQuantity(21))
-        assertEquals(11, apexPluralQuantity(111))
-        assertEquals(0, apexPluralQuantity(1_000))
-        assertEquals(4, apexPluralQuantity(1_234_567_804))
-    }
-
-    @Test
-    fun `plural quantity ignores sign`() {
-        assertEquals(5, apexPluralQuantity(-5))
-        assertEquals(12, apexPluralQuantity(-112))
-        assertEquals(8, apexPluralQuantity(Long.MIN_VALUE))
-    }
-
-    @Test
-    fun `plural quantity of large amount fits int`() {
-        assertEquals(7, apexPluralQuantity(Long.MAX_VALUE))
-        assertEquals(1, apexPluralQuantity(10_000_000_001))
-    }
 }
