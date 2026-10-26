@@ -25,6 +25,10 @@ data class HomeUiState(
                 LeaderboardEntryUiModel(id = "1", rank = 1, name = "Иван П.", thanksCount = "12 456"),
                 LeaderboardEntryUiModel(id = "2", rank = 2, name = "Мария С.", thanksCount = "10 832"),
                 LeaderboardEntryUiModel(id = "3", rank = 3, name = "Алексей К.", thanksCount = "9 215"),
+                LeaderboardEntryUiModel(id = "4", rank = 4, name = "Ольга Н.", thanksCount = "5"),
+                LeaderboardEntryUiModel(id = "5", rank = 5, name = "Пётр В.", thanksCount = "1"),
+                LeaderboardEntryUiModel(id = "6", rank = 6, name = "Светлана Д.", thanksCount = "0"),
+                LeaderboardEntryUiModel(id = "7", rank = 7, name = "Юрий Т.", thanksCount = "0"),
             ),
             achievements = listOf(
                 AchievementUiModel(id = "steps", title = "10K шагов"),

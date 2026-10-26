@@ -2,6 +2,7 @@ package com.example.apexhr.features.home.data
 
 import com.example.apexhr.core.data.network.NetworkConfig
 import com.example.apexhr.core.data.network.requireSuccess
+import com.example.apexhr.features.home.data.dto.HomeUserDto
 import com.example.apexhr.features.home.data.dto.LeaderboardEntryDto
 import com.example.apexhr.features.home.data.dto.QuestPageDto
 import io.ktor.client.HttpClient
@@ -13,6 +14,9 @@ import io.ktor.client.request.parameter
 interface HomeApi {
     suspend fun getQuests(page: Int, pageSize: Int): QuestPageDto
     suspend fun getLeaderboard(days: Int, limit: Int): List<LeaderboardEntryDto>
+
+    /** Все сотрудники: нужны, чтобы показать в лидерборде и тех, у кого 0 благодарностей. */
+    suspend fun getUsers(): List<HomeUserDto>
 }
 
 /**
@@ -33,4 +37,7 @@ class KtorHomeApi(
             parameter("days", days)
             parameter("limit", limit)
         }.requireSuccess().body()
+
+    override suspend fun getUsers(): List<HomeUserDto> =
+        client.get(NetworkConfig.USERS_URL).requireSuccess().body()
 }

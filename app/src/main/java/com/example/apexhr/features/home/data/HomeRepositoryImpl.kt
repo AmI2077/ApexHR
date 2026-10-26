@@ -10,7 +10,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 /**
- * Главная собирает данные из пяти запросов. Пользователь, баланс
+ * Главная собирает данные из шести запросов. Пользователь, баланс
  * и достижения — те же запросы, что у профиля, поэтому берутся из ProfileApi.
  */
 class HomeRepositoryImpl(
@@ -22,8 +22,13 @@ class HomeRepositoryImpl(
         coroutineScope {
             val balance = async { profileApi.getBalance() }
             val quests = async { homeApi.getQuests(page = 1, pageSize = QUESTS_PAGE_SIZE) }
+            val users = async { homeApi.getUsers() }
             val leaderboard = async {
-                homeApi.getLeaderboard(days = LEADERBOARD_DAYS, limit = LEADERBOARD_LIMIT)
+                // У лидерборда на сервере есть только limit (по умолчанию 10), поэтому
+                // просим не меньше, чем всего сотрудников, — иначе сотрудник с
+                // благодарностями за пределами топа попал бы в список с нулём.
+                val limit = maxOf(users.await().size, LEADERBOARD_MIN_LIMIT)
+                homeApi.getLeaderboard(days = LEADERBOARD_DAYS, limit = limit)
             }
             // Достижениям нужен id пользователя из профиля.
             val user = profileApi.getCurrentUser().toDomain()
@@ -36,9 +41,10 @@ class HomeRepositoryImpl(
                     .filter { it.isActiveForUser() }
                     .take(HOME_QUESTS_LIMIT)
                     .map { it.toDomain() },
-                leaderboard = leaderboard.await()
-                    .sortedBy { it.rank }
-                    .map { it.toDomain() },
+                leaderboard = mergeLeaderboard(
+                    entries = leaderboard.await().map { it.toDomain() },
+                    users = users.await(),
+                ),
                 achievements = achievements
                     .take(HOME_ACHIEVEMENTS_LIMIT)
                     .map { it.toDomain() },
@@ -51,9 +57,11 @@ class HomeRepositoryImpl(
         const val QUESTS_PAGE_SIZE = 20
         const val HOME_QUESTS_LIMIT = 3
 
-        /** Период рейтинга (как значение по умолчанию на сервере) и размер топа на главной. */
+        /** Период рейтинга (как значение по умолчанию на сервере). */
         const val LEADERBOARD_DAYS = 30
-        const val LEADERBOARD_LIMIT = 3
+
+        /** Нижняя граница limit для лидерборда (значение по умолчанию на сервере). */
+        const val LEADERBOARD_MIN_LIMIT = 10
 
         /** В ряд на главной помещаются три карточки. */
         const val HOME_ACHIEVEMENTS_LIMIT = 3

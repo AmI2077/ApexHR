@@ -17,6 +17,18 @@ data class QuestListItemDto(
     val participationStatus: String? = null,
 )
 
+/**
+ * Элемент ответа GET /api/users (на сервере это CurrentUserProfileDto).
+ * Главной нужны только id, имя и признак активности — для нулевых строк лидерборда.
+ */
+@Serializable
+data class HomeUserDto(
+    val id: String? = null,
+    val firstName: String? = null,
+    val lastName: String? = null,
+    val isActive: Boolean = true,
+)
+
 /** Элемент ответа GET /api/leaderboard. */
 @Serializable
 data class LeaderboardEntryDto(

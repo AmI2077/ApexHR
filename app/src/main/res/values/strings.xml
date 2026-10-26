@@ -35,7 +35,7 @@
     <string name="home_active_challenges">Активные вызовы</string>
     <string name="home_challenge_prize">Приз:</string>
     <string name="home_leaderboard">Лидерборд</string>
-    <string name="home_leaderboard_subtitle">Топ по числу благодарностей</string>
+    <string name="home_leaderboard_subtitle">Все сотрудники по числу благодарностей</string>
     <string name="home_achievements">Достижения</string>
     <string name="home_balance_content_description">Баланс апексов</string>
     <string name="home_greeting_fallback_name">коллега</string>

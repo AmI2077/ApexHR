@@ -3,6 +3,7 @@ package com.example.apexhr.features.home.data
 import com.example.apexhr.core.data.network.ApiStatusException
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.home.data.dto.HomeUserDto
 import com.example.apexhr.features.home.data.dto.LeaderboardEntryDto
 import com.example.apexhr.features.home.data.dto.QuestListItemDto
 import com.example.apexhr.features.home.data.dto.QuestPageDto
@@ -43,7 +44,16 @@ class HomeRepositoryImplTest {
         assertEquals(1, homeApi.questsPage)
         assertEquals(HomeRepositoryImpl.QUESTS_PAGE_SIZE, homeApi.questsPageSize)
         assertEquals(HomeRepositoryImpl.LEADERBOARD_DAYS, homeApi.leaderboardDays)
-        assertEquals(HomeRepositoryImpl.LEADERBOARD_LIMIT, homeApi.leaderboardLimit)
+        assertEquals(HomeRepositoryImpl.LEADERBOARD_MIN_LIMIT, homeApi.leaderboardLimit)
+    }
+
+    @Test
+    fun `leaderboard limit covers all employees`() = runBlocking {
+        homeApi.users = (1..25).map { HomeUserDto(id = "u-$it") }
+
+        loadData()
+
+        assertEquals(25, homeApi.leaderboardLimit)
     }
 
     @Test
@@ -62,12 +72,35 @@ class HomeRepositoryImplTest {
 
     @Test
     fun `leaderboard is sorted by rank`() = runBlocking {
+        homeApi.users = emptyList()
         homeApi.leaderboard = listOf(
             LeaderboardEntryDto(rank = 2, userId = "b"),
             LeaderboardEntryDto(rank = 1, userId = "a"),
         )
 
         assertEquals(listOf("a", "b"), loadData().leaderboard.map { it.userId })
+    }
+
+    @Test
+    fun `employees without thanks are added to leaderboard`() = runBlocking {
+        homeApi.leaderboard = listOf(LeaderboardEntryDto(rank = 1, userId = "u-1", name = "Иван", thanksCount = 3))
+        homeApi.users = listOf(
+            HomeUserDto(id = "u-1", firstName = "Иван"),
+            HomeUserDto(id = "u-2", firstName = "Пётр", lastName = "Сидоров"),
+        )
+
+        val leaderboard = loadData().leaderboard
+
+        assertEquals(listOf("u-1", "u-2"), leaderboard.map { it.userId })
+        assertEquals(listOf(3L, 0L), leaderboard.map { it.thanksCount })
+        assertEquals("Пётр Сидоров", leaderboard[1].name)
+    }
+
+    @Test
+    fun `users failure fails the whole screen`() = runBlocking {
+        homeApi.usersError = ApiStatusException(500)
+
+        assertEquals(DataResult.Failure(DataError.Server), repository.loadHome())
     }
 
     @Test
@@ -102,8 +135,10 @@ class HomeRepositoryImplTest {
 private class FakeHomeApi : HomeApi {
     var quests = listOf(QuestListItemDto(id = 1, title = "Квест", rewardAmount = 100))
     var leaderboard = listOf(LeaderboardEntryDto(rank = 1, userId = "u-1", name = "Иван", thanksCount = 3))
+    var users = listOf(HomeUserDto(id = "u-1", firstName = "Иван"))
     var questsError: Throwable? = null
     var leaderboardError: Throwable? = null
+    var usersError: Throwable? = null
 
     var questsPage: Int? = null
     var questsPageSize: Int? = null
@@ -122,6 +157,11 @@ private class FakeHomeApi : HomeApi {
         leaderboardDays = days
         leaderboardLimit = limit
         return leaderboard
+    }
+
+    override suspend fun getUsers(): List<HomeUserDto> {
+        usersError?.let { throw it }
+        return users
     }
 }
 
