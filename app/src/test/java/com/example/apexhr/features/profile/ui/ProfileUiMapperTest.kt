@@ -8,6 +8,7 @@ import com.example.apexhr.features.profile.domain.UserProfile
 import com.example.apexhr.features.profile.ui.models.ProfileAchievementUiModel
 import com.example.apexhr.features.profile.ui.models.ProfileTab
 import com.example.apexhr.features.profile.ui.models.TransactionUiModel
+import com.example.apexhr.features.profile.ui.models.UserLabel
 import com.example.apexhr.features.profile.ui.models.toUiState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -42,7 +43,10 @@ class ProfileUiMapperTest {
         val state = profile.toUiState(ProfileTab.Achievements)
 
         assertEquals("Анна Иванова", state.name)
-        assertEquals("Аналитик · Маркетинг", state.department)
+        assertEquals(
+            listOf(UserLabel.Text("Аналитик"), UserLabel.Text("Маркетинг")),
+            state.department,
+        )
         assertEquals("1\u00A0250", state.balance)
         assertEquals(R.string.profile_balance_hint, state.balanceHintRes)
         assertEquals(ProfileTab.Achievements, state.selectedTab)
@@ -71,7 +75,22 @@ class ProfileUiMapperTest {
             .toUiState(ProfileTab.Thanks)
 
         assertEquals("Иванова", state.name)
-        assertEquals("Маркетинг", state.department)
+        assertEquals(listOf(UserLabel.Text("Маркетинг")), state.department)
+    }
+
+    @Test
+    fun `server default position and department are translated`() {
+        val state = profile
+            .copy(user = user.copy(position = "Employee", department = "Unassigned"))
+            .toUiState(ProfileTab.Thanks)
+
+        assertEquals(
+            listOf(
+                UserLabel.Resource(R.string.profile_position_employee),
+                UserLabel.Resource(R.string.profile_department_unassigned),
+            ),
+            state.department,
+        )
     }
 
     @Test

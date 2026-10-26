@@ -3,6 +3,7 @@ package com.example.apexhr.features.thanks.ui.models
 import androidx.annotation.StringRes
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.features.profile.ui.models.UserLabel
 
 sealed interface ThanksScreenState {
     data object Loading : ThanksScreenState
@@ -41,22 +42,22 @@ data class ThanksUiState(
                 ColleagueUiModel(
                     id = "anna",
                     name = "Анна Петрова",
-                    position = "Менеджер по маркетингу",
+                    position = listOf(UserLabel.Text("Менеджер по маркетингу")),
                 ),
                 ColleagueUiModel(
                     id = "ivan",
                     name = "Иван Соколов",
-                    position = "Руководитель разработки",
+                    position = listOf(UserLabel.Text("Руководитель разработки")),
                 ),
                 ColleagueUiModel(
                     id = "maria",
                     name = "Мария Лебедева",
-                    position = "Специалист по работе с клиентами",
+                    position = listOf(UserLabel.Text("Специалист по работе с клиентами")),
                 ),
                 ColleagueUiModel(
                     id = "dmitry",
                     name = null,
-                    position = "Аналитик",
+                    position = listOf(UserLabel.Text("Аналитик")),
                 ),
             ),
             selectedColleagueId = "anna",
@@ -89,7 +90,8 @@ data class ColleagueUiModel(
     val id: String,
     /** null, если сервер не прислал имя: экран показывает заглушку. */
     val name: String?,
-    val position: String,
+    /** «Должность · Отдел» по частям, как в профиле. */
+    val position: List<UserLabel>,
 )
 
 /**

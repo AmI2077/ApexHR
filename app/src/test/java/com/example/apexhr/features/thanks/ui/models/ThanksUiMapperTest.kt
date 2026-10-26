@@ -2,6 +2,7 @@ package com.example.apexhr.features.thanks.ui.models
 
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.features.profile.ui.models.UserLabel
 import com.example.apexhr.features.thanks.domain.Colleague
 import com.example.apexhr.features.thanks.domain.Thank
 import com.example.apexhr.features.thanks.domain.ThanksOverview
@@ -102,10 +103,21 @@ class ThanksUiMapperTest {
     @Test
     fun `colleague row shows position and department`() {
         assertEquals(
-            ColleagueUiModel(id = "anna", name = "Анна Смирнова", position = "Аналитик · Маркетинг"),
+            ColleagueUiModel(
+                id = "anna",
+                name = "Анна Смирнова",
+                position = listOf(UserLabel.Text("Аналитик"), UserLabel.Text("Маркетинг")),
+            ),
             anna.toUiModel(),
         )
-        assertEquals(ColleagueUiModel(id = "x", name = null, position = "Employee"), noName.toUiModel())
+        assertEquals(
+            ColleagueUiModel(
+                id = "x",
+                name = null,
+                position = listOf(UserLabel.Resource(R.string.profile_position_employee)),
+            ),
+            noName.toUiModel(),
+        )
     }
 
     @Test

@@ -11,7 +11,8 @@ enum class ProfileTab {
 
 data class ProfileUiState(
     val name: String,
-    val department: String,
+    /** «Должность · Отдел» по частям; служебные английские значения переведены. */
+    val department: List<UserLabel>,
     val balance: String,
     @StringRes val balanceHintRes: Int,
     val selectedTab: ProfileTab,
@@ -22,7 +23,10 @@ data class ProfileUiState(
     companion object {
         val Preview = ProfileUiState(
             name = "Olivia Martinez",
-            department = "Marketing Department",
+            department = listOf(
+                UserLabel.Resource(R.string.profile_position_employee),
+                UserLabel.Text("Marketing Department"),
+            ),
             balance = "1,250",
             balanceHintRes = R.string.profile_balance_hint,
             selectedTab = ProfileTab.Thanks,

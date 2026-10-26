@@ -37,5 +37,4 @@ internal fun UserProfile.displayName(): String =
     listOfNotNull(firstName, lastName).joinToString(" ")
 
 /** «Должность · Отдел»: в API они раздельно, а в UI одна строка. */
-internal fun UserProfile.displayDepartment(): String =
-    listOfNotNull(position, department).joinToString(" · ")
+internal fun UserProfile.displayDepartment(): List<UserLabel> = userInfoLabels(position, department)

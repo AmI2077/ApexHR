@@ -118,6 +118,12 @@
     <string name="profile_transaction_untitled">Операция по балансу</string>
     <string name="profile_achievement_untitled">Достижение</string>
     <string name="profile_name_unknown">Сотрудник</string>
+    <string name="profile_position_employee">Сотрудник</string>
+    <string name="profile_position_manager">Менеджер</string>
+    <string name="profile_position_admin">Администратор</string>
+    <string name="profile_position_superadmin">Суперадминистратор</string>
+    <string name="profile_position_unassigned">Не назначено</string>
+    <string name="profile_department_unassigned">Без отдела</string>
     <string name="profile_history_title">История операций</string>
     <string name="profile_history_filter_all">Все</string>
     <string name="profile_history_filter_activities">Активности</string>

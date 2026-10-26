@@ -3,6 +3,7 @@ package com.example.apexhr.features.thanks.ui.models
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.model.messageRes
+import com.example.apexhr.features.profile.ui.models.userInfoLabels
 import com.example.apexhr.features.thanks.domain.Colleague
 import com.example.apexhr.features.thanks.domain.Thank
 import com.example.apexhr.features.thanks.domain.ThanksOverview
@@ -70,7 +71,7 @@ fun String.limitThanksMessage(): String = take(THANKS_MESSAGE_MAX_LENGTH)
 fun Colleague.toUiModel() = ColleagueUiModel(
     id = id,
     name = name,
-    position = listOfNotNull(position, department).joinToString(" · "),
+    position = userInfoLabels(position, department),
 )
 
 fun Thank.toUiModel(zone: ZoneId) = ThankUiModel(

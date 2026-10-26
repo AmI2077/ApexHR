@@ -39,6 +39,7 @@ import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.core.ui.theme.transparent
+import com.example.apexhr.features.profile.ui.models.joinedText
 import com.example.apexhr.features.thanks.ui.models.ColleagueUiModel
 import com.example.apexhr.features.thanks.ui.models.ThankUiModel
 import com.example.apexhr.features.thanks.ui.models.ThanksNotice
@@ -149,7 +150,7 @@ fun ColleagueRow(
             )
             Spacer(modifier = Modifier.height(ApexDimens.spacing2.dp))
             Text(
-                text = colleague.position,
+                text = colleague.position.joinedText(),
                 color = secondaryTextColor,
                 fontSize = ApexDimens.text12.sp,
                 maxLines = 1,

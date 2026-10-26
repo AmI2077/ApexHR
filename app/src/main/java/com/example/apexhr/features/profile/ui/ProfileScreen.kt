@@ -30,6 +30,7 @@ import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
 import com.example.apexhr.features.profile.ui.models.ProfileScreenState
 import com.example.apexhr.features.profile.ui.models.ProfileTab
 import com.example.apexhr.features.profile.ui.models.ProfileUiState
+import com.example.apexhr.features.profile.ui.models.joinedText
 import com.example.apexhr.ui.theme.ApexHRTheme
 
 @Preview(showBackground = true, widthDp = 360)
@@ -117,7 +118,7 @@ fun ProfileScreenContent(
         item {
             ProfileUserInfo(
                 name = uiState.name,
-                department = uiState.department,
+                department = uiState.department.joinedText(),
                 avatarUrl = uiState.avatarUrl,
             )
         }
