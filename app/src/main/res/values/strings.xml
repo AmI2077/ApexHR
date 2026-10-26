@@ -8,6 +8,20 @@
 
     <string name="apex_brand">АПЕКС</string>
     <string name="points_diamond">◆</string>
+    <!-- Валюта «апексы». %1$s — уже отформатированное число (formatAmount), количество — apexPluralQuantity. -->
+    <plurals name="apex_amount">
+        <item quantity="one">%1$s апекс</item>
+        <item quantity="few">%1$s апекса</item>
+        <item quantity="many">%1$s апексов</item>
+        <item quantity="other">%1$s апекса</item>
+    </plurals>
+    <!-- Только слово, без числа: «апекс / апекса / апексов». -->
+    <plurals name="apex_word">
+        <item quantity="one">апекс</item>
+        <item quantity="few">апекса</item>
+        <item quantity="many">апексов</item>
+        <item quantity="other">апекса</item>
+    </plurals>
     <string name="search">Поиск</string>
     <string name="back">Назад</string>
     <string name="popular">ПОПУЛЯРНОЕ</string>
