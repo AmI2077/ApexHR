@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -27,8 +28,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
+import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.theme.ApexDimens
+import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.darkBlueColor
+import com.example.apexhr.core.ui.theme.pillBackgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.core.ui.theme.secondaryBlueColor
@@ -148,6 +152,55 @@ fun ChallengeCard(
     }
 }
 
+/** Сколько первых мест выделяется залитым синим кружком. */
+private const val HIGHLIGHTED_RANKS = 3
+
+/**
+ * Лидерборд в стиле карточек веба: светлая скруглённая карточка с заголовком
+ * и подзаголовком, внутри — белые строки «место · имя · число благодарностей».
+ * Список короткий (топ с сервера), поэтому строки рисуются обычным Column.
+ */
+@Composable
+fun HomeLeaderboardCard(
+    entries: List<LeaderboardEntryUiModel>,
+    onEntryClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(ApexDimens.radius20.dp))
+            .background(pillBackgroundColor)
+            .padding(ApexDimens.spacing16.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.home_leaderboard),
+            color = primaryTextColor,
+            fontSize = ApexDimens.text18.sp,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
+        Text(
+            text = stringResource(R.string.home_leaderboard_subtitle),
+            color = secondaryTextColor,
+            fontSize = ApexDimens.text14.sp,
+        )
+        Spacer(modifier = Modifier.height(ApexDimens.spacing12.dp))
+        if (entries.isEmpty()) {
+            EmptyState(text = stringResource(R.string.home_leaderboard_empty))
+        } else {
+            Column(verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing8.dp)) {
+                entries.forEach { entry ->
+                    LeaderboardRow(
+                        entry = entry,
+                        onClick = { onEntryClick(entry.id) },
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun LeaderboardRow(
     entry: LeaderboardEntryUiModel,
@@ -157,21 +210,17 @@ fun LeaderboardRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(ApexDimens.radius20.dp))
-            .background(secondaryBlueColor.copy(alpha = 0.28f))
+            .clip(RoundedCornerShape(ApexDimens.radius16.dp))
+            .background(backgroundColor)
             .clickable(onClick = onClick)
             .padding(
-                horizontal = ApexDimens.spacing16.dp,
-                vertical = ApexDimens.spacing12.dp,
+                horizontal = ApexDimens.spacing12.dp,
+                vertical = ApexDimens.spacing10.dp,
             ),
+        horizontalArrangement = Arrangement.spacedBy(ApexDimens.spacing12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = entry.rank.toString(),
-            color = secondaryTextColor,
-            fontSize = ApexDimens.text14.sp,
-            modifier = Modifier.width(ApexDimens.spacing24.dp),
-        )
+        LeaderboardRankBadge(rank = entry.rank)
         Text(
             text = entry.name.ifBlank { stringResource(R.string.home_leaderboard_unknown_name) },
             color = primaryTextColor,
@@ -181,11 +230,37 @@ fun LeaderboardRow(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
+        // Число благодарностей, а не валюта, поэтому без значка апексов.
         Text(
-            text = entry.points,
+            text = entry.thanksCount,
             color = primaryTextColor,
+            fontSize = ApexDimens.text16.sp,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+        )
+    }
+}
+
+/** Номер места в кружке: 1–3 — залитый фирменным синим с белой цифрой, остальные — светлый с синей. */
+@Composable
+private fun LeaderboardRankBadge(
+    rank: Int,
+    modifier: Modifier = Modifier,
+) {
+    val highlighted = rank in 1..HIGHLIGHTED_RANKS
+    Box(
+        modifier = modifier
+            .size(ApexDimens.icon32.dp)
+            .clip(CircleShape)
+            .background(if (highlighted) primaryBlueColor else secondaryBlueColor.copy(alpha = 0.28f)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = rank.toString(),
+            color = if (highlighted) backgroundColor else primaryBlueColor,
             fontSize = ApexDimens.text14.sp,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
         )
     }
 }

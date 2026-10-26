@@ -23,7 +23,7 @@ import com.example.apexhr.features.home.ui.composables.ChallengeCard
 import com.example.apexhr.features.home.ui.composables.HomeAchievementsRow
 import com.example.apexhr.features.home.ui.composables.HomeGreeting
 import com.example.apexhr.features.home.ui.composables.HomeHeader
-import com.example.apexhr.features.home.ui.composables.LeaderboardRow
+import com.example.apexhr.features.home.ui.composables.HomeLeaderboardCard
 import com.example.apexhr.features.home.ui.composables.SectionTitle
 import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
 import com.example.apexhr.features.home.ui.models.HomeScreenState
@@ -130,16 +130,10 @@ fun HomeScreenContent(
                 onClick = { callbacks.onChallengeClick(challenge.id) },
             )
         }
-        item {
-            SectionTitle(text = stringResource(R.string.home_leaderboard))
-        }
-        if (uiState.leaderboard.isEmpty()) {
-            item { EmptyState(text = stringResource(R.string.home_leaderboard_empty)) }
-        }
-        items(uiState.leaderboard, key = { "leader_${it.id}" }) { entry ->
-            LeaderboardRow(
-                entry = entry,
-                onClick = { callbacks.onLeaderboardEntryClick(entry.id) },
+        item(key = "leaderboard") {
+            HomeLeaderboardCard(
+                entries = uiState.leaderboard,
+                onEntryClick = callbacks::onLeaderboardEntryClick,
             )
         }
         item {

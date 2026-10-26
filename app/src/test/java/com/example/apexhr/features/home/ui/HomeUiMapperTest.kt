@@ -49,8 +49,8 @@ class HomeUiMapperTest {
     fun `leaderboard shows thanks count and falls back to rank key`() {
         assertEquals(
             listOf(
-                LeaderboardEntryUiModel(id = "u-1", rank = 1, name = "Иван П.", points = "12\u00A0456"),
-                LeaderboardEntryUiModel(id = "rank_2_1", rank = 2, name = "", points = "3"),
+                LeaderboardEntryUiModel(id = "u-1", rank = 1, name = "Иван П.", thanksCount = "12\u00A0456"),
+                LeaderboardEntryUiModel(id = "rank_2_1", rank = 2, name = "", thanksCount = "3"),
             ),
             data.toUiState().leaderboard,
         )

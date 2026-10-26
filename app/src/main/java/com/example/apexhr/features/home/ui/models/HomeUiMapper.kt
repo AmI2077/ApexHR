@@ -20,7 +20,7 @@ fun HomeData.toUiState(): HomeUiState = HomeUiState(
             id = entry.userId ?: "rank_${entry.rank}_$index",
             rank = entry.rank,
             name = entry.name.orEmpty(),
-            points = formatAmount(entry.thanksCount),
+            thanksCount = formatAmount(entry.thanksCount),
         )
     },
     achievements = achievements.map { achievement ->

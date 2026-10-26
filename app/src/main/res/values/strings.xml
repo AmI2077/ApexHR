@@ -34,7 +34,8 @@
     <string name="home_subtitle">Достигаем целей вместе</string>
     <string name="home_active_challenges">Активные вызовы</string>
     <string name="home_challenge_prize">Приз: %1$d баллов</string>
-    <string name="home_leaderboard">Таблица лидеров</string>
+    <string name="home_leaderboard">Лидерборд</string>
+    <string name="home_leaderboard_subtitle">Топ по числу благодарностей</string>
     <string name="home_achievements">Достижения</string>
     <string name="home_points_content_description">Баланс баллов</string>
     <string name="home_greeting_fallback_name">коллега</string>

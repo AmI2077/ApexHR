@@ -21,9 +21,9 @@ data class HomeUiState(
                 )
             ),
             leaderboard = listOf(
-                LeaderboardEntryUiModel(id = "1", rank = 1, name = "Иван П.", points = "12 456"),
-                LeaderboardEntryUiModel(id = "2", rank = 2, name = "Мария С.", points = "10 832"),
-                LeaderboardEntryUiModel(id = "3", rank = 3, name = "Алексей К.", points = "9 215"),
+                LeaderboardEntryUiModel(id = "1", rank = 1, name = "Иван П.", thanksCount = "12 456"),
+                LeaderboardEntryUiModel(id = "2", rank = 2, name = "Мария С.", thanksCount = "10 832"),
+                LeaderboardEntryUiModel(id = "3", rank = 3, name = "Алексей К.", thanksCount = "9 215"),
             ),
             achievements = listOf(
                 AchievementUiModel(id = "steps", title = "10K шагов"),
@@ -40,12 +40,12 @@ data class ChallengeUiModel(
     val prizePoints: Long,
 )
 
-/** @param points значение рейтинга; сервер считает его по числу благодарностей. */
+/** @param thanksCount число полученных благодарностей (по нему сервер строит рейтинг), уже отформатированное. */
 data class LeaderboardEntryUiModel(
     val id: String,
     val rank: Int,
     val name: String,
-    val points: String,
+    val thanksCount: String,
 )
 
 data class AchievementUiModel(
