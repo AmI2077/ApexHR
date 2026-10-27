@@ -3,6 +3,7 @@ package com.example.apexhr.features.auth.ui.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,9 +17,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -79,13 +84,31 @@ fun ChangePasswordScreenErrorPreview() {
     }
 }
 
-/** Экран обязательной смены временного пароля при первом входе. */
+@Preview(showBackground = true, backgroundColor = 0xFF09090B)
+@Composable
+fun ChangePasswordScreenFromSettingsDarkPreview() {
+    ApexHRTheme(dynamicColor = false, darkTheme = true) {
+        ChangePasswordScreen(
+            state = ChangePasswordUiState(),
+            callbacks = ChangePasswordScreenCallbacks.Empty,
+            onBackClick = {}
+        )
+    }
+}
+
+/**
+ * Смена пароля. Без [onBackClick] — обязательная смена временного пароля
+ * при первом входе (по центру, с кнопкой выхода). С [onBackClick] — смена
+ * пароля из настроек: стрелка «назад» сверху, без кнопки выхода.
+ */
 @Composable
 fun ChangePasswordScreen(
     state: ChangePasswordUiState,
     callbacks: ChangePasswordScreenCallbacks,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBackClick: (() -> Unit)? = null
 ) {
+    val fromSettings = onBackClick != null
     val focusManager = LocalFocusManager.current
 
     val submit = {
@@ -102,8 +125,21 @@ fun ChangePasswordScreen(
             .verticalScroll(rememberScrollState())
             .padding(ApexDimens.spacing20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = if (fromSettings) Arrangement.Top else Arrangement.Center
     ) {
+        if (onBackClick != null) {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                IconButton(onClick = onBackClick, enabled = !state.isLoading) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back),
+                        tint = primaryTextColor
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+
         Text(
             text = stringResource(R.string.change_password_title),
             style = MaterialTheme.typography.headlineMedium,
@@ -114,7 +150,10 @@ fun ChangePasswordScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.change_password_subtitle),
+            text = stringResource(
+                if (fromSettings) R.string.change_password_settings_subtitle
+                else R.string.change_password_subtitle
+            ),
             style = MaterialTheme.typography.bodyMedium,
             color = secondaryTextColor,
             textAlign = TextAlign.Center
@@ -206,16 +245,18 @@ fun ChangePasswordScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        if (!fromSettings) {
+            Spacer(modifier = Modifier.height(8.dp))
 
-        TextButton(
-            onClick = callbacks::onLogoutClick,
-            enabled = !state.isLoading
-        ) {
-            Text(
-                text = stringResource(R.string.change_password_logout),
-                color = secondaryTextColor
-            )
+            TextButton(
+                onClick = callbacks::onLogoutClick,
+                enabled = !state.isLoading
+            ) {
+                Text(
+                    text = stringResource(R.string.change_password_logout),
+                    color = secondaryTextColor
+                )
+            }
         }
     }
 }

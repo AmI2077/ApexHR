@@ -82,6 +82,10 @@ data object ThanksRoute : NavKey
 @Serializable
 data object SettingsRoute : NavKey
 
+/** Смена пароля: открывается из настроек. */
+@Serializable
+data object SettingsChangePasswordRoute : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {

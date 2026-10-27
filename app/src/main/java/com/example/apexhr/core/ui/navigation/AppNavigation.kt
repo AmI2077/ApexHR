@@ -1,11 +1,14 @@
 package com.example.apexhr.core.ui.navigation
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
@@ -25,6 +28,10 @@ import com.example.apexhr.features.activities.ui.quest.models.QuestDetailsScreen
 import com.example.apexhr.features.activities.ui.survey.SurveyDetailsScreen
 import com.example.apexhr.features.activities.ui.survey.SurveyDetailsViewModel
 import com.example.apexhr.features.activities.ui.survey.models.SurveyDetailsScreenCallbacks
+import com.example.apexhr.R
+import com.example.apexhr.features.auth.ui.ChangePasswordViewModel
+import com.example.apexhr.features.auth.ui.composables.ChangePasswordScreen
+import com.example.apexhr.features.auth.ui.model.ChangePasswordUiActions
 import com.example.apexhr.features.home.ui.HomeScreen
 import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
@@ -110,11 +117,39 @@ fun AppNavigation(
                     object : SettingsScreenCallbacks by viewModel {
                         override fun onBackClick() = navigator.goBack()
                         override fun onLogoutClick() = onLogout()
+                        override fun onChangePasswordClick() =
+                            navigator.navigate(SettingsChangePasswordRoute)
                     }
                 }
                 SettingsScreen(
                     darkTheme = resolveDarkTheme(savedDarkTheme, isSystemInDarkTheme()),
                     callbacks = settingsCallbacks,
+                )
+            }
+            entry<SettingsChangePasswordRoute> {
+                val viewModel: ChangePasswordViewModel = koinViewModel()
+                val state by viewModel.uiState.collectAsStateWithLifecycle()
+                val context = LocalContext.current
+                LaunchedEffect(viewModel) {
+                    viewModel.actions.collect { action ->
+                        when (action) {
+                            ChangePasswordUiActions.Success -> {
+                                Toast.makeText(
+                                    context,
+                                    R.string.change_password_success,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                navigator.goBack()
+                            }
+                            // Кнопки выхода на этом экране нет.
+                            ChangePasswordUiActions.Logout -> Unit
+                        }
+                    }
+                }
+                ChangePasswordScreen(
+                    state = state,
+                    callbacks = viewModel,
+                    onBackClick = { navigator.goBack() },
                 )
             }
             entry<ThanksRoute> {

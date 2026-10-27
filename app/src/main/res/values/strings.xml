@@ -143,6 +143,7 @@
     <!-- Настройки -->
     <string name="settings_title">Настройки</string>
     <string name="settings_dark_theme">Тёмная тема</string>
+    <string name="settings_change_password">Сменить пароль</string>
 
     <string name="activities_title">Активности</string>
     <string name="activities_search_placeholder">Поиск по активностям…</string>
@@ -285,6 +286,8 @@
     <string name="auth_error_unknown">Что-то пошло не так. Попробуйте ещё раз</string>
     <string name="change_password_title">Смените пароль</string>
     <string name="change_password_subtitle">Это первый вход. Придумайте свой пароль</string>
+    <string name="change_password_settings_subtitle">Придумайте новый пароль, не короче 6 символов</string>
+    <string name="change_password_success">Пароль изменён</string>
     <string name="change_password_new_label">Новый пароль</string>
     <string name="change_password_confirm_label">Повторите пароль</string>
     <string name="change_password_save">Сохранить</string>

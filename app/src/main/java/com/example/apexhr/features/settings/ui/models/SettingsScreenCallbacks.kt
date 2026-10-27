@@ -7,6 +7,9 @@ interface SettingsScreenCallbacks {
     /** Выход из аккаунта. По умолчанию ничего не делает. */
     fun onLogoutClick() = Unit
 
+    /** Переход к смене пароля. По умолчанию ничего не делает. */
+    fun onChangePasswordClick() = Unit
+
     companion object {
         val Empty = object : SettingsScreenCallbacks {
             override fun onBackClick() = Unit

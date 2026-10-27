@@ -1,6 +1,7 @@
 package com.example.apexhr.features.settings.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +16,9 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.Logout
+import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +39,7 @@ import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.negativeRedColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
+import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.features.settings.ui.models.SettingsScreenCallbacks
 import com.example.apexhr.ui.theme.ApexHRTheme
 
@@ -56,7 +60,7 @@ fun SettingsScreenDarkPreview() {
 }
 
 /**
- * Настройки: переключатель тёмной темы и выход из аккаунта.
+ * Настройки: переключатель тёмной темы, смена пароля и выход из аккаунта.
  *
  * @param darkTheme включена ли сейчас тёмная тема (с учётом системной, если выбора нет).
  */
@@ -114,6 +118,35 @@ fun SettingsScreen(
                 )
                 // Нажатие обрабатывает вся строка, поэтому у самого переключателя обработчика нет.
                 Switch(checked = darkTheme, onCheckedChange = null)
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        role = Role.Button,
+                        onClick = callbacks::onChangePasswordClick,
+                    )
+                    .padding(vertical = ApexDimens.spacing12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Lock,
+                    contentDescription = null,
+                    tint = secondaryTextColor,
+                    modifier = Modifier.size(ApexDimens.icon20.dp),
+                )
+                Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
+                Text(
+                    text = stringResource(R.string.settings_change_password),
+                    color = primaryTextColor,
+                    fontSize = ApexDimens.text16.sp,
+                    modifier = Modifier.weight(1f),
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = secondaryTextColor,
+                )
             }
             Spacer(modifier = Modifier.height(ApexDimens.spacing24.dp))
             OutlinedButton(
