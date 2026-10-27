@@ -7,8 +7,8 @@ interface ProfileScreenCallbacks {
     fun onTabClick(tab: ProfileTab)
     fun onAchievementClick(achievementId: String)
 
-    /** Выход из аккаунта. По умолчанию ничего не делает. */
-    fun onLogoutClick() = Unit
+    /** Переход к настройкам. По умолчанию ничего не делает. */
+    fun onSettingsClick() = Unit
 
     /** Переход к отправке благодарности. По умолчанию ничего не делает. */
     fun onSendThanksClick() = Unit

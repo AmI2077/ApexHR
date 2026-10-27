@@ -1,6 +1,7 @@
 package com.example.apexhr.core.ui.navigation
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -30,6 +31,10 @@ import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
 import com.example.apexhr.features.profile.ui.ProfileScreen
 import com.example.apexhr.features.profile.ui.ProfileViewModel
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
+import com.example.apexhr.features.settings.domain.resolveDarkTheme
+import com.example.apexhr.features.settings.ui.SettingsScreen
+import com.example.apexhr.features.settings.ui.SettingsViewModel
+import com.example.apexhr.features.settings.ui.models.SettingsScreenCallbacks
 import com.example.apexhr.features.shop.ui.ShopScreen
 import com.example.apexhr.features.shop.ui.ShopViewModel
 import com.example.apexhr.features.shop.ui.cart.CartScreen
@@ -87,15 +92,29 @@ fun AppNavigation(
             entry<TopLevelRoute.Profile> {
                 val viewModel: ProfileViewModel = koinViewModel()
                 val screenState by viewModel.state.collectAsStateWithLifecycle()
-                val profileCallbacks = remember(viewModel, navigator, onLogout) {
+                val profileCallbacks = remember(viewModel, navigator) {
                     object : ProfileScreenCallbacks by viewModel {
-                        override fun onLogoutClick() = onLogout()
+                        override fun onSettingsClick() = navigator.navigate(SettingsRoute)
                         override fun onSendThanksClick() = navigator.navigate(ThanksRoute)
                     }
                 }
                 ProfileScreen(
                     screenState = screenState,
                     callbacks = profileCallbacks,
+                )
+            }
+            entry<SettingsRoute> {
+                val viewModel: SettingsViewModel = koinViewModel()
+                val savedDarkTheme by viewModel.darkTheme.collectAsStateWithLifecycle()
+                val settingsCallbacks = remember(viewModel, navigator, onLogout) {
+                    object : SettingsScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                        override fun onLogoutClick() = onLogout()
+                    }
+                }
+                SettingsScreen(
+                    darkTheme = resolveDarkTheme(savedDarkTheme, isSystemInDarkTheme()),
+                    callbacks = settingsCallbacks,
                 )
             }
             entry<ThanksRoute> {

@@ -34,6 +34,7 @@ import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.pillBackgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
+import com.example.apexhr.ui.theme.ApexHRTheme
 
 /**
  * Горизонтально прокручиваемый ряд вкладок-«таблеток» вместо текстовых вкладок.
@@ -117,19 +118,43 @@ fun ApexPillTab(
 @Preview(showBackground = true, widthDp = 360)
 @Composable
 private fun ApexPillTabsPreview() {
-    var selected by remember { mutableIntStateOf(0) }
-    Column(verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing16.dp)) {
-        ApexPillTabs(
-            labels = listOf("Опросы", "Мини-игры", "Мероприятия"),
-            selectedIndex = selected,
-            onSelect = { selected = it },
-            contentPadding = PaddingValues(horizontal = ApexDimens.spacing20.dp),
-        )
-        ApexPillTabs(
-            labels = listOf("Все", "Мерч", "Сертификаты", "Опыт", "Благотворительность", "Обучение"),
-            selectedIndex = 2,
-            onSelect = {},
-            contentPadding = PaddingValues(horizontal = ApexDimens.spacing20.dp),
-        )
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        var selected by remember { mutableIntStateOf(0) }
+        Column(verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing16.dp)) {
+            ApexPillTabs(
+                labels = listOf("Опросы", "Мини-игры", "Мероприятия"),
+                selectedIndex = selected,
+                onSelect = { selected = it },
+                contentPadding = PaddingValues(horizontal = ApexDimens.spacing20.dp),
+            )
+            ApexPillTabs(
+                labels = listOf("Все", "Мерч", "Сертификаты", "Опыт", "Благотворительность", "Обучение"),
+                selectedIndex = 2,
+                onSelect = {},
+                contentPadding = PaddingValues(horizontal = ApexDimens.spacing20.dp),
+            )
+        }
+    }
+}
+
+@Preview(name = "Dark", showBackground = true, backgroundColor = 0xFF121417, widthDp = 360)
+@Composable
+private fun ApexPillTabsDarkPreview() {
+    ApexHRTheme(dynamicColor = false, darkTheme = true) {
+        var selected by remember { mutableIntStateOf(0) }
+        Column(verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing16.dp)) {
+            ApexPillTabs(
+                labels = listOf("Опросы", "Мини-игры", "Мероприятия"),
+                selectedIndex = selected,
+                onSelect = { selected = it },
+                contentPadding = PaddingValues(horizontal = ApexDimens.spacing20.dp),
+            )
+            ApexPillTabs(
+                labels = listOf("Все", "Мерч", "Сертификаты", "Опыт", "Благотворительность", "Обучение"),
+                selectedIndex = 2,
+                onSelect = {},
+                contentPadding = PaddingValues(horizontal = ApexDimens.spacing20.dp),
+            )
+        }
     }
 }

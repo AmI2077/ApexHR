@@ -25,6 +25,7 @@ import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
+import com.example.apexhr.ui.theme.ApexHRTheme
 
 /** Индикатор загрузки блока данных. */
 @Composable
@@ -92,5 +93,7 @@ fun EmptyState(
 @Preview(showBackground = true, widthDp = 360)
 @Composable
 fun ErrorStatePreview() {
-    ErrorState(error = DataError.Network, onRetry = {})
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        ErrorState(error = DataError.Network, onRetry = {})
+    }
 }

@@ -40,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentType
@@ -67,41 +66,48 @@ import com.example.apexhr.features.auth.domain.EmailError
 import com.example.apexhr.features.auth.ui.model.LoginScreenCallbacks
 import com.example.apexhr.features.auth.ui.model.LoginUiState
 import com.example.apexhr.features.auth.ui.model.messageRes
+import com.example.apexhr.ui.theme.ApexHRTheme
 
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen(
-        state = LoginUiState(),
-        isSessionExpired = false,
-        callbacks = LoginScreenCallbacks.Empty
-    )
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        LoginScreen(
+            state = LoginUiState(),
+            isSessionExpired = false,
+            callbacks = LoginScreenCallbacks.Empty
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenLoadingPreview() {
-    LoginScreenContent(
-        modifier = Modifier
-            .background(backgroundColor)
-            .padding(ApexDimens.spacing20.dp),
-        state = LoginUiState(email = "user@example.com", password = "password", isLoading = true),
-        showWakeUpHintInitially = true
-    )
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        LoginScreenContent(
+            modifier = Modifier
+                .background(backgroundColor)
+                .padding(ApexDimens.spacing20.dp),
+            state = LoginUiState(email = "user@example.com", password = "password", isLoading = true),
+            showWakeUpHintInitially = true
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenErrorPreview() {
-    LoginScreen(
-        state = LoginUiState(
-            email = "user@example",
-            emailError = EmailError.InvalidFormat,
-            error = AuthError.Timeout
-        ),
-        isSessionExpired = true,
-        callbacks = LoginScreenCallbacks.Empty
-    )
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        LoginScreen(
+            state = LoginUiState(
+                email = "user@example",
+                emailError = EmailError.InvalidFormat,
+                error = AuthError.Timeout
+            ),
+            isSessionExpired = true,
+            callbacks = LoginScreenCallbacks.Empty
+        )
+    }
 }
 
 @Composable
@@ -296,13 +302,13 @@ fun LoginScreenContent(
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = primaryBlueColor,
-                contentColor = Color.White
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
             if (state.isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(22.dp),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     strokeWidth = 2.dp
                 )
             } else {

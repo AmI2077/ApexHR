@@ -140,6 +140,10 @@
     <string name="profile_history_load_more">Показать ещё</string>
     <string name="profile_send_thanks">Поблагодарить коллегу</string>
 
+    <!-- Настройки -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_dark_theme">Тёмная тема</string>
+
     <string name="activities_title">Активности</string>
     <string name="activities_search_placeholder">Поиск по активностям…</string>
     <string name="activities_category_surveys">Опросы</string>

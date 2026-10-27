@@ -27,7 +27,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,28 +50,33 @@ import com.example.apexhr.features.auth.ui.model.ChangePasswordScreenCallbacks
 import com.example.apexhr.features.auth.ui.model.ChangePasswordUiState
 import com.example.apexhr.features.auth.ui.model.message
 import com.example.apexhr.features.auth.ui.model.messageRes
+import com.example.apexhr.ui.theme.ApexHRTheme
 
 @Preview(showBackground = true)
 @Composable
 fun ChangePasswordScreenPreview() {
-    ChangePasswordScreen(
-        state = ChangePasswordUiState(),
-        callbacks = ChangePasswordScreenCallbacks.Empty
-    )
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        ChangePasswordScreen(
+            state = ChangePasswordUiState(),
+            callbacks = ChangePasswordScreenCallbacks.Empty
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ChangePasswordScreenErrorPreview() {
-    ChangePasswordScreen(
-        state = ChangePasswordUiState(
-            newPassword = "qwerty",
-            confirmPassword = "qwert",
-            confirmPasswordError = ConfirmPasswordError.Mismatch,
-            error = ChangePasswordError.Rejected("Пароль слишком простой")
-        ),
-        callbacks = ChangePasswordScreenCallbacks.Empty
-    )
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        ChangePasswordScreen(
+            state = ChangePasswordUiState(
+                newPassword = "qwerty",
+                confirmPassword = "qwert",
+                confirmPasswordError = ConfirmPasswordError.Mismatch,
+                error = ChangePasswordError.Rejected("Пароль слишком простой")
+            ),
+            callbacks = ChangePasswordScreenCallbacks.Empty
+        )
+    }
 }
 
 /** Экран обязательной смены временного пароля при первом входе. */
@@ -185,13 +189,13 @@ fun ChangePasswordScreen(
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = primaryBlueColor,
-                contentColor = Color.White
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
             if (state.isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(22.dp),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     strokeWidth = 2.dp
                 )
             } else {

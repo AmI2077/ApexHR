@@ -25,6 +25,7 @@ import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
+import com.example.apexhr.ui.theme.ApexHRTheme
 
 /**
  * Экран проверки сессии при запуске. Бэкенд после простоя «просыпается»
@@ -73,5 +74,7 @@ fun LoadingScreen(
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable
 private fun LoadingScreenPreview() {
-    LoadingScreen()
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        LoadingScreen()
+    }
 }

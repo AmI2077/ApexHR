@@ -17,8 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Icon
@@ -58,7 +58,7 @@ import com.example.apexhr.features.profile.ui.models.ThankUiModel
 fun ProfileHeader(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onLogoutClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -78,10 +78,10 @@ fun ProfileHeader(
             fontSize = ApexDimens.text18.sp,
             fontWeight = FontWeight.Bold,
         )
-        IconButton(onClick = onLogoutClick) {
+        IconButton(onClick = onSettingsClick) {
             Icon(
-                imageVector = Icons.AutoMirrored.Outlined.Logout,
-                contentDescription = stringResource(R.string.logout),
+                imageVector = Icons.Filled.Settings,
+                contentDescription = stringResource(R.string.settings_title),
                 tint = primaryTextColor,
             )
         }

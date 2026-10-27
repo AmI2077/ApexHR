@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.example.apexhr.R
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
+import com.example.apexhr.ui.theme.ApexHRTheme
 
 /**
  * Логотип «Апекс» экранов авторизации (вход и пробуждение сервера):
@@ -52,5 +53,15 @@ fun ApexLogo(
 @Preview(showBackground = true)
 @Composable
 private fun ApexLogoPreview() {
-    ApexLogo()
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        ApexLogo()
+    }
+}
+
+@Preview(name = "Dark", showBackground = true, backgroundColor = 0xFF121417)
+@Composable
+private fun ApexLogoDarkPreview() {
+    ApexHRTheme(dynamicColor = false, darkTheme = true) {
+        ApexLogo()
+    }
 }

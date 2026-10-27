@@ -88,7 +88,7 @@ fun ProfileScreenErrorPreview() {
     }
 }
 
-/** Экран профиля с учётом загрузки: шапка с выходом видна всегда. */
+/** Экран профиля с учётом загрузки: шапка с настройками видна всегда. */
 @Composable
 fun ProfileScreen(
     screenState: ProfileScreenState,
@@ -251,7 +251,7 @@ private fun LazyListScope.thanksSection(
     }
 }
 
-/** Общий каркас: фон, отступы и шапка с кнопкой выхода. */
+/** Общий каркас: фон, отступы и шапка с кнопкой настроек. */
 @Composable
 private fun ProfileScreenFrame(
     callbacks: ProfileScreenCallbacks,
@@ -271,7 +271,7 @@ private fun ProfileScreenFrame(
         item {
             ProfileHeader(
                 onBackClick = callbacks::onBackClick,
-                onLogoutClick = callbacks::onLogoutClick,
+                onSettingsClick = callbacks::onSettingsClick,
             )
         }
         content()

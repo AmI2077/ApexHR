@@ -37,6 +37,7 @@ import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.negativeRedColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
+import com.example.apexhr.ui.theme.ApexHRTheme
 
 /** С какой стороны от числа рисовать значок апексов. */
 enum class ApexIconPosition { Start, End }
@@ -187,19 +188,43 @@ fun apexWord(amount: Long, case: ApexCase = ApexCase.Nominative): String =
 @Preview(showBackground = true)
 @Composable
 private fun ApexAmountPreview() {
-    Column(modifier = Modifier.padding(ApexDimens.spacing16.dp)) {
-        ApexAmount(amount = 1_250, fontSize = ApexDimens.text16.sp, fontWeight = FontWeight.Medium)
-        ApexAmount(
-            amount = 12_500,
-            fontSize = ApexDimens.text28.sp,
-            fontWeight = FontWeight.Bold,
-            color = primaryBlueColor,
-            iconPosition = ApexIconPosition.End,
-        )
-        ApexAmount(amount = 150, showSign = true, color = primaryBlueColor)
-        ApexAmount(amount = -50, showSign = true, color = negativeRedColor, iconTint = negativeRedColor)
-        ApexAmount(formattedAmount = "300", iconSize = ApexDimens.icon24.dp)
-        Text(text = apexAmountText(21) + ", " + apexAmountText(3) + ", " + apexAmountText(11))
-        Text(text = "Не хватает " + apexAmountTextGenitive(1) + ", " + apexAmountTextGenitive(2) + ", " + apexAmountTextGenitive(21))
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        Column(modifier = Modifier.padding(ApexDimens.spacing16.dp)) {
+            ApexAmount(amount = 1_250, fontSize = ApexDimens.text16.sp, fontWeight = FontWeight.Medium)
+            ApexAmount(
+                amount = 12_500,
+                fontSize = ApexDimens.text28.sp,
+                fontWeight = FontWeight.Bold,
+                color = primaryBlueColor,
+                iconPosition = ApexIconPosition.End,
+            )
+            ApexAmount(amount = 150, showSign = true, color = primaryBlueColor)
+            ApexAmount(amount = -50, showSign = true, color = negativeRedColor, iconTint = negativeRedColor)
+            ApexAmount(formattedAmount = "300", iconSize = ApexDimens.icon24.dp)
+            Text(text = apexAmountText(21) + ", " + apexAmountText(3) + ", " + apexAmountText(11))
+            Text(text = "Не хватает " + apexAmountTextGenitive(1) + ", " + apexAmountTextGenitive(2) + ", " + apexAmountTextGenitive(21))
+        }
+    }
+}
+
+@Preview(name = "Dark", showBackground = true, backgroundColor = 0xFF121417)
+@Composable
+private fun ApexAmountDarkPreview() {
+    ApexHRTheme(dynamicColor = false, darkTheme = true) {
+        Column(modifier = Modifier.padding(ApexDimens.spacing16.dp)) {
+            ApexAmount(amount = 1_250, fontSize = ApexDimens.text16.sp, fontWeight = FontWeight.Medium)
+            ApexAmount(
+                amount = 12_500,
+                fontSize = ApexDimens.text28.sp,
+                fontWeight = FontWeight.Bold,
+                color = primaryBlueColor,
+                iconPosition = ApexIconPosition.End,
+            )
+            ApexAmount(amount = 150, showSign = true, color = primaryBlueColor)
+            ApexAmount(amount = -50, showSign = true, color = negativeRedColor, iconTint = negativeRedColor)
+            ApexAmount(formattedAmount = "300", iconSize = ApexDimens.icon24.dp)
+            Text(text = apexAmountText(21) + ", " + apexAmountText(3) + ", " + apexAmountText(11))
+            Text(text = "Не хватает " + apexAmountTextGenitive(1) + ", " + apexAmountTextGenitive(2) + ", " + apexAmountTextGenitive(21))
+        }
     }
 }

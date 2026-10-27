@@ -78,6 +78,10 @@ data class SurveyDetailsRoute(val surveyId: Long) : NavKey
 @Serializable
 data object ThanksRoute : NavKey
 
+/** Настройки (тёмная тема, выход из аккаунта): открываются из профиля. */
+@Serializable
+data object SettingsRoute : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {
