@@ -14,6 +14,18 @@ data class CurrentUserProfileDto(
     val position: String? = null,
 )
 
+/**
+ * Тело PATCH /api/users/me (UpdateOwnProfileRequest). Имя передаём текущее,
+ * чтобы смена фото его не затронула.
+ */
+@Serializable
+data class UpdateOwnProfileRequest(
+    val firstName: String? = null,
+    val lastName: String? = null,
+    val middleName: String? = null,
+    val avatarUrl: String? = null,
+)
+
 /** Ответ GET /api/balances/me (BalanceResponse). */
 @Serializable
 data class BalanceDto(

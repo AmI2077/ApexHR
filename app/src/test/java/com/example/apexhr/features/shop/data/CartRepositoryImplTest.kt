@@ -7,6 +7,7 @@ import com.example.apexhr.features.profile.data.ProfileApi
 import com.example.apexhr.features.profile.data.dto.BalanceDto
 import com.example.apexhr.features.profile.data.dto.CurrentUserProfileDto
 import com.example.apexhr.features.profile.data.dto.TransactionDto
+import com.example.apexhr.features.profile.data.dto.UpdateOwnProfileRequest
 import com.example.apexhr.features.profile.data.dto.UserAchievementDto
 import com.example.apexhr.features.shop.data.dto.CartItemDto
 import com.example.apexhr.features.shop.data.dto.OrderDto
@@ -217,6 +218,8 @@ private class FakeBalanceApi : ProfileApi {
     override suspend fun getCurrentUser(): CurrentUserProfileDto = error("not used")
 
     override suspend fun getTransactions(skip: Int, take: Int): List<TransactionDto> = error("not used")
+
+    override suspend fun updateOwnProfile(request: UpdateOwnProfileRequest) = error("not used")
 
     override suspend fun getUserAchievements(userId: String): List<UserAchievementDto> = error("not used")
 }

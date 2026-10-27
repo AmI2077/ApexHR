@@ -21,10 +21,13 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -94,6 +97,9 @@ fun ProfileUserInfo(
     department: String,
     modifier: Modifier = Modifier,
     avatarUrl: String? = null,
+    isAvatarUploading: Boolean = false,
+    @StringRes avatarErrorRes: Int? = null,
+    onAvatarClick: (() -> Unit)? = null,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -105,6 +111,9 @@ fun ProfileUserInfo(
                 .size(ApexDimens.avatarSize.dp)
                 .clip(CircleShape)
                 .background(secondaryBlueColor.copy(alpha = 0.28f))
+                .clickable(enabled = onAvatarClick != null && !isAvatarUploading) {
+                    onAvatarClick?.invoke()
+                }
                 .semantics { contentDescription = avatarDescription },
             contentAlignment = Alignment.Center,
         ) {
@@ -128,6 +137,12 @@ fun ProfileUserInfo(
                     modifier = Modifier.matchParentSize(),
                 )
             }
+            if (isAvatarUploading) {
+                CircularProgressIndicator(
+                    color = primaryBlueColor,
+                    modifier = Modifier.fillMaxSize(0.6f),
+                )
+            }
         }
         Spacer(modifier = Modifier.width(ApexDimens.spacing16.dp))
         Column {
@@ -143,6 +158,27 @@ fun ProfileUserInfo(
                 color = secondaryTextColor,
                 fontSize = ApexDimens.text14.sp,
             )
+            if (onAvatarClick != null) {
+                TextButton(
+                    onClick = onAvatarClick,
+                    enabled = !isAvatarUploading,
+                ) {
+                    Text(
+                        text = stringResource(
+                            if (isAvatarUploading) R.string.profile_avatar_uploading
+                            else R.string.profile_avatar_change
+                        ),
+                        fontSize = ApexDimens.text14.sp,
+                    )
+                }
+            }
+            if (avatarErrorRes != null) {
+                Text(
+                    text = stringResource(avatarErrorRes),
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = ApexDimens.text14.sp,
+                )
+            }
         }
     }
 }

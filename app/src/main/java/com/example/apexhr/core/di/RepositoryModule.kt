@@ -6,8 +6,12 @@ import com.example.apexhr.features.auth.data.AuthRepositoryImpl
 import com.example.apexhr.features.auth.domain.AuthRepository
 import com.example.apexhr.features.home.data.HomeRepositoryImpl
 import com.example.apexhr.features.home.domain.HomeRepository
+import com.example.apexhr.features.profile.data.AndroidAvatarImageCompressor
+import com.example.apexhr.features.profile.data.AvatarRepositoryImpl
 import com.example.apexhr.features.profile.data.ProfileRepositoryImpl
 import com.example.apexhr.features.profile.data.TransactionHistoryRepositoryImpl
+import com.example.apexhr.features.profile.domain.AvatarImageCompressor
+import com.example.apexhr.features.profile.domain.AvatarRepository
 import com.example.apexhr.features.profile.domain.ProfileRepository
 import com.example.apexhr.features.profile.domain.TransactionHistoryRepository
 import com.example.apexhr.features.shop.data.CartRepositoryImpl
@@ -16,11 +20,14 @@ import com.example.apexhr.features.shop.domain.CartRepository
 import com.example.apexhr.features.shop.domain.ShopRepository
 import com.example.apexhr.features.thanks.data.ThanksRepositoryImpl
 import com.example.apexhr.features.thanks.domain.ThanksRepository
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val repoModule = module {
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     single<ProfileRepository> { ProfileRepositoryImpl(get()) }
+    single<AvatarImageCompressor> { AndroidAvatarImageCompressor(androidContext().applicationContext) }
+    single<AvatarRepository> { AvatarRepositoryImpl(get(), get(), get(), get()) }
     single<TransactionHistoryRepository> { TransactionHistoryRepositoryImpl(get()) }
     single<ShopRepository> { ShopRepositoryImpl(get()) }
     single<CartRepository> { CartRepositoryImpl(get(), get()) }

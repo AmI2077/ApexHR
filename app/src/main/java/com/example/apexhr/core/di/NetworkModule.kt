@@ -9,6 +9,8 @@ import com.example.apexhr.features.activities.data.ActivitiesApi
 import com.example.apexhr.features.activities.data.KtorActivitiesApi
 import com.example.apexhr.features.home.data.HomeApi
 import com.example.apexhr.features.home.data.KtorHomeApi
+import com.example.apexhr.features.profile.data.AvatarStorageApi
+import com.example.apexhr.features.profile.data.KtorAvatarStorageApi
 import com.example.apexhr.features.profile.data.KtorProfileApi
 import com.example.apexhr.features.profile.data.ProfileApi
 import com.example.apexhr.features.shop.data.CartApi
@@ -60,6 +62,8 @@ val networkModule = module {
     }
 
     single<ProfileApi> { KtorProfileApi(get(AUTHORIZED_HTTP_CLIENT)) }
+    // Supabase Storage: без автоматического bearer и сброса сессии на 401.
+    single<AvatarStorageApi> { KtorAvatarStorageApi(get(AUTH_HTTP_CLIENT)) }
     single<ShopApi> { KtorShopApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<CartApi> { KtorCartApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<HomeApi> { KtorHomeApi(get(AUTHORIZED_HTTP_CLIENT)) }

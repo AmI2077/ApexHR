@@ -1,5 +1,6 @@
 package com.example.apexhr.features.profile.ui.models
 
+import androidx.annotation.StringRes
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.features.profile.ui.history.models.TransactionHistoryState
@@ -24,6 +25,10 @@ data class ProfileUiState(
     val avatarUrl: String? = null,
     /** Вкладка «Операции»: загружается при первом открытии вкладки. */
     val operations: TransactionHistoryState = TransactionHistoryState.Loading,
+    /** Идёт загрузка нового фото профиля. */
+    val isAvatarUploading: Boolean = false,
+    /** Почему не удалось сменить фото; null — ошибки нет. */
+    @StringRes val avatarErrorRes: Int? = null,
 ) {
     companion object {
         val Preview = ProfileUiState(

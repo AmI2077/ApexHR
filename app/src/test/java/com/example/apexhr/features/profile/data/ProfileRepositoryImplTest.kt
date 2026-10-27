@@ -7,6 +7,7 @@ import com.example.apexhr.features.profile.data.dto.AchievementDto
 import com.example.apexhr.features.profile.data.dto.BalanceDto
 import com.example.apexhr.features.profile.data.dto.CurrentUserProfileDto
 import com.example.apexhr.features.profile.data.dto.TransactionDto
+import com.example.apexhr.features.profile.data.dto.UpdateOwnProfileRequest
 import com.example.apexhr.features.profile.data.dto.UserAchievementDto
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -89,6 +90,8 @@ private class FakeProfileApi : ProfileApi {
         transactionsSkip = skip
         return emptyList()
     }
+
+    override suspend fun updateOwnProfile(request: UpdateOwnProfileRequest) = Unit
 
     override suspend fun getUserAchievements(userId: String): List<UserAchievementDto> {
         achievementsError?.let { throw it }

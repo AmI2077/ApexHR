@@ -14,6 +14,18 @@ object NetworkConfig {
     const val BALANCE_TRANSACTIONS_URL = "$BASE_URL/api/balances/me/transactions"
     fun userAchievementsUrl(userId: String) = "$BASE_URL/api/achievements/users/$userId"
 
+    // Supabase Storage: фото профиля (бакет avatars, лимит 2 МБ).
+    // Токен бэкенда — это JWT Supabase, им и авторизуемся в хранилище.
+    const val SUPABASE_URL = "https://hqvphndmvluncjfsqspf.supabase.co"
+
+    /** Публичный anon-ключ проекта: он и так открыт в вебе, секретом не является. */
+    const val SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxdnBobmRtdmx1bmNqZnNxc3BmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTY0MjEsImV4cCI6MjEwNzczMjQyMX0.-VxhzXAXnnp03RxVdlAvlx0xyKzb7G963QLJvSZkf0o"
+    const val AVATARS_OBJECT_URL = "$SUPABASE_URL/storage/v1/object/avatars"
+    const val AVATARS_PUBLIC_URL = "$SUPABASE_URL/storage/v1/object/public/avatars"
+    fun avatarObjectUrl(path: String) = "$AVATARS_OBJECT_URL/$path"
+    fun avatarPublicUrl(path: String) = "$AVATARS_PUBLIC_URL/$path"
+
     // Благодарности (текущий пользователь — тот же USER_PROFILE_URL, что у профиля)
     const val USERS_URL = "$BASE_URL/api/users"
     const val THANKS_URL = "$BASE_URL/api/thanks"

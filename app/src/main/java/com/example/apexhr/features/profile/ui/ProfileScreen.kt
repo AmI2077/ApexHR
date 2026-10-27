@@ -1,5 +1,8 @@
 package com.example.apexhr.features.profile.ui
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -136,12 +139,23 @@ fun ProfileScreenContent(
     callbacks: ProfileScreenCallbacks,
     modifier: Modifier = Modifier,
 ) {
+    // Системный выбор фото: только изображения, разрешение на галерею не нужно.
+    val pickPhoto = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri -> uri?.let { callbacks.onAvatarPicked(it.toString()) } }
     ProfileScreenFrame(callbacks, modifier) {
         item {
             ProfileUserInfo(
                 name = uiState.name,
                 department = uiState.department.joinedText(),
                 avatarUrl = uiState.avatarUrl,
+                isAvatarUploading = uiState.isAvatarUploading,
+                avatarErrorRes = uiState.avatarErrorRes,
+                onAvatarClick = {
+                    pickPhoto.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                },
             )
         }
         item {

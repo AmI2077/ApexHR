@@ -14,6 +14,7 @@ import com.example.apexhr.features.profile.data.dto.AchievementDto
 import com.example.apexhr.features.profile.data.dto.BalanceDto
 import com.example.apexhr.features.profile.data.dto.CurrentUserProfileDto
 import com.example.apexhr.features.profile.data.dto.TransactionDto
+import com.example.apexhr.features.profile.data.dto.UpdateOwnProfileRequest
 import com.example.apexhr.features.profile.data.dto.UserAchievementDto
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -202,6 +203,8 @@ private class FakeProfileApi : ProfileApi {
     override suspend fun getBalance(): BalanceDto = BalanceDto(amount = 120)
 
     override suspend fun getTransactions(skip: Int, take: Int): List<TransactionDto> = emptyList()
+
+    override suspend fun updateOwnProfile(request: UpdateOwnProfileRequest) = error("not used")
 
     override suspend fun getUserAchievements(userId: String): List<UserAchievementDto> {
         achievementsUserId = userId

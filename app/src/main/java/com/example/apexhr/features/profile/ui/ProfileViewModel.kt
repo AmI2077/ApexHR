@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
 import com.example.apexhr.core.domain.map
+import com.example.apexhr.features.profile.domain.AvatarChangeResult
+import com.example.apexhr.features.profile.domain.AvatarRepository
 import com.example.apexhr.features.profile.domain.Profile
 import com.example.apexhr.features.profile.domain.ProfileRepository
 import com.example.apexhr.features.profile.domain.TransactionFilter
@@ -15,6 +17,7 @@ import com.example.apexhr.features.profile.ui.history.models.toUiState
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
 import com.example.apexhr.features.profile.ui.models.ProfileScreenState
 import com.example.apexhr.features.profile.ui.models.ProfileTab
+import com.example.apexhr.features.profile.ui.models.messageRes
 import com.example.apexhr.features.profile.ui.models.toUiState
 import com.example.apexhr.features.thanks.domain.ThanksHistory
 import com.example.apexhr.features.thanks.domain.ThanksRepository
@@ -34,11 +37,13 @@ import kotlinx.coroutines.launch
  * отправленных, баланс и операции уже обновлены.
  * Переход к настройкам обрабатывает навигация (onSettingsClick переопределяется
  * в AppNavigation), здесь его нет.
+ * Новое фото профиля загружается в хранилище, после чего профиль перечитывается.
  */
 class ProfileViewModel(
     private val repository: ProfileRepository,
     private val thanksRepository: ThanksRepository,
     private val historyRepository: TransactionHistoryRepository,
+    private val avatarRepository: AvatarRepository,
 ) : ViewModel(), ProfileScreenCallbacks {
 
     private val _state = MutableStateFlow<ProfileScreenState>(ProfileScreenState.Loading)
@@ -56,6 +61,10 @@ class ProfileViewModel(
     private var isLoadingMore = false
     private var loadMoreError: DataError? = null
     private var operationsJob: Job? = null
+
+    // Смена фото.
+    private var isAvatarUploading = false
+    private var avatarErrorRes: Int? = null
 
     init {
         load()
@@ -163,6 +172,26 @@ class ProfileViewModel(
         if (operations is TransactionHistoryState.Content) publishOperations()
     }
 
+    override fun onAvatarPicked(imageUri: String) {
+        if (isAvatarUploading || data == null) return
+        isAvatarUploading = true
+        avatarErrorRes = null
+        publish()
+        viewModelScope.launch {
+            when (val result = avatarRepository.changeAvatar(imageUri)) {
+                is AvatarChangeResult.Success -> {
+                    // Перечитываем профиль с новой ссылкой; индикатор держим до конца.
+                    loadJob?.cancel()
+                    val reloaded = loadAll()
+                    if (reloaded is DataResult.Success) data = reloaded.data
+                }
+                is AvatarChangeResult.Failure -> avatarErrorRes = result.error.messageRes()
+            }
+            isAvatarUploading = false
+            publish()
+        }
+    }
+
     // Экранов назад и деталей достижений пока нет.
     override fun onBackClick() = Unit
     override fun onAchievementClick(achievementId: String) = Unit
@@ -182,7 +211,11 @@ class ProfileViewModel(
     private fun publish() {
         val (profile, thanks) = data ?: return
         _state.value = ProfileScreenState.Content(
-            profile.toUiState(selectedTab, thanks).copy(operations = operations)
+            profile.toUiState(selectedTab, thanks).copy(
+                operations = operations,
+                isAvatarUploading = isAvatarUploading,
+                avatarErrorRes = avatarErrorRes,
+            )
         )
     }
 }

@@ -6,6 +6,7 @@ import com.example.apexhr.core.domain.DataResult
 import com.example.apexhr.features.profile.data.dto.BalanceDto
 import com.example.apexhr.features.profile.data.dto.CurrentUserProfileDto
 import com.example.apexhr.features.profile.data.dto.TransactionDto
+import com.example.apexhr.features.profile.data.dto.UpdateOwnProfileRequest
 import com.example.apexhr.features.profile.data.dto.UserAchievementDto
 import com.example.apexhr.features.profile.domain.TransactionPage
 import com.example.apexhr.features.profile.domain.TransactionType
@@ -114,6 +115,8 @@ private class FakeHistoryProfileApi : ProfileApi {
         transactionsError?.let { throw it }
         return transactions
     }
+
+    override suspend fun updateOwnProfile(request: UpdateOwnProfileRequest) = error("not used")
 
     override suspend fun getUserAchievements(userId: String): List<UserAchievementDto> =
         error("не нужен истории")

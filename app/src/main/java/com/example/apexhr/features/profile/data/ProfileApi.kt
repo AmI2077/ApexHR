@@ -5,12 +5,17 @@ import com.example.apexhr.core.data.network.requireSuccess
 import com.example.apexhr.features.profile.data.dto.BalanceDto
 import com.example.apexhr.features.profile.data.dto.CurrentUserProfileDto
 import com.example.apexhr.features.profile.data.dto.TransactionDto
+import com.example.apexhr.features.profile.data.dto.UpdateOwnProfileRequest
 import com.example.apexhr.features.profile.data.dto.UserAchievementDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.patch
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 
 /** Запросы профиля. Все идут от имени пользователя, с bearer-токеном. */
 interface ProfileApi {
@@ -18,6 +23,9 @@ interface ProfileApi {
     suspend fun getBalance(): BalanceDto
     suspend fun getTransactions(skip: Int, take: Int): List<TransactionDto>
     suspend fun getUserAchievements(userId: String): List<UserAchievementDto>
+
+    /** PATCH /api/users/me. Ответ не разбираем: после сохранения профиль перечитывается. */
+    suspend fun updateOwnProfile(request: UpdateOwnProfileRequest)
 }
 
 /**
@@ -49,4 +57,11 @@ class KtorProfileApi(
 
     override suspend fun getUserAchievements(userId: String): List<UserAchievementDto> =
         client.get(NetworkConfig.userAchievementsUrl(userId)).requireSuccess().body()
+
+    override suspend fun updateOwnProfile(request: UpdateOwnProfileRequest) {
+        client.patch(NetworkConfig.USER_PROFILE_URL) {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.requireSuccess()
+    }
 }

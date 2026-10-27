@@ -110,6 +110,12 @@
     <string name="profile_tab_achievements">Достижения</string>
     <string name="profile_tab_operations">История</string>
     <string name="profile_avatar">Аватар</string>
+    <string name="profile_avatar_change">Сменить фото</string>
+    <string name="profile_avatar_uploading">Загружаем фото…</string>
+    <string name="profile_avatar_error_session">Не удалось сменить фото: вход выполнен под другим пользователем. Выйдите и войдите заново</string>
+    <string name="profile_avatar_error_image">Не удалось прочитать изображение. Выберите другое фото</string>
+    <string name="profile_avatar_error_too_large">Фото слишком большое. Выберите другое</string>
+    <string name="profile_avatar_error_rejected">Хранилище не приняло фото. Попробуйте ещё раз или войдите заново</string>
     <string name="profile_achievements_empty">Достижений пока нет</string>
     <string name="profile_transaction_untitled">Операция по балансу</string>
     <string name="profile_achievement_untitled">Достижение</string>

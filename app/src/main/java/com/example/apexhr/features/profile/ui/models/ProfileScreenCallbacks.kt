@@ -25,6 +25,9 @@ interface ProfileScreenCallbacks {
     /** Повтор загрузки вкладки «Операции» после ошибки. По умолчанию ничего не делает. */
     fun onOperationsRetryClick() = Unit
 
+    /** Выбрано новое фото профиля (content:// адрес). По умолчанию ничего не делает. */
+    fun onAvatarPicked(imageUri: String) = Unit
+
     companion object {
         val Empty = object : ProfileScreenCallbacks {
             override fun onBackClick() = Unit
