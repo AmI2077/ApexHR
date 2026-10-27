@@ -34,9 +34,9 @@ data class UpdateCartItemRequest(
 )
 
 /**
- * Элемент ответа GET /api/orders и ответ POST /api/orders/checkout (201).
+ * Элемент ответа GET /api/orders/history (массив, как раньше у GET /api/orders) и ответ POST /api/orders/checkout (201).
  * В Swagger схем нет, поля сняты с реальных ответов:
- * - GET /api/orders: `{"id":5,"status":"Paid","totalAmount":50,"createdAt":"…Z",
+ * - GET /api/orders/history: `{"id":5,"status":"Paid","totalAmount":50,"createdAt":"…Z",
  *   "updatedAt":"…Z","comment":null,"items":[{"id":5,"productId":1,
  *   "productName":"…","quantity":1,"priceAtPurchase":50}]}`;
  * - checkout: `{"id":6,"status":"Paid","totalAmount":50,"createdAt":"…Z",
