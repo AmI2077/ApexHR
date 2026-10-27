@@ -47,7 +47,7 @@ fun SettingsScreenPreview() {
     }
 }
 
-@Preview(name = "Dark", showBackground = true, backgroundColor = 0xFF121417, widthDp = 360)
+@Preview(name = "Dark", showBackground = true, backgroundColor = 0xFF09090B, widthDp = 360)
 @Composable
 fun SettingsScreenDarkPreview() {
     ApexHRTheme(dynamicColor = false, darkTheme = true) {

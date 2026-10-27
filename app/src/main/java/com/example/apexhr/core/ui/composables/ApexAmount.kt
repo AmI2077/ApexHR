@@ -207,7 +207,7 @@ private fun ApexAmountPreview() {
     }
 }
 
-@Preview(name = "Dark", showBackground = true, backgroundColor = 0xFF121417)
+@Preview(name = "Dark", showBackground = true, backgroundColor = 0xFF09090B)
 @Composable
 private fun ApexAmountDarkPreview() {
     ApexHRTheme(dynamicColor = false, darkTheme = true) {

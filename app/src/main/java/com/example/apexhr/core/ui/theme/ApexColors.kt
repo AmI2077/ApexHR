@@ -53,20 +53,28 @@ val ApexLightColorScheme: ColorScheme = lightColorScheme(
 )
 
 /**
- * Тёмная схема «Апекса»: тёмный фон, светлый текст и посветлевший фирменный
- * синий, чтобы синий текст и значки читались на тёмном фоне.
+ * Тёмная схема «Апекса» на цветах веба: почти чёрный фон (#09090B),
+ * карточки #171717, светлый текст и посветлевший фирменный синий.
  */
 val ApexDarkColorScheme: ColorScheme = darkColorScheme(
-    primary = Color(0xFF7EA8E6),
-    onPrimary = Color(0xFF0D2547),
-    primaryContainer = Color(0xFF2C4C78),
-    onPrimaryContainer = Color(0xFFD3E3FA),
-    background = Color(0xFF121417),
-    onBackground = Color(0xFFE3E6EA),
-    surface = Color(0xFF121417),
-    onSurface = Color(0xFFE3E6EA),
-    surfaceVariant = Color(0xFF252A31),
-    onSurfaceVariant = Color(0xFFA4A9AE),
+    primary = Color(0xFF5A8DD6),
+    onPrimary = Color.White,
+    primaryContainer = Color(0xFF1E4A8A),
+    onPrimaryContainer = Color(0xFFD6E6F8),
+    secondary = Color(0xFF2A63B6),
+    background = Color(0xFF09090B),
+    onBackground = Color(0xFFFAFAFA),
+    surface = Color(0xFF09090B),
+    onSurface = Color(0xFFFAFAFA),
+    surfaceVariant = Color(0xFF171717),
+    onSurfaceVariant = Color(0xFFA1A1AA),
+    surfaceContainerLowest = Color(0xFF171717),
+    surfaceContainerLow = Color(0xFF171717),
+    surfaceContainer = Color(0xFF171717),
+    surfaceContainerHigh = Color(0xFF171717),
+    surfaceContainerHighest = Color(0xFF171717),
+    outline = Color(0xFF404040),
+    outlineVariant = Color(0xFF404040),
     error = Color(0xFFF2777F),
     onError = Color(0xFF3B0A0F),
 )
