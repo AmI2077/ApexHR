@@ -108,7 +108,7 @@
     <string name="profile_current_balance">Текущий баланс</string>
     <string name="profile_tab_thanks">Благодарности</string>
     <string name="profile_tab_achievements">Достижения</string>
-    <string name="profile_tab_operations">Операции</string>
+    <string name="profile_tab_operations">История</string>
     <string name="profile_avatar">Аватар</string>
     <string name="profile_achievements_empty">Достижений пока нет</string>
     <string name="profile_transaction_untitled">Операция по балансу</string>
@@ -134,9 +134,9 @@
     <string name="profile_history_type_refund">Возврат</string>
     <string name="profile_history_type_adjustment">Корректировка</string>
     <string name="profile_history_type_other">Операция</string>
-    <string name="profile_history_empty">Операций по балансу пока нет</string>
-    <string name="profile_history_filter_empty">Операций с таким фильтром нет</string>
-    <string name="profile_history_filter_empty_loaded">Среди загруженных операций таких нет</string>
+    <string name="profile_history_empty">История пока пуста</string>
+    <string name="profile_history_filter_empty">В истории нет записей с таким фильтром</string>
+    <string name="profile_history_filter_empty_loaded">Среди загруженных записей истории таких нет</string>
     <string name="profile_history_load_more">Показать ещё</string>
     <string name="profile_send_thanks">Поблагодарить коллегу</string>
 
