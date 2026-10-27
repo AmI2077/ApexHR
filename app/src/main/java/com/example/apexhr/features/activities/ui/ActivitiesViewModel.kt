@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * Вкладка «Активности»: опросы, квесты («Мини-игры») и мероприятия.
+ * Вкладка «Активности»: опросы, квесты и мероприятия.
  * Список выбранной вкладки перечитывается при каждом показе экрана и выборе вкладки;
  * поиск фильтрует уже загруженный список по названию. Переходы на детали задаёт навигация.
  */
@@ -78,7 +78,7 @@ class ActivitiesViewModel(
 
     private suspend fun loadCategory(categoryId: String): DataResult<List<ActivityUiModel>> =
         when (categoryId) {
-            ActivitiesUiState.CATEGORY_MINI_GAMES ->
+            ActivitiesUiState.CATEGORY_QUESTS ->
                 repository.getQuests().map { quests -> quests.map { it.toUiModel() } }
 
             ActivitiesUiState.CATEGORY_EVENTS ->

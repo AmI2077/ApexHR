@@ -122,7 +122,7 @@ private fun ApexPillTabsPreview() {
         var selected by remember { mutableIntStateOf(0) }
         Column(verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing16.dp)) {
             ApexPillTabs(
-                labels = listOf("Опросы", "Мини-игры", "Мероприятия"),
+                labels = listOf("Опросы", "Квесты", "Мероприятия"),
                 selectedIndex = selected,
                 onSelect = { selected = it },
                 contentPadding = PaddingValues(horizontal = ApexDimens.spacing20.dp),
@@ -144,7 +144,7 @@ private fun ApexPillTabsDarkPreview() {
         var selected by remember { mutableIntStateOf(0) }
         Column(verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing16.dp)) {
             ApexPillTabs(
-                labels = listOf("Опросы", "Мини-игры", "Мероприятия"),
+                labels = listOf("Опросы", "Квесты", "Мероприятия"),
                 selectedIndex = selected,
                 onSelect = { selected = it },
                 contentPadding = PaddingValues(horizontal = ApexDimens.spacing20.dp),

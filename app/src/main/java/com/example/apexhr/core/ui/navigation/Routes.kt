@@ -66,7 +66,7 @@ data object OrdersRoute : NavKey
 @Serializable
 data class EventDetailsRoute(val eventId: Long) : NavKey
 
-/** Квест: открывается из списка «Активности» (вкладка «Мини-игры»). */
+/** Квест: открывается из списка «Активности» (вкладка «Квесты»). */
 @Serializable
 data class QuestDetailsRoute(val questId: Long) : NavKey
 

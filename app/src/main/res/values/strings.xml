@@ -154,7 +154,7 @@
     <string name="activities_title">Активности</string>
     <string name="activities_search_placeholder">Поиск по активностям…</string>
     <string name="activities_category_surveys">Опросы</string>
-    <string name="activities_category_mini_games">Мини-игры</string>
+    <string name="activities_category_quests">Квесты</string>
     <string name="activities_category_events">Мероприятия</string>
     <plurals name="activities_questions_count">
         <item quantity="one">%1$d вопрос</item>

@@ -12,12 +12,12 @@ data class ActivitiesUiState(
 ) {
     companion object {
         const val CATEGORY_SURVEYS = "surveys"
-        const val CATEGORY_MINI_GAMES = "mini_games"
+        const val CATEGORY_QUESTS = "quests"
         const val CATEGORY_EVENTS = "events"
 
         val Categories = listOf(
             ActivityCategoryUiModel(CATEGORY_SURVEYS, R.string.activities_category_surveys),
-            ActivityCategoryUiModel(CATEGORY_MINI_GAMES, R.string.activities_category_mini_games),
+            ActivityCategoryUiModel(CATEGORY_QUESTS, R.string.activities_category_quests),
             ActivityCategoryUiModel(CATEGORY_EVENTS, R.string.activities_category_events),
         )
 
