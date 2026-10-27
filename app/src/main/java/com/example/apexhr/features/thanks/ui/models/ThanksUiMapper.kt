@@ -7,17 +7,16 @@ import com.example.apexhr.features.profile.ui.models.userInfoLabels
 import com.example.apexhr.features.thanks.domain.Colleague
 import com.example.apexhr.features.thanks.domain.ThanksSendError
 
-/** Суммы благодарности на выбор; первая — по умолчанию. */
-val THANKS_AMOUNTS: List<Long> = listOf(10, 20, 30, 50)
-
 /** Ограничение длины сообщения, как в веб-версии. */
 const val THANKS_MESSAGE_MAX_LENGTH = 120
+
+/** Минимальная длина сообщения без пробелов по краям, как в веб-версии. */
+const val THANKS_MESSAGE_MIN_LENGTH = 2
 
 /** Введённые пользователем данные формы и состояние отправки. */
 data class ThanksForm(
     val searchQuery: String = "",
     val selectedColleagueId: String? = null,
-    val selectedAmount: Long = THANKS_AMOUNTS.first(),
     val message: String = "",
     val isSending: Boolean = false,
     val notice: ThanksNotice? = null,
@@ -32,9 +31,8 @@ fun List<Colleague>.toUiState(form: ThanksForm): ThanksUiState {
         colleagues = search(form.searchQuery).map { it.toUiModel() },
         selectedColleagueId = selected?.id,
         selectedColleagueName = selected?.name,
-        amountOptions = THANKS_AMOUNTS,
-        selectedAmount = form.selectedAmount,
         message = form.message,
+        messageMinLength = THANKS_MESSAGE_MIN_LENGTH,
         messageMaxLength = THANKS_MESSAGE_MAX_LENGTH,
         isSending = form.isSending,
         notice = form.notice,
@@ -54,6 +52,9 @@ fun List<Colleague>.search(query: String): List<Colleague> {
         words.all { word -> fields.any { it.contains(word) } }
     }
 }
+
+/** Сообщение достаточно длинное для отправки. */
+fun String.isValidThanksMessage(): Boolean = trim().length >= THANKS_MESSAGE_MIN_LENGTH
 
 /** Обрезает сообщение до допустимой длины. */
 fun String.limitThanksMessage(): String = take(THANKS_MESSAGE_MAX_LENGTH)

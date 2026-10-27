@@ -30,7 +30,6 @@ import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.features.thanks.ui.composables.ColleagueRow
 import com.example.apexhr.features.thanks.ui.composables.SendThanksButton
-import com.example.apexhr.features.thanks.ui.composables.ThanksAmountSelector
 import com.example.apexhr.features.thanks.ui.composables.ThanksHeader
 import com.example.apexhr.features.thanks.ui.composables.ThanksMessageCounter
 import com.example.apexhr.features.thanks.ui.composables.ThanksMessageField
@@ -127,12 +126,6 @@ fun ThanksScreenContent(
                 )
             }
         }
-        ThanksAmountSelector(
-            options = uiState.amountOptions,
-            selected = uiState.selectedAmount,
-            onAmountClick = callbacks::onAmountClick,
-            enabled = !uiState.isSending,
-        )
         Column(modifier = Modifier.fillMaxWidth()) {
             ThanksMessageField(
                 message = uiState.message,

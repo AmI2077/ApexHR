@@ -40,19 +40,32 @@ class ThanksUiMapperTest {
     }
 
     @Test
-    fun `default form selects first amount and nothing else`() {
+    fun `default form selects nothing`() {
         val state = state()
 
-        assertEquals(listOf(10L, 20L, 30L, 50L), state.amountOptions)
-        assertEquals(10L, state.selectedAmount)
         assertNull(state.selectedColleagueId)
         assertFalse(state.canSend)
         assertEquals(THANKS_MESSAGE_MAX_LENGTH, state.messageMaxLength)
+        assertEquals(THANKS_MESSAGE_MIN_LENGTH, state.messageMinLength)
+    }
+
+    @Test
+    fun `message shorter than two characters blocks sending`() {
+        assertFalse(state(ThanksForm(selectedColleagueId = "anna")).canSend)
+        assertFalse(state(ThanksForm(selectedColleagueId = "anna", message = "  а  ")).canSend)
+        assertTrue(state(ThanksForm(selectedColleagueId = "anna", message = " ок ")).canSend)
+    }
+
+    @Test
+    fun `message validation trims spaces`() {
+        assertFalse("".isValidThanksMessage())
+        assertFalse(" я ".isValidThanksMessage())
+        assertTrue("ок".isValidThanksMessage())
     }
 
     @Test
     fun `selection survives search that hides selected colleague`() {
-        val state = state(ThanksForm(searchQuery = "иван", selectedColleagueId = "anna"))
+        val state = state(ThanksForm(searchQuery = "иван", selectedColleagueId = "anna", message = "Спасибо"))
 
         assertEquals(listOf("ivan"), state.colleagues.map { it.id })
         assertEquals("anna", state.selectedColleagueId)
@@ -70,7 +83,7 @@ class ThanksUiMapperTest {
 
     @Test
     fun `cannot send while sending`() {
-        assertFalse(state(ThanksForm(selectedColleagueId = "anna", isSending = true)).canSend)
+        assertFalse(state(ThanksForm(selectedColleagueId = "anna", message = "Спасибо", isSending = true)).canSend)
     }
 
     @Test

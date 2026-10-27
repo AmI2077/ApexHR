@@ -6,11 +6,11 @@ import com.example.apexhr.core.domain.DataResult
 import com.example.apexhr.features.thanks.domain.Colleague
 import com.example.apexhr.features.thanks.domain.ThanksRepository
 import com.example.apexhr.features.thanks.domain.ThanksSendResult
-import com.example.apexhr.features.thanks.ui.models.THANKS_AMOUNTS
 import com.example.apexhr.features.thanks.ui.models.THANKS_SENT_NOTICE
 import com.example.apexhr.features.thanks.ui.models.ThanksForm
 import com.example.apexhr.features.thanks.ui.models.ThanksScreenCallbacks
 import com.example.apexhr.features.thanks.ui.models.ThanksScreenState
+import com.example.apexhr.features.thanks.ui.models.isValidThanksMessage
 import com.example.apexhr.features.thanks.ui.models.limitThanksMessage
 import com.example.apexhr.features.thanks.ui.models.toNotice
 import com.example.apexhr.features.thanks.ui.models.toUiState
@@ -63,22 +63,18 @@ class ThanksViewModel(
 
     override fun onQuickThanksClick(colleagueId: String) = onColleagueClick(colleagueId)
 
-    override fun onAmountClick(amount: Long) {
-        if (amount !in THANKS_AMOUNTS) return
-        updateForm { copy(selectedAmount = amount, notice = null) }
-    }
-
     override fun onMessageChange(message: String) =
         updateForm { copy(message = message.limitThanksMessage()) }
 
     override fun onSendClick() {
         val toUserId = form.selectedColleagueId ?: return
         if (form.isSending || colleagues == null) return
+        // Кнопка уже неактивна, но проверяем и здесь: короткое сообщение сервер не примет.
+        if (!form.message.isValidThanksMessage()) return
         updateForm { copy(isSending = true, notice = null) }
         viewModelScope.launch {
             val result = repository.sendThanks(
                 toUserId = toUserId,
-                amount = form.selectedAmount,
                 message = form.message,
             )
             when (result) {

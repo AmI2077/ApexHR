@@ -237,16 +237,13 @@
     <string name="thanks_action">Спасибо</string>
     <string name="thanks_send_section">Отправить благодарность</string>
     <string name="thanks_recipient">Кому: %1$s</string>
-    <string name="thanks_message_label">Сообщение (необязательно)</string>
+    <string name="thanks_message_label">Сообщение (не короче 2 символов)</string>
     <string name="thanks_message_placeholder">Напишите несколько слов благодарности…</string>
     <string name="thanks_send">Отправить благодарность</string>
     <string name="thanks_sending">Отправляем…</string>
     <string name="thanks_unknown_colleague">Неизвестный сотрудник</string>
     <string name="thanks_nothing_found">Никого не нашли</string>
     <string name="thanks_no_colleagues">Пока некого благодарить</string>
-    <string name="thanks_amount_label">Сумма</string>
-    <string name="thanks_amount_currency">в апексах</string>
-    <string name="thanks_amount_option">%1$d</string>
     <string name="thanks_message_counter">%1$d / %2$d</string>
     <string name="thanks_sent">Благодарность отправлена</string>
     <string name="thanks_error_server_message">%1$s</string>

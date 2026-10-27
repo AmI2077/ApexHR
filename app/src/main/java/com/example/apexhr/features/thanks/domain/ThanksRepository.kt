@@ -10,7 +10,11 @@ interface ThanksRepository {
     /** Полученные и отправленные благодарности; имена — из списка сотрудников. */
     suspend fun loadHistory(): DataResult<ThanksHistory>
 
-    suspend fun sendThanks(toUserId: String, amount: Long, message: String?): ThanksSendResult
+    /**
+     * Отправляет благодарность без трат, как в вебе: сумма всегда
+     * THANKS_AMOUNT, благодарность публичная.
+     */
+    suspend fun sendThanks(toUserId: String, message: String): ThanksSendResult
 
     /** Срабатывает после каждой успешной отправки, чтобы история обновилась. */
     val thanksSent: Flow<Unit>

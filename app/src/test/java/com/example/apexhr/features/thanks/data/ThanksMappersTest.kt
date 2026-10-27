@@ -124,11 +124,11 @@ class ThanksMappersTest {
     fun `send request is serialized as in swagger`() {
         val body = json.encodeToJsonElement(
             CreateThankRequest.serializer(),
-            CreateThankRequest(toUserId = anna, amount = 20, message = "Спасибо", isPublic = true),
+            CreateThankRequest(toUserId = anna, amount = 1, message = "Спасибо", isPublic = true),
         ).jsonObject
 
         assertEquals(anna, body["toUserId"]?.jsonPrimitive?.content)
-        assertEquals("20", body["amount"]?.jsonPrimitive?.content)
+        assertEquals("1", body["amount"]?.jsonPrimitive?.content)
         assertEquals("Спасибо", body["message"]?.jsonPrimitive?.content)
         assertEquals("true", body["isPublic"]?.jsonPrimitive?.content)
     }

@@ -28,8 +28,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
-import com.example.apexhr.core.ui.composables.ApexCurrencyIcon
-import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.negativeRedColor
@@ -258,38 +256,6 @@ fun ThanksSectionLabel(
         fontWeight = FontWeight.Bold,
         modifier = modifier,
     )
-}
-
-@Composable
-fun ThanksAmountSelector(
-    options: List<Long>,
-    selected: Long,
-    onAmountClick: (Long) -> Unit,
-    enabled: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        // Таблетки умеют только текст, поэтому значок валюты стоит у подписи.
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(R.string.thanks_amount_label),
-                color = secondaryTextColor,
-                fontSize = ApexDimens.text13.sp,
-            )
-            Spacer(modifier = Modifier.width(ApexDimens.spacing4.dp))
-            ApexCurrencyIcon(
-                size = ApexDimens.icon16.dp,
-                contentDescription = stringResource(R.string.thanks_amount_currency),
-            )
-        }
-        Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
-        ApexPillTabs(
-            labels = options.map { amount -> stringResource(R.string.thanks_amount_option, amount) },
-            selectedIndex = options.indexOf(selected),
-            onSelect = { index -> onAmountClick(options[index]) },
-            enabled = enabled,
-        )
-    }
 }
 
 @Composable

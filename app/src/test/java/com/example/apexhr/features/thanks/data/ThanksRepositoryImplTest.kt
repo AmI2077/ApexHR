@@ -75,7 +75,7 @@ class ThanksRepositoryImplTest {
     fun `successful send notifies subscribers`() = runBlocking {
         val event = async(start = CoroutineStart.UNDISPATCHED) { repository.thanksSent.first() }
 
-        repository.sendThanks(toUserId = ANNA, amount = 10, message = null)
+        repository.sendThanks(toUserId = ANNA, message = "Спасибо")
 
         assertEquals(Unit, withTimeoutOrNull(1_000) { event.await() })
     }
@@ -87,25 +87,25 @@ class ThanksRepositoryImplTest {
             withTimeoutOrNull(200) { repository.thanksSent.first() }
         }
 
-        repository.sendThanks(toUserId = ANNA, amount = 10, message = null)
+        repository.sendThanks(toUserId = ANNA, message = "Спасибо")
 
         assertNull(event.await())
     }
 
     @Test
-    fun `send passes recipient amount and trimmed message`() = runBlocking {
-        val result = repository.sendThanks(toUserId = ANNA, amount = 30, message = "  Спасибо!  ")
+    fun `send passes recipient fixed amount and trimmed message`() = runBlocking {
+        val result = repository.sendThanks(toUserId = ANNA, message = "  Спасибо!  ")
 
         assertEquals(ThanksSendResult.Success, result)
         assertEquals(
-            CreateThankRequest(toUserId = ANNA, amount = 30, message = "Спасибо!", isPublic = true),
+            CreateThankRequest(toUserId = ANNA, amount = 1, message = "Спасибо!", isPublic = true),
             api.sentRequest,
         )
     }
 
     @Test
     fun `blank message is not sent`() = runBlocking {
-        repository.sendThanks(toUserId = ANNA, amount = 10, message = "   ")
+        repository.sendThanks(toUserId = ANNA, message = "   ")
 
         assertNull(api.sentRequest?.message)
     }
@@ -116,7 +116,7 @@ class ThanksRepositoryImplTest {
 
         assertEquals(
             ThanksSendResult.Failure(ThanksSendError.Rejected("Превышен недельный лимит благодарностей")),
-            repository.sendThanks(toUserId = ANNA, amount = 50, message = null),
+            repository.sendThanks(toUserId = ANNA, message = "Спасибо"),
         )
     }
 
@@ -126,7 +126,7 @@ class ThanksRepositoryImplTest {
 
         assertEquals(
             ThanksSendResult.Failure(ThanksSendError.Data(DataError.Network)),
-            repository.sendThanks(toUserId = ANNA, amount = 10, message = null),
+            repository.sendThanks(toUserId = ANNA, message = "Спасибо"),
         )
     }
 

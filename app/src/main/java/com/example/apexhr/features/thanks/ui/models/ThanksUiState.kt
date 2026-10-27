@@ -18,16 +18,16 @@ data class ThanksUiState(
     val selectedColleagueId: String?,
     /** Имя выбранного коллеги; null, если не выбран или имя неизвестно. */
     val selectedColleagueName: String?,
-    val amountOptions: List<Long>,
-    val selectedAmount: Long,
     val message: String,
+    /** Минимум символов без пробелов по краям. */
+    val messageMinLength: Int,
     val messageMaxLength: Int,
     val isSending: Boolean,
     /** Итог последней отправки; null, пока ничего не отправляли. */
     val notice: ThanksNotice?,
 ) {
     val canSend: Boolean
-        get() = selectedColleagueId != null && !isSending
+        get() = selectedColleagueId != null && !isSending && message.trim().length >= messageMinLength
 
     /** Список пуст из-за поиска, а не потому, что коллег нет. */
     val isNothingFound: Boolean
@@ -60,9 +60,8 @@ data class ThanksUiState(
             ),
             selectedColleagueId = "anna",
             selectedColleagueName = "Анна Петрова",
-            amountOptions = listOf(10, 20, 30, 50),
-            selectedAmount = 20,
-            message = "",
+            message = "Спасибо за помощь!",
+            messageMinLength = 2,
             messageMaxLength = 120,
             isSending = false,
             notice = ThanksNotice(

@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
+/** Сумма благодарности: в вебе она фиксированная и ничего не стоит отправителю. */
+const val THANKS_AMOUNT = 1L
+
 class ThanksRepositoryImpl(
     private val api: ThanksApi,
 ) : ThanksRepository {
@@ -53,14 +56,13 @@ class ThanksRepositoryImpl(
 
     override suspend fun sendThanks(
         toUserId: String,
-        amount: Long,
-        message: String?,
+        message: String,
     ): ThanksSendResult = safeThanksAction {
         api.sendThanks(
             CreateThankRequest(
                 toUserId = toUserId,
-                amount = amount,
-                message = message?.trim()?.takeIf { it.isNotEmpty() },
+                amount = THANKS_AMOUNT,
+                message = message.trim().takeIf { it.isNotEmpty() },
                 isPublic = true,
             )
         )
