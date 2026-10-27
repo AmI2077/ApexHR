@@ -1,19 +1,14 @@
-<vector xmlns:aapt="http://schemas.android.com/aapt" xmlns:android="http://schemas.android.com/apk/res/android" android:height="26.977777dp" android:viewportHeight="607" android:viewportWidth="540" android:width="24dp">
-      
-    <path android:pathData="M196,480.98C243,457.98 291,448.98 347,481.98L306,395.98H378C427,474.98 475,545.97 540,605.97L439,606.97C397,537.97 345,497.98 276,496.98C200,492.98 141,536.97 98,606.97H0C77,526.97 125,460.98 167,395.98H241L196,480.98ZM272,1.97C273.33,-0.69 274.5,-0.62 276,1.97C282,69.97 293,161.98 309,220.98C321,266.98 339,321.98 366,369.98H296L275,317.98L253,369.98H183C208,325.98 230,280.98 244,212.98C262,143.98 268,61.97 272,1.97Z">
-            
-        <aapt:attr name="android:fillColor">
-                  
-            <gradient android:endX="270" android:endY="606.98" android:startX="270" android:startY="395.98" android:type="linear">
-                        
-                <item android:color="#FF306CC0" android:offset="0"/>
-                        
-                <item android:color="#FF004099" android:offset="1"/>
-                      
-            </gradient>
-                
-        </aapt:attr>
-          
-    </path>
-    
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Знак «Апекса» (башня-«А») из веба: apexteam/public/favicon.svg, цвет #306CC0. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="26.977777dp"
+    android:viewportWidth="540"
+    android:viewportHeight="607">
+    <path
+        android:fillColor="#FF306CC0"
+        android:pathData="M272,1.974C268,61.974 262,143.974 244,212.974C230,280.974 208,325.974 183,369.974H253L275,317.974L296,369.974H366C339,321.974 321,266.974 309,220.974C293,161.974 282,69.974 276,1.974C274.5,-0.624 273.333,-0.692 272,1.974Z" />
+    <path
+        android:fillColor="#FF306CC0"
+        android:pathData="M0,606.974C77,526.974 125,460.974 167,395.974H241L196,480.974C243,457.974 291,448.974 347,481.974L306,395.974H378C427,474.974 475,545.974 540,605.974L439,606.974C397,537.974 345,497.974 276,496.974C200,492.974 141,536.974 98,606.974H0Z" />
 </vector>

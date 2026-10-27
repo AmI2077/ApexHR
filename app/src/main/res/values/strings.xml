@@ -260,6 +260,8 @@
     <!-- Авторизация -->
     <string name="logout">Выйти</string>
     <string name="auth_brand">Апекс</string>
+    <!-- Надпись логотипа после знака-«А» -->
+    <string name="auth_brand_wordmark">ПЕКС</string>
     <string name="auth_welcome">Добро пожаловать!</string>
     <string name="auth_subtitle">Войдите в свой аккаунт</string>
     <string name="auth_email_label">Email</string>
