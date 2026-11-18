@@ -168,8 +168,8 @@ fun ActivityCard(
                     fontWeight = FontWeight.SemiBold,
                 )
             }
-            Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
-            Row(
+            if (activity.canParticipate) Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
+            if (activity.canParticipate) Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
@@ -202,4 +202,13 @@ private fun ActivitySubtitle.text(): String = when (this) {
     is ActivitySubtitle.Steps -> pluralStringResource(R.plurals.activities_steps_count, count, count)
     is ActivitySubtitle.EventTime -> listOfNotNull(startAt, location)
         .joinToString(stringResource(R.string.activities_event_separator))
+
+    is ActivitySubtitle.AchievementInfo -> listOfNotNull(
+        description,
+        when {
+            conditionRes != null -> stringResource(conditionRes)
+            earnedAt != null -> stringResource(R.string.achievement_earned_at, earnedAt)
+            else -> null
+        },
+    ).joinToString("\n")
 }

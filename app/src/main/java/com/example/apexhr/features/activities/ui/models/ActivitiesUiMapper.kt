@@ -2,6 +2,8 @@ package com.example.apexhr.features.activities.ui.models
 
 import androidx.annotation.StringRes
 import com.example.apexhr.R
+import com.example.apexhr.features.activities.domain.Achievement
+import com.example.apexhr.features.activities.domain.AchievementCondition
 import com.example.apexhr.features.activities.domain.Event
 import com.example.apexhr.features.activities.domain.EventRegistrationStatus
 import com.example.apexhr.features.activities.domain.Quest
@@ -53,6 +55,31 @@ fun Event.toUiModel(zone: ZoneId = ZoneId.systemDefault()): ActivityUiModel =
         reward = rewardAmount.toRewardOrNull(),
         statusRes = registrationStatus?.labelRes(),
     )
+
+/** Достижение в общем списке: награда, «Получено» и условие, как в карточке веба. */
+fun Achievement.toUiModel(zone: ZoneId = ZoneId.systemDefault()): ActivityUiModel =
+    ActivityUiModel(
+        id = id,
+        kind = ActivityKind.Achievement,
+        title = name,
+        subtitle = ActivitySubtitle.AchievementInfo(
+            description = description,
+            isEarned = isEarned,
+            earnedAt = earnedAt?.formatActivityDate(zone)?.takeIf { isEarned },
+            conditionRes = if (isEarned) null else conditionType.hintRes(),
+        ),
+        reward = rewardAmount.toRewardOrNull(),
+        statusRes = if (isEarned) R.string.activities_status_achievement_earned else null,
+        canParticipate = false,
+    )
+
+@StringRes
+fun AchievementCondition.hintRes(): Int = when (this) {
+    AchievementCondition.FirstOrder -> R.string.achievement_condition_first_order
+    AchievementCondition.FirstThank -> R.string.achievement_condition_first_thank
+    AchievementCondition.FirstActivity -> R.string.achievement_condition_first_activity
+    AchievementCondition.Other -> R.string.achievement_condition_other
+}
 
 @StringRes
 fun QuestParticipationStatus.labelRes(): Int? = when (this) {

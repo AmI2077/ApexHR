@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apexhr.core.domain.DataResult
 import com.example.apexhr.core.domain.map
+import com.example.apexhr.features.activities.domain.AchievementsRepository
 import com.example.apexhr.features.activities.domain.ActivitiesRepository
 import com.example.apexhr.features.activities.ui.models.ActivitiesContentState
 import com.example.apexhr.features.activities.ui.models.ActivitiesScreenCallbacks
@@ -12,6 +13,8 @@ import com.example.apexhr.features.activities.ui.models.ActivityUiModel
 import com.example.apexhr.features.activities.ui.models.filterByQuery
 import com.example.apexhr.features.activities.ui.models.toUiModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +28,7 @@ import kotlinx.coroutines.launch
  */
 class ActivitiesViewModel(
     private val repository: ActivitiesRepository,
+    private val achievementsRepository: AchievementsRepository,
 ) : ViewModel(), ActivitiesScreenCallbacks {
 
     private val _state = MutableStateFlow(ActivitiesUiState.Initial)
@@ -84,8 +88,32 @@ class ActivitiesViewModel(
             ActivitiesUiState.CATEGORY_EVENTS ->
                 repository.getEvents().map { events -> events.map { it.toUiModel() } }
 
+            ActivitiesUiState.CATEGORY_ACHIEVEMENTS ->
+                achievementsRepository.getAchievements().map { items -> items.map { it.toUiModel() } }
+
+            ActivitiesUiState.CATEGORY_ALL -> loadAll()
+
             else -> repository.getSurveys().map { surveys -> surveys.map { it.toUiModel() } }
         }
+
+    /**
+     * «Все», как в вебе: квесты, опросы, мероприятия, затем достижения. Раздел, который
+     * не загрузился, пропускается; ошибка — только если не загрузилось ничего.
+     */
+    private suspend fun loadAll(): DataResult<List<ActivityUiModel>> = coroutineScope {
+        val parts = listOf(
+            async { repository.getQuests().map { quests -> quests.map { it.toUiModel() } } },
+            async { repository.getSurveys().map { surveys -> surveys.map { it.toUiModel() } } },
+            async { repository.getEvents().map { events -> events.map { it.toUiModel() } } },
+            async { achievementsRepository.getAchievements().map { items -> items.map { it.toUiModel() } } },
+        ).map { it.await() }
+        val loaded = parts.filterIsInstance<DataResult.Success<List<ActivityUiModel>>>()
+        if (loaded.isEmpty()) {
+            parts.first() as DataResult.Failure
+        } else {
+            DataResult.Success(loaded.flatMap { it.data })
+        }
+    }
 
     private fun render() {
         val activities = loaded ?: return

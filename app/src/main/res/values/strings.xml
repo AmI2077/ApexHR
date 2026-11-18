@@ -172,6 +172,14 @@
     <string name="activities_category_surveys">Опросы</string>
     <string name="activities_category_quests">Квесты</string>
     <string name="activities_category_events">Мероприятия</string>
+    <string name="activities_category_all">Все</string>
+    <string name="activities_category_achievements">Достижения</string>
+    <string name="activities_status_achievement_earned">Получено</string>
+    <string name="achievement_earned_at">Открыто %1$s</string>
+    <string name="achievement_condition_first_order">Откроется после первого заказа</string>
+    <string name="achievement_condition_first_thank">Откроется после первой благодарности</string>
+    <string name="achievement_condition_first_activity">Откроется после первой выполненной активности</string>
+    <string name="achievement_condition_other">Условие проверяет сервер</string>
     <plurals name="activities_questions_count">
         <item quantity="one">%1$d вопрос</item>
         <item quantity="few">%1$d вопроса</item>

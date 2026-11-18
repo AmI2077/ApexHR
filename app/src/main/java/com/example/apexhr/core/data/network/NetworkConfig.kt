@@ -13,6 +13,7 @@ object NetworkConfig {
     const val BALANCE_URL = "$BASE_URL/api/balances/me"
     const val BALANCE_TRANSACTIONS_URL = "$BASE_URL/api/balances/me/transactions"
     fun userAchievementsUrl(userId: String) = "$BASE_URL/api/achievements/users/$userId"
+    const val ACHIEVEMENTS_URL = "$BASE_URL/api/achievements"
 
     // Supabase Storage: фото профиля (бакет avatars, лимит 2 МБ).
     // Токен бэкенда — это JWT Supabase, им и авторизуемся в хранилище.

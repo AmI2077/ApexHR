@@ -465,5 +465,7 @@ private fun Navigator.openActivity(activity: ActivityUiModel) {
         ActivityKind.Event -> navigate(EventDetailsRoute(activity.id))
         ActivityKind.Quest -> navigate(QuestDetailsRoute(activity.id))
         ActivityKind.Survey -> navigate(SurveyDetailsRoute(activity.id))
+        // У достижения нет отдельного экрана: условие и награда уже на карточке.
+        ActivityKind.Achievement -> Unit
     }
 }

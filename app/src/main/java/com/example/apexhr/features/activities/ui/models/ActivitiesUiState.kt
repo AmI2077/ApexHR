@@ -11,19 +11,25 @@ data class ActivitiesUiState(
     val content: ActivitiesContentState,
 ) {
     companion object {
+        /** «Все»: квесты, опросы, мероприятия и достижения одним списком, как в вебе. */
+        const val CATEGORY_ALL = "all"
         const val CATEGORY_SURVEYS = "surveys"
         const val CATEGORY_QUESTS = "quests"
         const val CATEGORY_EVENTS = "events"
+        const val CATEGORY_ACHIEVEMENTS = "achievements"
 
         val Categories = listOf(
+            ActivityCategoryUiModel(CATEGORY_ALL, R.string.activities_category_all),
             ActivityCategoryUiModel(CATEGORY_SURVEYS, R.string.activities_category_surveys),
             ActivityCategoryUiModel(CATEGORY_QUESTS, R.string.activities_category_quests),
             ActivityCategoryUiModel(CATEGORY_EVENTS, R.string.activities_category_events),
+            ActivityCategoryUiModel(CATEGORY_ACHIEVEMENTS, R.string.activities_category_achievements),
         )
 
+        /** Как в вебе, по умолчанию открыта вкладка «Все». */
         val Initial = ActivitiesUiState(
             searchQuery = "",
-            selectedCategoryId = CATEGORY_SURVEYS,
+            selectedCategoryId = CATEGORY_ALL,
             categories = Categories,
             content = ActivitiesContentState.Loading,
         )
@@ -71,7 +77,7 @@ data class ActivityCategoryUiModel(
     @StringRes val titleRes: Int,
 )
 
-enum class ActivityKind { Survey, Quest, Event }
+enum class ActivityKind { Survey, Quest, Event, Achievement }
 
 data class ActivityUiModel(
     val id: Long,
@@ -83,6 +89,8 @@ data class ActivityUiModel(
     val reward: Long?,
     /** Статус участия пользователя; null — пользователь ещё не участвовал. */
     @StringRes val statusRes: Int?,
+    /** Показывать кнопку «Участвовать»; у достижений её нет. */
+    val canParticipate: Boolean = true,
 )
 
 /** Вторая строка карточки: у опроса — вопросы, у квеста — шаги, у мероприятия — когда и где. */
@@ -90,4 +98,17 @@ sealed interface ActivitySubtitle {
     data class Questions(val count: Int) : ActivitySubtitle
     data class Steps(val count: Int) : ActivitySubtitle
     data class EventTime(val startAt: String?, val location: String?) : ActivitySubtitle
+
+    /**
+     * Достижение: описание и, как в вебе, «Открыто <дата>» у полученного
+     * или условие получения у ещё не полученного.
+     * @param earnedAt дата получения; null у неполученного или если сервер не прислал дату.
+     * @param conditionRes подсказка условия; null — достижение уже получено.
+     */
+    data class AchievementInfo(
+        val description: String?,
+        val isEarned: Boolean,
+        val earnedAt: String?,
+        @StringRes val conditionRes: Int?,
+    ) : ActivitySubtitle
 }

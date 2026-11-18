@@ -95,7 +95,7 @@ val vmModule = module {
     }
 
     viewModel {
-        ActivitiesViewModel(get())
+        ActivitiesViewModel(get(), get())
     }
 
     viewModel { (eventId: Long) ->
