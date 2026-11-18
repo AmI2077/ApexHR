@@ -12,7 +12,9 @@ import com.example.apexhr.features.home.data.dto.QuestPageDto
 import com.example.apexhr.features.home.domain.HomeData
 import com.example.apexhr.features.news.FakeNewsApi
 import com.example.apexhr.features.thanks.data.ThanksApi
+import com.example.apexhr.features.thanks.data.dto.CreateManagerBonusRequest
 import com.example.apexhr.features.thanks.data.dto.CreateThankRequest
+import com.example.apexhr.features.thanks.data.dto.WorkBalanceDto
 import com.example.apexhr.features.thanks.data.dto.ThankDto
 import com.example.apexhr.features.thanks.data.dto.ThanksUserDto
 import com.example.apexhr.features.news.data.dto.CompanyNewsDto
@@ -313,4 +315,6 @@ private class HomeFakeThanksApi : ThanksApi {
     override suspend fun getThanksForMe(): List<ThankDto> = error?.let { throw it } ?: received
     override suspend fun getThanksFromMe(): List<ThankDto> = error?.let { throw it } ?: sent
     override suspend fun sendThanks(request: CreateThankRequest) = error("not used")
+    override suspend fun getWorkBalance(): WorkBalanceDto = error("not used")
+    override suspend fun sendManagerBonus(request: CreateManagerBonusRequest) = error("not used")
 }

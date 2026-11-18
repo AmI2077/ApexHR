@@ -16,6 +16,18 @@ interface ThanksRepository {
      */
     suspend fun sendThanks(toUserId: String, message: String): ThanksSendResult
 
+    /**
+     * Может ли текущий пользователь поощрять с рабочего баланса и сколько на нём.
+     * Рабочий баланс запрашивается только у руководителя.
+     */
+    suspend fun loadManagerBonusAccess(): DataResult<ManagerBonusAccess>
+
+    /**
+     * Поощрение руководителя: POST /api/thanks/manager-bonus, сумма списывается
+     * с рабочего баланса. Пустое сообщение не отправляется.
+     */
+    suspend fun sendManagerBonus(toUserId: String, amount: Long, message: String): ThanksSendResult
+
     /** Срабатывает после каждой успешной отправки, чтобы история обновилась. */
     val thanksSent: Flow<Unit>
 }

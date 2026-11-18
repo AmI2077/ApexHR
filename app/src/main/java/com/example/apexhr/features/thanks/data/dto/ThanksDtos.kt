@@ -11,6 +11,24 @@ data class ThanksUserDto(
     val department: String? = null,
     val position: String? = null,
     val isActive: Boolean = true,
+    /** Коды ролей; есть в ответе /api/users/me. */
+    val roles: List<String> = emptyList(),
+    val canAccessAdminPanel: Boolean = false,
+)
+
+/** Ответ GET /api/admin/balances/me (BalanceResponse); веб читает amount, иначе balance. */
+@Serializable
+data class WorkBalanceDto(
+    val amount: Long? = null,
+    val balance: Long? = null,
+)
+
+/** Тело POST /api/thanks/manager-bonus (CreateManagerBonusRequest в Swagger). */
+@Serializable
+data class CreateManagerBonusRequest(
+    val toUserId: String,
+    val amount: Long,
+    val message: String? = null,
 )
 
 /**

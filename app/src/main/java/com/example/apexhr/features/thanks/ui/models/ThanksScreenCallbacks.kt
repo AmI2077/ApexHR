@@ -12,6 +12,12 @@ interface ThanksScreenCallbacks {
     /** Профиль коллеги из списка: экран открывает навигация. */
     fun onColleagueProfileClick(colleagueId: String) = Unit
 
+    /** Галочка «Поощрение с рабочего баланса» (видна только руководителю). */
+    fun onManagerModeChange(enabled: Boolean) = Unit
+
+    /** Выбор суммы поощрения. */
+    fun onBonusAmountClick(amount: Long) = Unit
+
     companion object {
         val Empty = object : ThanksScreenCallbacks {
             override fun onBackClick() = Unit

@@ -2,7 +2,9 @@ package com.example.apexhr.features.thanks.data
 
 import com.example.apexhr.core.data.network.NetworkConfig
 import com.example.apexhr.core.data.network.requireSuccess
+import com.example.apexhr.features.thanks.data.dto.CreateManagerBonusRequest
 import com.example.apexhr.features.thanks.data.dto.CreateThankRequest
+import com.example.apexhr.features.thanks.data.dto.WorkBalanceDto
 import com.example.apexhr.features.thanks.data.dto.ThankDto
 import com.example.apexhr.features.thanks.data.dto.ThanksUserDto
 import io.ktor.client.HttpClient
@@ -25,6 +27,8 @@ interface ThanksApi {
     suspend fun getThanksForMe(): List<ThankDto>
     suspend fun getThanksFromMe(): List<ThankDto>
     suspend fun sendThanks(request: CreateThankRequest)
+    suspend fun getWorkBalance(): WorkBalanceDto
+    suspend fun sendManagerBonus(request: CreateManagerBonusRequest)
 }
 
 /**
@@ -48,6 +52,16 @@ class KtorThanksApi(
 
     override suspend fun sendThanks(request: CreateThankRequest) {
         client.post(NetworkConfig.THANKS_URL) {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.requireThanksSuccess()
+    }
+
+    override suspend fun getWorkBalance(): WorkBalanceDto =
+        client.get(NetworkConfig.WORK_BALANCE_URL).requireSuccess().body()
+
+    override suspend fun sendManagerBonus(request: CreateManagerBonusRequest) {
+        client.post(NetworkConfig.THANKS_MANAGER_BONUS_URL) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }.requireThanksSuccess()

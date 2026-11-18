@@ -31,7 +31,10 @@ import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
+import com.example.apexhr.features.thanks.ui.composables.BonusAmountPills
 import com.example.apexhr.features.thanks.ui.composables.ColleagueRow
+import com.example.apexhr.features.thanks.ui.composables.ManagerBonusToggle
+import com.example.apexhr.features.thanks.ui.composables.WorkBalanceText
 import com.example.apexhr.features.thanks.ui.composables.SendThanksButton
 import com.example.apexhr.features.thanks.ui.composables.ThanksHeader
 import com.example.apexhr.features.thanks.ui.composables.ThanksMessageCounter
@@ -50,6 +53,17 @@ fun ThanksScreenPreview() {
     ApexHRTheme(dynamicColor = false, darkTheme = false) {
         ThanksScreen(
             screenState = ThanksScreenState.Content(ThanksUiState.Preview),
+            callbacks = ThanksScreenCallbacks.Empty,
+        )
+    }
+}
+
+@Preview(name = "Manager bonus", showBackground = true, widthDp = 360)
+@Composable
+private fun ThanksScreenManagerPreview() {
+    ApexHRTheme(dynamicColor = false, darkTheme = false) {
+        ThanksScreen(
+            screenState = ThanksScreenState.Content(ThanksUiState.PreviewManager),
             callbacks = ThanksScreenCallbacks.Empty,
         )
     }
@@ -90,7 +104,8 @@ fun ThanksScreenContent(
 ) {
     ThanksScreenFrame(callbacks, modifier) {
         Text(
-            text = stringResource(R.string.thanks_rules, apexAmountText(uiState.amount)),
+            text = stringResource(R.string.thanks_rules, apexAmountText(uiState.amount)) +
+                if (uiState.canReward) " " + stringResource(R.string.thanks_manager_rules) else "",
             color = secondaryTextColor,
             fontSize = ApexDimens.text13.sp,
         )
@@ -117,12 +132,30 @@ fun ThanksScreenContent(
         }
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = stringResource(R.string.thanks_send_section),
+                text = stringResource(
+                    if (uiState.isManagerMode) R.string.thanks_manager_mode else R.string.thanks_send_section
+                ),
                 color = primaryTextColor,
                 fontSize = ApexDimens.text18.sp,
                 fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
+            if (uiState.canReward) {
+                ManagerBonusToggle(
+                    checked = uiState.isManagerMode,
+                    onCheckedChange = callbacks::onManagerModeChange,
+                )
+            }
+            if (uiState.isManagerMode) {
+                WorkBalanceText(workBalance = uiState.workBalance)
+                Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
+                BonusAmountPills(
+                    amounts = uiState.bonusAmounts,
+                    selected = uiState.selectedBonusAmount,
+                    onAmountClick = callbacks::onBonusAmountClick,
+                )
+                Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
+            }
             if (uiState.selectedColleagueId != null) {
                 val name = uiState.selectedColleagueName
                     ?: stringResource(R.string.thanks_unknown_colleague)
@@ -133,6 +166,8 @@ fun ThanksScreenContent(
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                 )
+            }
+            if (uiState.selectedColleagueId != null && !uiState.isManagerMode) {
                 Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
                 Text(
                     text = if (uiState.isSelectedThankedRecently) {
@@ -150,6 +185,9 @@ fun ThanksScreenContent(
             ThanksMessageField(
                 message = uiState.message,
                 onMessageChange = callbacks::onMessageChange,
+                label = stringResource(
+                    if (uiState.isManagerMode) R.string.thanks_message_label_optional else R.string.thanks_message_label
+                ),
             )
             ThanksMessageCounter(
                 length = uiState.message.length,
@@ -163,6 +201,7 @@ fun ThanksScreenContent(
         SendThanksButton(
             onClick = callbacks::onSendClick,
             enabled = uiState.canSend,
+            text = stringResource(if (uiState.isManagerMode) R.string.thanks_send_bonus else R.string.thanks_send),
         )
         if (uiState.isSending) {
             Text(

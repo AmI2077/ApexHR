@@ -447,4 +447,13 @@
     <string name="home_feed_empty">Пока нет благодарностей с вашим участием.</string>
     <string name="home_feed_no_message">без сообщения</string>
     <string name="home_feed_manager_bonus">поощрение</string>
+    <!-- Поощрение руководителя -->
+    <string name="thanks_manager_rules">Поощрение руководителя списывается с рабочего баланса.</string>
+    <string name="thanks_manager_mode">Поощрение с рабочего баланса</string>
+    <string name="thanks_work_balance">Рабочий баланс: %1$s</string>
+    <string name="thanks_work_balance_unavailable">Рабочий баланс: нет доступа</string>
+    <string name="thanks_message_label_optional">Сообщение (необязательно)</string>
+    <string name="thanks_send_bonus">Отправить поощрение</string>
+    <string name="thanks_bonus_sent">Поощрение отправлено</string>
+    <string name="thanks_error_bonus_amount">Выберите сумму поощрения</string>
 </resources>

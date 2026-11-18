@@ -3,6 +3,7 @@ package com.example.apexhr.features.thanks.ui
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
 import com.example.apexhr.features.thanks.domain.Colleague
+import com.example.apexhr.features.thanks.domain.ManagerBonusAccess
 import com.example.apexhr.features.thanks.domain.PEER_THANKS_AMOUNT
 import com.example.apexhr.features.thanks.domain.Thank
 import com.example.apexhr.features.thanks.domain.ThanksHistory
@@ -129,6 +130,12 @@ class ThanksWeeklyLimitTest {
             sendCalls++
             return ThanksSendResult.Success
         }
+
+        override suspend fun loadManagerBonusAccess(): DataResult<ManagerBonusAccess> =
+            DataResult.Success(ManagerBonusAccess.None)
+
+        override suspend fun sendManagerBonus(toUserId: String, amount: Long, message: String): ThanksSendResult =
+            error("not used")
 
         override val thanksSent: Flow<Unit> = emptyFlow()
     }

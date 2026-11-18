@@ -19,6 +19,7 @@ import com.example.apexhr.features.profile.data.testJwt
 import com.example.apexhr.features.thanks.domain.Colleague
 import com.example.apexhr.features.thanks.domain.Thank
 import com.example.apexhr.features.thanks.domain.ThanksHistory
+import com.example.apexhr.features.thanks.domain.ManagerBonusAccess
 import com.example.apexhr.features.thanks.domain.ThanksRepository
 import com.example.apexhr.features.thanks.domain.ThanksSendResult
 import java.io.IOException
@@ -168,6 +169,10 @@ private class FakeHistoryThanksRepository : ThanksRepository {
     override suspend fun loadColleagues(): DataResult<List<Colleague>> = throw UnsupportedOperationException()
     override suspend fun loadHistory(): DataResult<ThanksHistory> = history
     override suspend fun sendThanks(toUserId: String, message: String): ThanksSendResult =
+        throw UnsupportedOperationException()
+    override suspend fun loadManagerBonusAccess(): DataResult<ManagerBonusAccess> =
+        throw UnsupportedOperationException()
+    override suspend fun sendManagerBonus(toUserId: String, amount: Long, message: String): ThanksSendResult =
         throw UnsupportedOperationException()
     override val thanksSent: Flow<Unit> = emptyFlow()
 }

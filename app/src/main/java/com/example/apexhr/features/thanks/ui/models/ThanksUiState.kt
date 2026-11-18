@@ -29,10 +29,29 @@ data class ThanksUiState(
     val isSending: Boolean,
     /** Итог последней отправки; null, пока ничего не отправляли. */
     val notice: ThanksNotice?,
+    /** Пользователь — руководитель и может поощрять с рабочего баланса. */
+    val canReward: Boolean = false,
+    /** Включено «Поощрение с рабочего баланса». */
+    val isManagerMode: Boolean = false,
+    /** Суммы поощрения на выбор; пусто вне режима поощрения. */
+    val bonusAmounts: List<Long> = emptyList(),
+    val selectedBonusAmount: Long? = null,
+    /** Рабочий баланс; null — «нет доступа». */
+    val workBalance: Long? = null,
 ) {
+    /**
+     * Благодарность: выбран коллега, которого не благодарили на этой неделе, и
+     * сообщение не короче минимума. Поощрение: выбраны коллега и сумма, сообщение
+     * необязательное, недельного лимита нет.
+     */
     val canSend: Boolean
-        get() = selectedColleagueId != null && !isSelectedThankedRecently && !isSending &&
-            message.trim().length >= messageMinLength
+        get() = if (isManagerMode) {
+            selectedColleagueId != null && selectedBonusAmount != null && !isSending &&
+                message.trim().length <= messageMaxLength
+        } else {
+            selectedColleagueId != null && !isSelectedThankedRecently && !isSending &&
+                message.trim().length >= messageMinLength
+        }
 
     /** Список пуст из-за поиска, а не потому, что коллег нет. */
     val isNothingFound: Boolean
@@ -76,6 +95,16 @@ data class ThanksUiState(
                 args = listOf("Этому коллеге благодарность уже отправлена на этой неделе"),
                 isError = true,
             ),
+        )
+
+        val PreviewManager = Preview.copy(
+            canReward = true,
+            isManagerMode = true,
+            bonusAmounts = listOf(50, 100, 200, 500),
+            selectedBonusAmount = 100,
+            workBalance = 4_500,
+            message = "",
+            notice = null,
         )
     }
 }

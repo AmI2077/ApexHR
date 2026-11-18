@@ -14,6 +14,7 @@ import com.example.apexhr.features.profile.ui.models.ProfileScreenState
 import com.example.apexhr.features.profile.ui.models.ProfileUiState
 import com.example.apexhr.features.thanks.domain.Colleague
 import com.example.apexhr.features.thanks.domain.ThanksHistory
+import com.example.apexhr.features.thanks.domain.ManagerBonusAccess
 import com.example.apexhr.features.thanks.domain.ThanksRepository
 import com.example.apexhr.features.thanks.domain.ThanksSendResult
 import kotlinx.coroutines.CompletableDeferred
@@ -139,6 +140,10 @@ private class FakeThanksRepository : ThanksRepository {
     override suspend fun loadHistory(): DataResult<ThanksHistory> =
         DataResult.Success(ThanksHistory(received = emptyList(), sent = emptyList()))
     override suspend fun sendThanks(toUserId: String, message: String): ThanksSendResult =
+        throw UnsupportedOperationException()
+    override suspend fun loadManagerBonusAccess(): DataResult<ManagerBonusAccess> =
+        throw UnsupportedOperationException()
+    override suspend fun sendManagerBonus(toUserId: String, amount: Long, message: String): ThanksSendResult =
         throw UnsupportedOperationException()
     override val thanksSent: Flow<Unit> = emptyFlow()
 }

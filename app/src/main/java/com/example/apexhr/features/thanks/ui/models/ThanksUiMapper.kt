@@ -5,6 +5,8 @@ import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.model.messageRes
 import com.example.apexhr.features.profile.ui.models.userInfoLabels
 import com.example.apexhr.features.thanks.domain.Colleague
+import com.example.apexhr.features.thanks.domain.MANAGER_BONUS_AMOUNTS
+import com.example.apexhr.features.thanks.domain.ManagerBonusAccess
 import com.example.apexhr.features.thanks.domain.PEER_THANKS_AMOUNT
 import com.example.apexhr.features.thanks.domain.ThanksSendError
 
@@ -21,13 +23,21 @@ data class ThanksForm(
     val message: String = "",
     val isSending: Boolean = false,
     val notice: ThanksNotice? = null,
+    /** Галочка «Поощрение с рабочего баланса»; действует только у руководителя. */
+    val asManager: Boolean = false,
+    val bonusAmount: Long? = null,
 )
 
 /**
  * Форма отправки по списку коллег (активные сотрудники, кроме текущего пользователя).
  * @param thankedRecently кого уже благодарили на этой неделе: им кнопка отправки недоступна.
  */
-fun List<Colleague>.toUiState(form: ThanksForm, thankedRecently: Set<String> = emptySet()): ThanksUiState {
+fun List<Colleague>.toUiState(
+    form: ThanksForm,
+    thankedRecently: Set<String> = emptySet(),
+    access: ManagerBonusAccess = ManagerBonusAccess.None,
+): ThanksUiState {
+    val isManagerMode = access.canReward && form.asManager
     // Выбранного ищем среди всех коллег: поиск не должен сбрасывать получателя.
     val selected = firstOrNull { it.id == form.selectedColleagueId }
     return ThanksUiState(
@@ -42,6 +52,11 @@ fun List<Colleague>.toUiState(form: ThanksForm, thankedRecently: Set<String> = e
         messageMaxLength = THANKS_MESSAGE_MAX_LENGTH,
         isSending = form.isSending,
         notice = form.notice,
+        canReward = access.canReward,
+        isManagerMode = isManagerMode,
+        bonusAmounts = if (isManagerMode) MANAGER_BONUS_AMOUNTS else emptyList(),
+        selectedBonusAmount = form.bonusAmount.takeIf { isManagerMode },
+        workBalance = access.workBalance,
     )
 }
 
@@ -73,6 +88,12 @@ fun Colleague.toUiModel() = ColleagueUiModel(
 
 /** Сообщение об успешной отправке. */
 val THANKS_SENT_NOTICE = ThanksNotice(textRes = R.string.thanks_sent, isError = false)
+
+/** Поощрение руководителя отправлено, как тост в вебе. */
+val MANAGER_BONUS_SENT_NOTICE = ThanksNotice(textRes = R.string.thanks_bonus_sent, isError = false)
+
+/** Сумма поощрения не выбрана. */
+val MANAGER_BONUS_AMOUNT_NOTICE = ThanksNotice(textRes = R.string.thanks_error_bonus_amount, isError = true)
 
 /** Текст ошибки отправки; текст сервера (например, о недельном лимите) показывается как есть. */
 fun ThanksSendError.toNotice(): ThanksNotice = when (this) {

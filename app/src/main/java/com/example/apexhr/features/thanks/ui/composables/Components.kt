@@ -193,10 +193,11 @@ fun ThanksMessageField(
     message: String,
     onMessageChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    label: String = stringResource(R.string.thanks_message_label),
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = stringResource(R.string.thanks_message_label),
+            text = label,
             color = secondaryTextColor,
             fontSize = ApexDimens.text13.sp,
         )
@@ -235,6 +236,7 @@ fun SendThanksButton(
     onClick: () -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,
+    text: String = stringResource(R.string.thanks_send),
 ) {
     Button(
         onClick = onClick,
@@ -251,7 +253,7 @@ fun SendThanksButton(
         shape = RoundedCornerShape(ApexDimens.radius24.dp),
     ) {
         Text(
-            text = stringResource(R.string.thanks_send),
+            text = text,
             fontSize = ApexDimens.text16.sp,
             fontWeight = FontWeight.SemiBold,
         )

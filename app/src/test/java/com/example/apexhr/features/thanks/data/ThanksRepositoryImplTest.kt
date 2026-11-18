@@ -3,7 +3,9 @@ package com.example.apexhr.features.thanks.data
 import com.example.apexhr.core.data.network.ApiStatusException
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.thanks.data.dto.CreateManagerBonusRequest
 import com.example.apexhr.features.thanks.data.dto.CreateThankRequest
+import com.example.apexhr.features.thanks.data.dto.WorkBalanceDto
 import com.example.apexhr.features.thanks.data.dto.ThankDto
 import com.example.apexhr.features.thanks.data.dto.ThanksUserDto
 import com.example.apexhr.features.thanks.domain.ThanksSendError
@@ -172,5 +174,8 @@ class ThanksRepositoryImplTest {
             sendError?.let { throw it }
             sentRequest = request
         }
+
+        override suspend fun getWorkBalance(): WorkBalanceDto = error("not used")
+        override suspend fun sendManagerBonus(request: CreateManagerBonusRequest) = error("not used")
     }
 }

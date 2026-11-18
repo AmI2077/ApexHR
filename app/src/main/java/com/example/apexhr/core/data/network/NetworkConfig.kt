@@ -40,6 +40,10 @@ object NetworkConfig {
     const val THANKS_URL = "$BASE_URL/api/thanks"
     const val THANKS_FOR_ME_URL = "$THANKS_URL/for-me"
     const val THANKS_FROM_ME_URL = "$THANKS_URL/from-me"
+    const val THANKS_MANAGER_BONUS_URL = "$THANKS_URL/manager-bonus"
+
+    /** Рабочий баланс руководителя (роль manager или superadmin), из него идут поощрения. */
+    const val WORK_BALANCE_URL = "$BASE_URL/api/admin/balances/me"
 
     // Каталог
     const val CATEGORIES_URL = "$BASE_URL/api/categories"

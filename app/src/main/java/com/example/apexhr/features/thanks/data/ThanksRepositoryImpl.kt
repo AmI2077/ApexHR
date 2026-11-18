@@ -2,7 +2,11 @@ package com.example.apexhr.features.thanks.data
 
 import com.example.apexhr.core.data.network.safeApiCall
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.thanks.data.dto.CreateManagerBonusRequest
 import com.example.apexhr.features.thanks.data.dto.CreateThankRequest
+import com.example.apexhr.features.thanks.domain.ManagerBonusAccess
+import com.example.apexhr.features.thanks.domain.appRoleOf
+import com.example.apexhr.features.thanks.domain.canRewardFromWorkBalance
 import com.example.apexhr.features.thanks.domain.Colleague
 import com.example.apexhr.features.thanks.domain.PEER_THANKS_AMOUNT
 import com.example.apexhr.features.thanks.domain.ThanksHistory
@@ -63,6 +67,38 @@ class ThanksRepositoryImpl(
                 amount = PEER_THANKS_AMOUNT,
                 message = message.trim().takeIf { it.isNotEmpty() },
                 isPublic = true,
+            )
+        )
+    }.fold(
+        onSuccess = {
+            _thanksSent.tryEmit(Unit)
+            ThanksSendResult.Success
+        },
+        onFailure = { ThanksSendResult.Failure(it.toThanksSendError()) },
+    )
+
+    override suspend fun loadManagerBonusAccess(): DataResult<ManagerBonusAccess> = safeApiCall {
+        val me = api.getCurrentUser()
+        val canReward = appRoleOf(me.roles, me.canAccessAdminPanel).canRewardFromWorkBalance
+        if (!canReward) {
+            ManagerBonusAccess.None
+        } else {
+            // Как в вебе: без рабочего баланса форма остаётся, баланс — «нет доступа».
+            val balance = safeThanksAction { api.getWorkBalance() }.getOrNull()
+            ManagerBonusAccess(canReward = true, workBalance = balance?.let { it.amount ?: it.balance ?: 0L })
+        }
+    }
+
+    override suspend fun sendManagerBonus(
+        toUserId: String,
+        amount: Long,
+        message: String,
+    ): ThanksSendResult = safeThanksAction {
+        api.sendManagerBonus(
+            CreateManagerBonusRequest(
+                toUserId = toUserId,
+                amount = amount,
+                message = message.trim().takeIf { it.isNotEmpty() },
             )
         )
     }.fold(
