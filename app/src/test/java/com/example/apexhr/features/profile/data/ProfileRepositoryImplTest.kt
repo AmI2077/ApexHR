@@ -3,6 +3,7 @@ package com.example.apexhr.features.profile.data
 import com.example.apexhr.core.data.network.ApiStatusException
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.engagement.FakeEngagementApi
 import com.example.apexhr.features.profile.data.dto.AchievementDto
 import com.example.apexhr.features.profile.data.dto.BalanceDto
 import com.example.apexhr.features.profile.data.dto.CurrentUserProfileDto
@@ -19,7 +20,20 @@ import java.net.UnknownHostException
 class ProfileRepositoryImplTest {
 
     private val api = FakeProfileApi()
-    private val repository = ProfileRepositoryImpl(api)
+    private val engagementApi = FakeEngagementApi()
+    private val repository = ProfileRepositoryImpl(api, engagementApi)
+
+    @Test
+    fun `activity level is loaded and its failure does not break profile`() = runBlocking {
+        val loaded = repository.loadProfile() as DataResult.Success
+        assertEquals("Искра", loaded.data.activityLevel?.title)
+
+        engagementApi.error = ApiStatusException(500)
+        val withoutLevel = repository.loadProfile()
+
+        assertTrue(withoutLevel is DataResult.Success)
+        assertNull((withoutLevel as DataResult.Success).data.activityLevel)
+    }
 
     @Test
     fun `loads all profile parts`() = runBlocking {

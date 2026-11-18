@@ -3,6 +3,7 @@ package com.example.apexhr.features.home.data
 import com.example.apexhr.core.data.network.ApiStatusException
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.engagement.FakeEngagementApi
 import com.example.apexhr.features.home.data.dto.HomeAchievementDto
 import com.example.apexhr.features.home.data.dto.HomeUserDto
 import com.example.apexhr.features.home.data.dto.LeaderboardEntryDto
@@ -25,7 +26,18 @@ class HomeRepositoryImplTest {
 
     private val homeApi = FakeHomeApi()
     private val profileApi = FakeProfileApi()
-    private val repository = HomeRepositoryImpl(homeApi, profileApi)
+    private val engagementApi = FakeEngagementApi()
+    private val repository = HomeRepositoryImpl(homeApi, profileApi, engagementApi)
+
+    @Test
+    fun `home gets my activity level and works without it`() = runBlocking {
+        assertEquals("Искра", (repository.loadHome() as DataResult.Success).data.activityLevel?.title)
+
+        engagementApi.error = UnknownHostException()
+        val result = repository.loadHome()
+
+        assertEquals(null, (result as DataResult.Success).data.activityLevel)
+    }
 
     private suspend fun loadData(): HomeData =
         (repository.loadHome() as DataResult.Success).data

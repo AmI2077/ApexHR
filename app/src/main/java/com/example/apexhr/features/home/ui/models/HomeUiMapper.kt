@@ -23,6 +23,7 @@ internal fun HomeData.myLeaderboardEntry(): LeaderboardEntryUiModel? {
         name = entry?.name ?: listOfNotNull(user.firstName, user.lastName).joinToString(" "),
         thanksCount = formatAmount(entry?.thanksCount ?: 0),
         isMine = true,
+        activityLevel = activityLevel?.title,
     )
 }
 
@@ -45,6 +46,7 @@ fun HomeData.toUiState(): HomeUiState = HomeUiState(
             name = entry.name.orEmpty(),
             thanksCount = formatAmount(entry.thanksCount),
             isMine = entry.isUser(user.id),
+            activityLevel = activityLevel?.title?.takeIf { entry.isUser(user.id) },
         )
     },
     myLeaderboardEntry = myLeaderboardEntry(),

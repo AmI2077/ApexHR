@@ -310,15 +310,26 @@ fun LeaderboardRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         LeaderboardRankBadge(rank = entry.rank)
-        Text(
-            text = entry.name.ifBlank { stringResource(R.string.home_leaderboard_unknown_name) },
-            color = primaryTextColor,
-            fontSize = ApexDimens.text14.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.weight(1f),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = entry.name.ifBlank { stringResource(R.string.home_leaderboard_unknown_name) },
+                color = primaryTextColor,
+                fontSize = ApexDimens.text14.sp,
+                fontWeight = FontWeight.Medium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            // Как в вебе: уровень активности мелкой синей строкой под именем.
+            entry.activityLevel?.let { level ->
+                Text(
+                    text = level,
+                    color = primaryBlueColor,
+                    fontSize = ApexDimens.text12.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
         // Число благодарностей, а не валюта, поэтому без значка апексов.
         Text(
             text = entry.thanksCount,

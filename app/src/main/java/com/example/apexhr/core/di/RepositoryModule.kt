@@ -37,13 +37,13 @@ import org.koin.dsl.module
 
 val repoModule = module {
     single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
-    single<ProfileRepository> { ProfileRepositoryImpl(get()) }
+    single<ProfileRepository> { ProfileRepositoryImpl(get(), get()) }
     single<AvatarImageCompressor> { AndroidAvatarImageCompressor(androidContext().applicationContext) }
     single<AvatarRepository> { AvatarRepositoryImpl(get(), get(), get(), get()) }
     single<TransactionHistoryRepository> { TransactionHistoryRepositoryImpl(get()) }
     single<ShopRepository> { ShopRepositoryImpl(get()) }
     single<CartRepository> { CartRepositoryImpl(get(), get()) }
-    single<HomeRepository> { HomeRepositoryImpl(get(), get()) }
+    single<HomeRepository> { HomeRepositoryImpl(get(), get(), get()) }
     single<ActivitiesRepository> { ActivitiesRepositoryImpl(get()) }
     single<AchievementsRepository> { AchievementsRepositoryImpl(get(), get(), get()) }
     single<ProofFileSource> { AndroidProofFileSource(androidContext().applicationContext) }

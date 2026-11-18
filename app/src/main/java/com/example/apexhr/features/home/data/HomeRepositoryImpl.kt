@@ -2,6 +2,8 @@ package com.example.apexhr.features.home.data
 
 import com.example.apexhr.core.data.network.safeApiCall
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.engagement.data.EngagementApi
+import com.example.apexhr.features.engagement.data.loadActivityLevelOrNull
 import com.example.apexhr.features.home.domain.HomeData
 import com.example.apexhr.features.home.domain.HomeRepository
 import com.example.apexhr.features.profile.data.ProfileApi
@@ -10,13 +12,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 /**
- * Главная собирает данные из семи запросов. Пользователь, баланс
+ * Главная собирает данные из восьми запросов (восьмой — уровень активности, необязательный). Пользователь, баланс
  * и полученные достижения — те же запросы, что у профиля, поэтому берутся
  * из ProfileApi; каталог достижений, квесты, лидерборд и сотрудники — из HomeApi.
  */
 class HomeRepositoryImpl(
     private val homeApi: HomeApi,
     private val profileApi: ProfileApi,
+    private val engagementApi: EngagementApi,
 ) : HomeRepository {
 
     override suspend fun loadHome(): DataResult<HomeData> = safeApiCall {
@@ -33,6 +36,7 @@ class HomeRepositoryImpl(
                 homeApi.getLeaderboard(days = LEADERBOARD_DAYS, limit = limit)
             }
             val achievementsCatalog = async { homeApi.getAchievements() }
+            val activityLevel = async { engagementApi.loadActivityLevelOrNull() }
             // Полученным достижениям нужен id пользователя из профиля (GET /api/users/me).
             val user = profileApi.getCurrentUser().toDomain()
             val earnedAchievements = profileApi.getUserAchievements(user.id)
@@ -52,6 +56,7 @@ class HomeRepositoryImpl(
                     catalog = achievementsCatalog.await(),
                     earned = earnedAchievements,
                 ),
+                activityLevel = activityLevel.await(),
             )
         }
     }

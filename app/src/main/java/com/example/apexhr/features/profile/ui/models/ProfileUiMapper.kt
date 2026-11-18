@@ -17,6 +17,7 @@ fun Profile.toUiState(
 ): ProfileUiState = ProfileUiState(
     name = user.displayName(),
     department = user.displayDepartment(),
+    activityLevel = activityLevel?.title,
     balance = balance,
     selectedTab = selectedTab,
     received = thanks.received.map { it.toUiModel(zone) },

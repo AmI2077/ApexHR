@@ -2,6 +2,8 @@ package com.example.apexhr.features.profile.data
 
 import com.example.apexhr.core.data.network.safeApiCall
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.engagement.data.EngagementApi
+import com.example.apexhr.features.engagement.data.loadActivityLevelOrNull
 import com.example.apexhr.features.profile.domain.Profile
 import com.example.apexhr.features.profile.domain.ProfileRepository
 import kotlinx.coroutines.async
@@ -9,6 +11,7 @@ import kotlinx.coroutines.coroutineScope
 
 class ProfileRepositoryImpl(
     private val api: ProfileApi,
+    private val engagementApi: EngagementApi,
 ) : ProfileRepository {
 
     override suspend fun loadProfile(): DataResult<Profile> = safeApiCall {
@@ -16,6 +19,7 @@ class ProfileRepositoryImpl(
             // Баланс не зависит от профиля — грузим параллельно.
             // Достижениям нужен id пользователя из профиля.
             val balance = async { api.getBalance() }
+            val activityLevel = async { engagementApi.loadActivityLevelOrNull() }
             val user = api.getCurrentUser().toDomain()
             val achievements = api.getUserAchievements(user.id)
 
@@ -23,6 +27,7 @@ class ProfileRepositoryImpl(
                 user = user,
                 balance = balance.await().amount,
                 achievements = achievements.map { it.toDomain() },
+                activityLevel = activityLevel.await(),
             )
         }
     }

@@ -98,6 +98,7 @@ fun ProfileUserInfo(
     isAvatarUploading: Boolean = false,
     @StringRes avatarErrorRes: Int? = null,
     onAvatarClick: (() -> Unit)? = null,
+    activityLevel: String? = null,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -156,6 +157,15 @@ fun ProfileUserInfo(
                 color = secondaryTextColor,
                 fontSize = ApexDimens.text14.sp,
             )
+            // Как в веб-профиле: «Уровень активности: Искра» под должностью и отделом.
+            if (activityLevel != null) {
+                Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
+                Text(
+                    text = stringResource(R.string.profile_activity_level, activityLevel),
+                    color = secondaryTextColor,
+                    fontSize = ApexDimens.text14.sp,
+                )
+            }
             if (onAvatarClick != null) {
                 TextButton(
                     onClick = onAvatarClick,

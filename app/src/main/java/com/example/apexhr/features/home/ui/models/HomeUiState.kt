@@ -61,6 +61,11 @@ data class LeaderboardEntryUiModel(
     val thanksCount: String,
     /** Строка текущего пользователя: выделяется рамкой, как в вебе. */
     val isMine: Boolean = false,
+    /**
+     * Уровень активности под именем. Сервер отдаёт уровень только текущему
+     * пользователю (GET /api/me/engagement), поэтому он есть лишь в моей строке.
+     */
+    val activityLevel: String? = null,
 )
 
 /**

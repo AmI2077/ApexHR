@@ -1,5 +1,6 @@
 package com.example.apexhr.features.home.domain
 
+import com.example.apexhr.features.engagement.domain.ActivityLevel
 import com.example.apexhr.features.profile.domain.UserProfile
 
 data class HomeData(
@@ -8,6 +9,8 @@ data class HomeData(
     val quests: List<Quest>,
     val leaderboard: List<LeaderboardEntry>,
     val achievements: List<HomeAchievement>,
+    /** Мой уровень активности для строки лидерборда; null — не загрузился. */
+    val activityLevel: ActivityLevel? = null,
 )
 
 data class Quest(

@@ -148,6 +148,7 @@ fun ProfileScreenContent(
             ProfileUserInfo(
                 name = uiState.name,
                 department = uiState.department.joinedText(),
+                activityLevel = uiState.activityLevel,
                 avatarUrl = uiState.avatarUrl,
                 isAvatarUploading = uiState.isAvatarUploading,
                 avatarErrorRes = uiState.avatarErrorRes,

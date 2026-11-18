@@ -29,6 +29,8 @@ data class ProfileUiState(
     val isAvatarUploading: Boolean = false,
     /** Почему не удалось сменить фото; null — ошибки нет. */
     @StringRes val avatarErrorRes: Int? = null,
+    /** Название уровня активности («Искра»…); null — уровень не загрузился. */
+    val activityLevel: String? = null,
 ) {
     companion object {
         val Preview = ProfileUiState(
