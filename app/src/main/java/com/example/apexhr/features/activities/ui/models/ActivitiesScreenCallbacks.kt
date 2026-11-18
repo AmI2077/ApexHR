@@ -9,6 +9,9 @@ interface ActivitiesScreenCallbacks {
     fun onParticipateClick(activity: ActivityUiModel)
     fun onRetryClick()
 
+    /** Список докручен до конца или нажато «Повторить» в футере: следующая страница. */
+    fun onLoadMore()
+
     companion object {
         val Empty = object : ActivitiesScreenCallbacks {
             override fun onScreenShown() = Unit
@@ -17,6 +20,7 @@ interface ActivitiesScreenCallbacks {
             override fun onActivityClick(activity: ActivityUiModel) = Unit
             override fun onParticipateClick(activity: ActivityUiModel) = Unit
             override fun onRetryClick() = Unit
+            override fun onLoadMore() = Unit
         }
     }
 }

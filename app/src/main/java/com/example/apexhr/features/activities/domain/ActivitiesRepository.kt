@@ -2,11 +2,12 @@ package com.example.apexhr.features.activities.domain
 
 import com.example.apexhr.core.domain.DataResult
 
-/** Анкеты, квесты и мероприятия: списки (первая страница), детали и действия. */
+/** Анкеты, квесты и мероприятия: списки постранично, детали и действия. */
 interface ActivitiesRepository {
-    suspend fun getSurveys(): DataResult<List<Survey>>
-    suspend fun getQuests(): DataResult<List<Quest>>
-    suspend fun getEvents(): DataResult<List<Event>>
+    /** @param page номер страницы с 1. */
+    suspend fun getSurveys(page: Int = FIRST_PAGE): DataResult<ActivityPage<Survey>>
+    suspend fun getQuests(page: Int = FIRST_PAGE): DataResult<ActivityPage<Quest>>
+    suspend fun getEvents(page: Int = FIRST_PAGE): DataResult<ActivityPage<Event>>
 
     suspend fun getSurveyDetails(surveyId: Long): DataResult<SurveyDetails>
     suspend fun getQuestDetails(questId: Long): DataResult<QuestDetails>
@@ -26,4 +27,8 @@ interface ActivitiesRepository {
     suspend fun registerForEvent(eventId: Long): ActivityActionResult
     suspend fun cancelEventRegistration(eventId: Long): ActivityActionResult
     suspend fun claimEventReward(eventId: Long): ActivityActionResult
+
+    companion object {
+        const val FIRST_PAGE = 1
+    }
 }

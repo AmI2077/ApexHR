@@ -4,6 +4,8 @@ import com.example.apexhr.R
 import com.example.apexhr.core.domain.AuthTokens
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.core.domain.map
+import com.example.apexhr.core.ui.model.LoadMoreState
 import com.example.apexhr.core.domain.TokenStorage
 import com.example.apexhr.features.activities.data.AchievementsApi
 import com.example.apexhr.features.activities.data.AchievementsRepositoryImpl
@@ -14,6 +16,7 @@ import com.example.apexhr.features.activities.domain.AchievementCondition
 import com.example.apexhr.features.activities.domain.AchievementsRepository
 import com.example.apexhr.features.activities.domain.ActivitiesRepository
 import com.example.apexhr.features.activities.domain.ActivityActionResult
+import com.example.apexhr.features.activities.domain.ActivityPage
 import com.example.apexhr.features.activities.domain.Event
 import com.example.apexhr.features.activities.domain.EventDetails
 import com.example.apexhr.features.activities.domain.Quest
@@ -191,6 +194,102 @@ class ActivitiesAchievementsTest {
         assertEquals(1, content.activities.size)
         assertEquals(0, activities.calls)
     }
+
+    // Догрузка страниц
+
+    @Test
+    fun `surveys tab loads next page at list end and hides footer on last page`() {
+        val activities = FakeActivitiesRepository().apply {
+            surveyPages[1] = surveysPage(1, hasNext = true, 1, 2)
+            surveyPages[2] = surveysPage(2, hasNext = false, 2, 3)
+        }
+        val viewModel = ActivitiesViewModel(activities, FakeAchievementsRepository())
+        viewModel.onCategoryClick(ActivitiesUiState.CATEGORY_SURVEYS)
+        assertEquals(LoadMoreState.Available, viewModel.content().loadMore)
+
+        viewModel.onLoadMore()
+
+        assertEquals(listOf(1L, 2L, 3L), viewModel.content().activities.map { it.id })
+        assertEquals(LoadMoreState.Hidden, viewModel.content().loadMore)
+        viewModel.onLoadMore()
+        assertEquals(listOf(1, 2), activities.requestedSurveyPages)
+    }
+
+    @Test
+    fun `load more error keeps list, shows retry and retry loads the page`() {
+        val activities = FakeActivitiesRepository().apply {
+            surveyPages[1] = surveysPage(1, hasNext = true, 1)
+            surveyPages[2] = DataResult.Failure(DataError.Timeout)
+        }
+        val viewModel = ActivitiesViewModel(activities, FakeAchievementsRepository())
+        viewModel.onCategoryClick(ActivitiesUiState.CATEGORY_SURVEYS)
+
+        viewModel.onLoadMore()
+        assertEquals(listOf(1L), viewModel.content().activities.map { it.id })
+        assertEquals(LoadMoreState.Error(DataError.Timeout), viewModel.content().loadMore)
+
+        activities.surveyPages[2] = surveysPage(2, hasNext = false, 2)
+        viewModel.onLoadMore()
+        assertEquals(listOf(1L, 2L), viewModel.content().activities.map { it.id })
+        assertEquals(LoadMoreState.Hidden, viewModel.content().loadMore)
+    }
+
+    @Test
+    fun `All tab continues only sections that have more pages and keeps section order`() {
+        val activities = FakeActivitiesRepository().apply {
+            questPages[1] = questsPage(1, hasNext = true, 10)
+            questPages[2] = questsPage(2, hasNext = false, 11)
+            surveyPages[1] = surveysPage(1, hasNext = false, 1)
+        }
+        val viewModel = ActivitiesViewModel(activities, FakeAchievementsRepository())
+        viewModel.onScreenShown()
+
+        viewModel.onLoadMore()
+
+        val content = viewModel.content()
+        assertEquals(
+            listOf(ActivityKind.Quest to 10L, ActivityKind.Quest to 11L, ActivityKind.Survey to 1L, ActivityKind.Achievement to 1L),
+            content.activities.map { it.kind to it.id },
+        )
+        assertEquals(listOf(1, 2), activities.requestedQuestPages)
+        assertEquals(listOf(1), activities.requestedSurveyPages)
+        assertEquals(LoadMoreState.Hidden, content.loadMore)
+    }
+
+    @Test
+    fun `refresh starts again from the first page`() {
+        val activities = FakeActivitiesRepository().apply {
+            surveyPages[1] = surveysPage(1, hasNext = true, 1)
+            surveyPages[2] = surveysPage(2, hasNext = false, 2)
+        }
+        val viewModel = ActivitiesViewModel(activities, FakeAchievementsRepository())
+        viewModel.onCategoryClick(ActivitiesUiState.CATEGORY_SURVEYS)
+        viewModel.onLoadMore()
+
+        viewModel.onScreenShown()
+
+        assertEquals(listOf(1L), viewModel.content().activities.map { it.id })
+        assertEquals(LoadMoreState.Available, viewModel.content().loadMore)
+        assertEquals(listOf(1, 2, 1), activities.requestedSurveyPages)
+    }
+
+    private fun ActivitiesViewModel.content() = state.value.content as ActivitiesContentState.Content
+
+    private fun surveysPage(page: Int, hasNext: Boolean, vararg ids: Long) = DataResult.Success(
+        ActivityPage(
+            items = ids.map { Survey(it, "Опрос $it", null, questionsCount = 1, hasResponded = false, canRespond = true) },
+            page = page,
+            hasNextPage = hasNext,
+        ),
+    )
+
+    private fun questsPage(page: Int, hasNext: Boolean, vararg ids: Long) = DataResult.Success(
+        ActivityPage(
+            items = ids.map { Quest(it, "Квест $it", null, rewardAmount = 5, stepsCount = 1, participationStatus = null) },
+            page = page,
+            hasNextPage = hasNext,
+        ),
+    )
 }
 
 /** JWT с нужным sub; подпись не проверяется. */
@@ -243,9 +342,25 @@ private class FakeActivitiesRepository : ActivitiesRepository {
     var events: DataResult<List<Event>> = DataResult.Success(emptyList())
     var calls = 0
 
-    override suspend fun getSurveys() = surveys.also { calls++ }
-    override suspend fun getQuests() = quests.also { calls++ }
-    override suspend fun getEvents() = events.also { calls++ }
+    /** Постраничные ответы по номеру страницы; если заданы, важнее списков выше. */
+    val surveyPages = mutableMapOf<Int, DataResult<ActivityPage<Survey>>>()
+    val questPages = mutableMapOf<Int, DataResult<ActivityPage<Quest>>>()
+    val requestedSurveyPages = mutableListOf<Int>()
+    val requestedQuestPages = mutableListOf<Int>()
+
+    override suspend fun getSurveys(page: Int): DataResult<ActivityPage<Survey>> {
+        calls++
+        requestedSurveyPages += page
+        return surveyPages[page] ?: surveys.map { ActivityPage(it, page, hasNextPage = false) }
+    }
+
+    override suspend fun getQuests(page: Int): DataResult<ActivityPage<Quest>> {
+        calls++
+        requestedQuestPages += page
+        return questPages[page] ?: quests.map { ActivityPage(it, page, hasNextPage = false) }
+    }
+
+    override suspend fun getEvents(page: Int) = events.also { calls++ }.map { ActivityPage(it, page, hasNextPage = false) }
     override suspend fun getSurveyDetails(surveyId: Long): DataResult<SurveyDetails> = throw UnsupportedOperationException()
     override suspend fun getQuestDetails(questId: Long): DataResult<QuestDetails> = throw UnsupportedOperationException()
     override suspend fun getEventDetails(eventId: Long): DataResult<EventDetails> = throw UnsupportedOperationException()

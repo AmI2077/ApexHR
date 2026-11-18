@@ -17,6 +17,7 @@ import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.composables.ApexPillTabs
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
+import com.example.apexhr.core.ui.composables.LoadMoreFooter
 import com.example.apexhr.core.ui.composables.LoadingState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
@@ -128,24 +129,30 @@ fun ActivitiesScreenContent(
                 )
             }
 
-            is ActivitiesContentState.Content -> if (content.activities.isEmpty()) {
-                item {
-                    EmptyState(
-                        text = stringResource(
-                            if (content.isFiltered) R.string.activities_not_found else R.string.activities_empty,
-                        ),
-                    )
+            is ActivitiesContentState.Content -> {
+                if (content.activities.isEmpty()) {
+                    item {
+                        EmptyState(
+                            text = stringResource(
+                                if (content.isFiltered) R.string.activities_not_found else R.string.activities_empty,
+                            ),
+                        )
+                    }
+                } else {
+                    item {
+                        ActivitiesPopularTitle()
+                    }
+                    items(content.activities, key = { "${it.kind}_${it.id}" }) { activity ->
+                        ActivityCard(
+                            activity = activity,
+                            onClick = { callbacks.onActivityClick(activity) },
+                            onParticipateClick = { callbacks.onParticipateClick(activity) },
+                        )
+                    }
                 }
-            } else {
-                item {
-                    ActivitiesPopularTitle()
-                }
-                items(content.activities, key = { "${it.kind}_${it.id}" }) { activity ->
-                    ActivityCard(
-                        activity = activity,
-                        onClick = { callbacks.onActivityClick(activity) },
-                        onParticipateClick = { callbacks.onParticipateClick(activity) },
-                    )
+                // Бесконечная прокрутка; при поиске догружаются и ещё не загруженные страницы.
+                item(key = "load_more") {
+                    LoadMoreFooter(state = content.loadMore, onLoadMore = callbacks::onLoadMore)
                 }
             }
         }

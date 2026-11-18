@@ -2,6 +2,13 @@ package com.example.apexhr.features.activities.domain
 
 import java.time.Instant
 
+/** Страница списка с сервера (page/pageSize). @param hasNextPage есть следующая страница. */
+data class ActivityPage<T>(
+    val items: List<T>,
+    val page: Int,
+    val hasNextPage: Boolean,
+)
+
 // Анкеты
 
 data class Survey(

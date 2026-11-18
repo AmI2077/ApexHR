@@ -2,10 +2,12 @@ package com.example.apexhr.features.activities.data
 
 import com.example.apexhr.core.data.network.safeApiCall
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.features.activities.data.dto.ActivityPageDto
 import com.example.apexhr.features.activities.data.dto.CompleteQuestStepRequest
 import com.example.apexhr.features.activities.data.dto.SubmitSurveyRequest
 import com.example.apexhr.features.activities.domain.ActivitiesRepository
 import com.example.apexhr.features.activities.domain.ActivityActionResult
+import com.example.apexhr.features.activities.domain.ActivityPage
 import com.example.apexhr.features.activities.domain.Event
 import com.example.apexhr.features.activities.domain.EventDetails
 import com.example.apexhr.features.activities.domain.Quest
@@ -14,21 +16,21 @@ import com.example.apexhr.features.activities.domain.Survey
 import com.example.apexhr.features.activities.domain.SurveyAnswer
 import com.example.apexhr.features.activities.domain.SurveyDetails
 
-/** Списки — только первая страница: активностей у компании немного. */
+/** Списки грузятся страницами по [PAGE_SIZE], как в вебе (pageSize=50). */
 class ActivitiesRepositoryImpl(
     private val api: ActivitiesApi,
 ) : ActivitiesRepository {
 
-    override suspend fun getSurveys(): DataResult<List<Survey>> = safeApiCall {
-        api.getSurveys(FIRST_PAGE, PAGE_SIZE).items.map { it.toDomain() }
+    override suspend fun getSurveys(page: Int): DataResult<ActivityPage<Survey>> = safeApiCall {
+        api.getSurveys(page, PAGE_SIZE).toDomainPage(page) { it.toDomain() }
     }
 
-    override suspend fun getQuests(): DataResult<List<Quest>> = safeApiCall {
-        api.getQuests(FIRST_PAGE, PAGE_SIZE).items.map { it.toDomain() }
+    override suspend fun getQuests(page: Int): DataResult<ActivityPage<Quest>> = safeApiCall {
+        api.getQuests(page, PAGE_SIZE).toDomainPage(page) { it.toDomain() }
     }
 
-    override suspend fun getEvents(): DataResult<List<Event>> = safeApiCall {
-        api.getEvents(FIRST_PAGE, PAGE_SIZE).items.map { it.toDomain() }
+    override suspend fun getEvents(page: Int): DataResult<ActivityPage<Event>> = safeApiCall {
+        api.getEvents(page, PAGE_SIZE).toDomainPage(page) { it.toDomain() }
     }
 
     override suspend fun getSurveyDetails(surveyId: Long): DataResult<SurveyDetails> = safeApiCall {
@@ -74,8 +76,11 @@ class ActivitiesRepositoryImpl(
             onFailure = { ActivityActionResult.Failure(it.toActivityActionError()) },
         )
 
-    private companion object {
-        const val FIRST_PAGE = 1
+    /** Номер страницы берём запрошенный: сервер может не прислать page. */
+    private inline fun <T, R> ActivityPageDto<T>.toDomainPage(requestedPage: Int, map: (T) -> R) =
+        ActivityPage(items = items.map(map), page = requestedPage, hasNextPage = hasNextPage)
+
+    companion object {
         const val PAGE_SIZE = 50
     }
 }

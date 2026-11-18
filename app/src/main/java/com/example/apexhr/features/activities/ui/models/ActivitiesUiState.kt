@@ -3,6 +3,7 @@ package com.example.apexhr.features.activities.ui.models
 import androidx.annotation.StringRes
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.model.LoadMoreState
 
 data class ActivitiesUiState(
     val searchQuery: String,
@@ -65,10 +66,14 @@ sealed interface ActivitiesContentState {
     data object Loading : ActivitiesContentState
     data class Error(val error: DataError) : ActivitiesContentState
 
-    /** @param isFiltered true, если список сужен поиском (для текста пустого списка). */
+    /**
+     * @param isFiltered true, если список сужен поиском (для текста пустого списка).
+     * @param loadMore футер списка: догрузка следующей страницы.
+     */
     data class Content(
         val activities: List<ActivityUiModel>,
         val isFiltered: Boolean,
+        val loadMore: LoadMoreState = LoadMoreState.Hidden,
     ) : ActivitiesContentState
 }
 

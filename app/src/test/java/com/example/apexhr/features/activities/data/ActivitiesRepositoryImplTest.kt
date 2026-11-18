@@ -19,6 +19,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonPrimitive
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.SocketTimeoutException
 
@@ -37,10 +38,23 @@ class ActivitiesRepositoryImplTest {
         val quests = (repository.getQuests() as DataResult.Success).data
         val events = (repository.getEvents() as DataResult.Success).data
 
-        assertEquals(listOf(1L), surveys.map { it.id })
-        assertEquals(listOf(2L), quests.map { it.id })
-        assertEquals(listOf(3L), events.map { it.id })
+        assertEquals(listOf(1L), surveys.items.map { it.id })
+        assertEquals(listOf(2L), quests.items.map { it.id })
+        assertEquals(listOf(3L), events.items.map { it.id })
         assertEquals(listOf(1 to 50, 1 to 50, 1 to 50), api.requestedPages)
+    }
+
+    @Test
+    fun `next page is requested by number and keeps server hasNextPage`() = runBlocking {
+        api.surveys = listOf(SurveyListItemDto(id = 51, title = "Анкета", questionsCount = 1))
+        api.hasNextPage = true
+
+        val page = (repository.getSurveys(page = 2) as DataResult.Success).data
+
+        assertEquals(2, page.page)
+        assertTrue(page.hasNextPage)
+        assertEquals(listOf(51L), page.items.map { it.id })
+        assertEquals(listOf(2 to 50), api.requestedPages)
     }
 
     @Test
@@ -131,6 +145,7 @@ private class FakeActivitiesApi : ActivitiesApi {
     var quests = emptyList<ActivityQuestListItemDto>()
     var events = emptyList<EventListItemDto>()
     var loadError: Throwable? = null
+    var hasNextPage = false
     var actionError: Throwable? = null
 
     val requestedPages = mutableListOf<Pair<Int, Int>>()
@@ -141,7 +156,7 @@ private class FakeActivitiesApi : ActivitiesApi {
     private fun <T> pageOf(page: Int, pageSize: Int, items: List<T>): ActivityPageDto<T> {
         loadError?.let { throw it }
         requestedPages += page to pageSize
-        return ActivityPageDto(items = items, totalCount = items.size)
+        return ActivityPageDto(items = items, totalCount = items.size, hasNextPage = hasNextPage)
     }
 
     override suspend fun getSurveys(page: Int, pageSize: Int) = pageOf(page, pageSize, surveys)

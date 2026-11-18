@@ -5,6 +5,7 @@ import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
 import com.example.apexhr.features.activities.domain.ActivitiesRepository
 import com.example.apexhr.features.activities.domain.ActivityActionResult
+import com.example.apexhr.features.activities.domain.ActivityPage
 import com.example.apexhr.features.activities.domain.Event
 import com.example.apexhr.features.activities.domain.EventDetails
 import com.example.apexhr.features.activities.domain.ProofStatus
@@ -176,9 +177,9 @@ private class ProofActivitiesRepository(
 ) : ActivitiesRepository {
     override suspend fun getQuestDetails(questId: Long): DataResult<QuestDetails> = details()
 
-    override suspend fun getSurveys(): DataResult<List<Survey>> = error("не нужен")
-    override suspend fun getQuests(): DataResult<List<Quest>> = error("не нужен")
-    override suspend fun getEvents(): DataResult<List<Event>> = error("не нужен")
+    override suspend fun getSurveys(page: Int): DataResult<ActivityPage<Survey>> = error("не нужен")
+    override suspend fun getQuests(page: Int): DataResult<ActivityPage<Quest>> = error("не нужен")
+    override suspend fun getEvents(page: Int): DataResult<ActivityPage<Event>> = error("не нужен")
     override suspend fun getSurveyDetails(surveyId: Long): DataResult<SurveyDetails> = error("не нужен")
     override suspend fun getEventDetails(eventId: Long): DataResult<EventDetails> = error("не нужен")
     override suspend fun submitSurvey(surveyId: Long, answers: Map<Long, SurveyAnswer>): ActivityActionResult =
