@@ -26,6 +26,12 @@ object NetworkConfig {
     fun avatarObjectUrl(path: String) = "$AVATARS_OBJECT_URL/$path"
     fun avatarPublicUrl(path: String) = "$AVATARS_PUBLIC_URL/$path"
 
+    /** Бакет proofs: файлы подтверждения шагов квестов, путь «<id пользователя>/<файл>». */
+    const val PROOFS_OBJECT_URL = "$SUPABASE_URL/storage/v1/object/proofs"
+    const val PROOFS_PUBLIC_URL = "$SUPABASE_URL/storage/v1/object/public/proofs"
+    fun proofObjectUrl(path: String) = "$PROOFS_OBJECT_URL/$path"
+    fun proofPublicUrl(path: String) = "$PROOFS_PUBLIC_URL/$path"
+
     // Благодарности (текущий пользователь — тот же USER_PROFILE_URL, что у профиля)
     const val USERS_URL = "$BASE_URL/api/users"
     fun userUrl(userId: String) = "$USERS_URL/$userId"
@@ -57,6 +63,7 @@ object NetworkConfig {
     fun questJoinUrl(questId: Long) = "${questUrl(questId)}/join"
     fun questCompleteUrl(questId: Long) = "${questUrl(questId)}/complete"
     fun questStepCompleteUrl(questId: Long, stepId: Long) = "${questUrl(questId)}/steps/$stepId/complete"
+    fun questStepProofUrl(questId: Long, stepId: Long) = "${questUrl(questId)}/steps/$stepId/proof"
     fun eventUrl(eventId: Long) = "$EVENTS_URL/$eventId"
     fun eventRegisterUrl(eventId: Long) = "${eventUrl(eventId)}/register"
     fun eventRegistrationUrl(eventId: Long) = "${eventUrl(eventId)}/registration"

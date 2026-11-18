@@ -142,7 +142,7 @@ class QuestDetailsUiMapperTest {
                 R.string.quest_step_completed,
                 R.string.quest_step_proof_pending,
                 R.string.quest_step_proof_rejected,
-                R.string.quest_step_proof_unavailable,
+                R.string.quest_step_proof_required,
                 R.string.quest_step_automatic,
                 R.string.quest_step_unsupported,
             ),

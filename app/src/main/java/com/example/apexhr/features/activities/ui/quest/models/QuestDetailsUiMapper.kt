@@ -55,17 +55,30 @@ private fun QuestStep.toUiModel(participating: Boolean): QuestStepUiModel = Ques
     isCompleted = isCompleted,
     canComplete = participating && !isCompleted && completionType == QuestStepType.Manual,
     stateRes = stateRes(),
+    proofAction = if (participating) proofAction() else null,
+    proofComment = proofComment.takeIf { completionType == QuestStepType.Proof },
 )
 
-/** Шаги с доказательством и автоматические только показывают состояние. */
+/** Как в вебе: отправить, отправить заново после отказа или заменить то, что на проверке. */
+private fun QuestStep.proofAction(): QuestProofAction? = when {
+    isCompleted || completionType != QuestStepType.Proof -> null
+    else -> when (proofStatus) {
+        ProofStatus.Pending -> QuestProofAction.Update
+        ProofStatus.Rejected -> QuestProofAction.Resubmit
+        ProofStatus.Approved -> null
+        ProofStatus.Unknown, null -> QuestProofAction.Submit
+    }
+}
+
+/** Состояние шага; подтверждение отправляется отдельной кнопкой, см. [proofAction]. */
 private fun QuestStep.stateRes(): Int? = when {
     isCompleted -> R.string.quest_step_completed
     completionType == QuestStepType.Manual -> null
     completionType == QuestStepType.Proof -> when (proofStatus) {
         ProofStatus.Pending -> R.string.quest_step_proof_pending
         ProofStatus.Rejected -> R.string.quest_step_proof_rejected
-        // Approved без isCompleted, null и Unknown: загрузить доказательство в приложении нельзя.
-        ProofStatus.Approved, ProofStatus.Unknown, null -> R.string.quest_step_proof_unavailable
+        ProofStatus.Approved -> R.string.quest_step_proof_approved
+        ProofStatus.Unknown, null -> R.string.quest_step_proof_required
     }
 
     completionType == QuestStepType.Automatic -> R.string.quest_step_automatic

@@ -9,6 +9,7 @@ import com.example.apexhr.features.support.ui.SupportTicketViewModel
 import com.example.apexhr.features.activities.ui.ActivitiesViewModel
 import com.example.apexhr.features.activities.ui.event.EventDetailsViewModel
 import com.example.apexhr.features.activities.ui.quest.QuestDetailsViewModel
+import com.example.apexhr.features.activities.ui.quest.proof.QuestStepProofViewModel
 import com.example.apexhr.features.activities.ui.survey.SurveyDetailsViewModel
 import com.example.apexhr.features.auth.ui.ChangePasswordViewModel
 import com.example.apexhr.features.auth.ui.LoginViewModel
@@ -98,6 +99,10 @@ val vmModule = module {
 
     viewModel { (questId: Long) ->
         QuestDetailsViewModel(questId, get())
+    }
+
+    viewModel { (questId: Long, stepId: Long) ->
+        QuestStepProofViewModel(questId, stepId, get(), get())
     }
 
     viewModel { (surveyId: Long) ->

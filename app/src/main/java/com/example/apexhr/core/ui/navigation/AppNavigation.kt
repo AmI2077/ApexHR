@@ -25,6 +25,9 @@ import com.example.apexhr.features.activities.ui.models.ActivityUiModel
 import com.example.apexhr.features.activities.ui.quest.QuestDetailsScreen
 import com.example.apexhr.features.activities.ui.quest.QuestDetailsViewModel
 import com.example.apexhr.features.activities.ui.quest.models.QuestDetailsScreenCallbacks
+import com.example.apexhr.features.activities.ui.quest.proof.QuestStepProofScreen
+import com.example.apexhr.features.activities.ui.quest.proof.QuestStepProofViewModel
+import com.example.apexhr.features.activities.ui.quest.proof.models.QuestStepProofScreenCallbacks
 import com.example.apexhr.features.activities.ui.survey.SurveyDetailsScreen
 import com.example.apexhr.features.activities.ui.survey.SurveyDetailsViewModel
 import com.example.apexhr.features.activities.ui.survey.models.SurveyDetailsScreenCallbacks
@@ -334,11 +337,37 @@ fun AppNavigation(
                 val questCallbacks = remember(viewModel, navigator) {
                     object : QuestDetailsScreenCallbacks by viewModel {
                         override fun onBackClick() = navigator.goBack()
+                        override fun onProofClick(stepId: Long) =
+                            navigator.navigate(QuestStepProofRoute(key.questId, stepId))
                     }
                 }
+                // После возврата с экрана подтверждения шаг должен показать новый статус.
+                LaunchedEffect(viewModel) { viewModel.refresh() }
                 QuestDetailsScreen(
                     screenState = screenState,
                     callbacks = questCallbacks,
+                    messages = viewModel.messages,
+                )
+            }
+            entry<QuestStepProofRoute> { key ->
+                val viewModel: QuestStepProofViewModel =
+                    koinViewModel(parameters = { parametersOf(key.questId, key.stepId) })
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val context = LocalContext.current
+                LaunchedEffect(viewModel) {
+                    viewModel.sent.collect {
+                        Toast.makeText(context, R.string.quest_proof_sent, Toast.LENGTH_SHORT).show()
+                        navigator.goBack()
+                    }
+                }
+                val proofCallbacks = remember(viewModel, navigator) {
+                    object : QuestStepProofScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                QuestStepProofScreen(
+                    screenState = screenState,
+                    callbacks = proofCallbacks,
                     messages = viewModel.messages,
                 )
             }

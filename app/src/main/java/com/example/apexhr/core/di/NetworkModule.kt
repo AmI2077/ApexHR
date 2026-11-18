@@ -7,6 +7,10 @@ import com.example.apexhr.core.domain.NetworkAuthClient
 import com.example.apexhr.core.domain.SessionEventBus
 import com.example.apexhr.features.activities.data.ActivitiesApi
 import com.example.apexhr.features.activities.data.KtorActivitiesApi
+import com.example.apexhr.features.activities.data.KtorProofStorageApi
+import com.example.apexhr.features.activities.data.KtorQuestProofApi
+import com.example.apexhr.features.activities.data.ProofStorageApi
+import com.example.apexhr.features.activities.data.QuestProofApi
 import com.example.apexhr.features.home.data.HomeApi
 import com.example.apexhr.features.home.data.KtorHomeApi
 import com.example.apexhr.features.profile.data.AvatarStorageApi
@@ -74,6 +78,8 @@ val networkModule = module {
     single<CartApi> { KtorCartApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<HomeApi> { KtorHomeApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<ActivitiesApi> { KtorActivitiesApi(get(AUTHORIZED_HTTP_CLIENT)) }
+    single<QuestProofApi> { KtorQuestProofApi(get(AUTHORIZED_HTTP_CLIENT)) }
+    single<ProofStorageApi> { KtorProofStorageApi(get(AUTH_HTTP_CLIENT)) }
     single<ThanksApi> { KtorThanksApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<NotificationsApi> { KtorNotificationsApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<SupportApi> { KtorSupportApi(get(AUTHORIZED_HTTP_CLIENT)) }

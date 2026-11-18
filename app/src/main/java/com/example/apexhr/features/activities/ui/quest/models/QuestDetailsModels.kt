@@ -43,7 +43,8 @@ data class QuestDetailsUiModel(
                     isRequired = true,
                     isCompleted = false,
                     canComplete = false,
-                    stateRes = R.string.quest_step_proof_unavailable,
+                    stateRes = R.string.quest_step_proof_required,
+                    proofAction = QuestProofAction.Submit,
                 ),
             ),
             action = null,
@@ -55,6 +56,8 @@ data class QuestDetailsUiModel(
 /**
  * @param canComplete шаг можно отметить выполненным (ручной, участник, ещё не выполнен).
  * @param stateRes состояние шага: выполнен, ждёт проверки, засчитается автоматически и т. п.
+ * @param proofAction что можно сделать с подтверждением шага; null — ничего.
+ * @param proofComment комментарий к уже отправленному подтверждению.
  */
 data class QuestStepUiModel(
     val id: Long,
@@ -64,7 +67,21 @@ data class QuestStepUiModel(
     val isCompleted: Boolean,
     val canComplete: Boolean,
     @StringRes val stateRes: Int?,
+    val proofAction: QuestProofAction? = null,
+    val proofComment: String? = null,
 )
+
+/** Действие с подтверждением шага: кнопка открывает экран загрузки файла. */
+enum class QuestProofAction {
+    /** Подтверждения ещё нет. */
+    Submit,
+
+    /** Прежнее отклонено — отправить новое. */
+    Resubmit,
+
+    /** Подтверждение на проверке — заменить его. */
+    Update,
+}
 
 sealed interface QuestAction {
     data object Join : QuestAction
@@ -89,6 +106,9 @@ interface QuestDetailsScreenCallbacks {
     fun onBackClick()
     fun onRetryClick()
     fun onActionClick(action: QuestAction)
+
+    /** Экран подтверждения шага открывает навигация. */
+    fun onProofClick(stepId: Long) = Unit
 
     companion object {
         val Empty = object : QuestDetailsScreenCallbacks {

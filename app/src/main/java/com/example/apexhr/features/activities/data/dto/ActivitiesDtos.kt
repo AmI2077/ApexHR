@@ -130,10 +130,15 @@ data class QuestStepDto(
     val completedAt: String? = null,
     /** pending, approved, rejected — для шагов с доказательством. */
     val proofStatus: String? = null,
+    /** Ссылка на уже отправленный файл подтверждения. */
+    val proofStoragePath: String? = null,
     val proofComment: String? = null,
 )
 
-/** Тело POST /api/quests/{id}/steps/{stepId}/complete; для ручного шага оба поля пустые. */
+/**
+ * Тело POST /api/quests/{id}/steps/{stepId}/complete (для ручного шага оба поля пустые)
+ * и PUT /api/quests/{id}/steps/{stepId}/proof.
+ */
 @Serializable
 data class CompleteQuestStepRequest(
     val storagePath: String? = null,

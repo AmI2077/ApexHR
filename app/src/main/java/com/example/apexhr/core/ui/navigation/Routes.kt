@@ -102,6 +102,10 @@ data object SupportNewTicketRoute : NavKey
 @Serializable
 data class SupportTicketRoute(val ticketId: Long) : NavKey
 
+/** Подтверждение шага квеста (файл и комментарий): открывается из квеста. */
+@Serializable
+data class QuestStepProofRoute(val questId: Long, val stepId: Long) : NavKey
+
 /** Профиль коллеги: открывается из лидерборда на главной и из списка коллег в «Благодарностях». */
 @Serializable
 data class ColleagueProfileRoute(val userId: String) : NavKey

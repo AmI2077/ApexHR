@@ -36,6 +36,7 @@ import com.example.apexhr.features.activities.ui.common.ActivityNoteText
 import com.example.apexhr.features.activities.ui.common.ActivityRewardInfo
 import com.example.apexhr.features.activities.ui.common.ActivityStatusText
 import com.example.apexhr.features.activities.ui.quest.models.QuestAction
+import com.example.apexhr.features.activities.ui.quest.models.QuestProofAction
 import com.example.apexhr.features.activities.ui.quest.models.QuestDetailsScreenCallbacks
 import com.example.apexhr.features.activities.ui.quest.models.QuestDetailsScreenState
 import com.example.apexhr.features.activities.ui.quest.models.QuestDetailsUiModel
@@ -86,7 +87,7 @@ fun QuestDetailsScreenErrorPreview() {
 
 /**
  * Квест: награда, срок, статус участия и шаги. Ручной шаг отмечается кнопкой,
- * остальные только показывают состояние.
+ * для шага с подтверждением кнопка открывает экран загрузки файла.
  * @param messages итог действий, показывается в snackbar.
  */
 @Composable
@@ -116,6 +117,7 @@ fun QuestDetailsScreen(
                 quest = screenState.quest,
                 pendingAction = screenState.pendingAction,
                 onActionClick = callbacks::onActionClick,
+                onProofClick = callbacks::onProofClick,
             )
         }
     }
@@ -126,6 +128,7 @@ private fun QuestDetailsBody(
     quest: QuestDetailsUiModel,
     pendingAction: QuestAction?,
     onActionClick: (QuestAction) -> Unit,
+    onProofClick: (Long) -> Unit,
 ) {
     ActivityDetailsContent {
         ActivityDetailsTitle(title = quest.title)
@@ -151,6 +154,7 @@ private fun QuestDetailsBody(
                     step = step,
                     pendingAction = pendingAction,
                     onCompleteClick = { onActionClick(QuestAction.CompleteStep(step.id)) },
+                    onProofClick = { onProofClick(step.id) },
                 )
             }
         }
@@ -173,6 +177,7 @@ private fun QuestStepCard(
     step: QuestStepUiModel,
     pendingAction: QuestAction?,
     onCompleteClick: () -> Unit,
+    onProofClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -201,6 +206,23 @@ private fun QuestStepCard(
                 inProgress = pendingAction == QuestAction.CompleteStep(step.id),
                 enabled = pendingAction == null,
                 onClick = onCompleteClick,
+            )
+        }
+        step.proofComment?.let {
+            ActivityInfoText(text = stringResource(R.string.quest_proof_sent_comment, it))
+        }
+        step.proofAction?.let { proofAction ->
+            ActivityActionButton(
+                text = stringResource(
+                    when (proofAction) {
+                        QuestProofAction.Submit -> R.string.quest_action_send_proof
+                        QuestProofAction.Resubmit -> R.string.quest_action_resend_proof
+                        QuestProofAction.Update -> R.string.quest_action_update_proof
+                    }
+                ),
+                inProgress = false,
+                enabled = pendingAction == null,
+                onClick = onProofClick,
             )
         }
     }

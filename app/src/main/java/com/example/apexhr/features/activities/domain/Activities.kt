@@ -96,13 +96,16 @@ data class QuestStep(
     val isRequired: Boolean,
     val isCompleted: Boolean,
     val proofStatus: ProofStatus?,
+    /** Публичная ссылка на отправленный файл подтверждения. */
+    val proofStoragePath: String? = null,
+    val proofComment: String? = null,
 )
 
 enum class QuestStepType {
     /** Пользователь отмечает сам. */
     Manual,
 
-    /** Нужно доказательство (файл); загрузки в API пока нет. */
+    /** Нужно подтверждение: файл в Storage и необязательный комментарий. */
     Proof,
 
     /** Засчитывается системой; сервер пока не поддерживает. */

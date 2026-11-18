@@ -66,6 +66,16 @@ class QuestDetailsViewModel(
         }
     }
 
+    /**
+     * Тихо перечитывает уже показанный квест, например после возврата с экрана
+     * подтверждения шага. Пока идёт первая загрузка или действие, ничего не делает.
+     */
+    fun refresh() {
+        val content = _state.value as? QuestDetailsScreenState.Content ?: return
+        if (content.pendingAction != null || loadJob?.isActive == true) return
+        loadJob = viewModelScope.launch { reload() }
+    }
+
     /** Перечитывает детали; при ошибке уже показанные данные остаются. */
     private suspend fun reload() {
         val result = repository.getQuestDetails(questId)

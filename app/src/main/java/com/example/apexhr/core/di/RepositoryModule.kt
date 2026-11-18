@@ -7,6 +7,10 @@ import com.example.apexhr.features.colleague.domain.ColleagueRepository
 import com.example.apexhr.features.support.data.SupportRepositoryImpl
 import com.example.apexhr.features.support.domain.SupportRepository
 import com.example.apexhr.features.activities.data.ActivitiesRepositoryImpl
+import com.example.apexhr.features.activities.data.AndroidProofFileSource
+import com.example.apexhr.features.activities.data.QuestProofRepositoryImpl
+import com.example.apexhr.features.activities.domain.ProofFileSource
+import com.example.apexhr.features.activities.domain.QuestProofRepository
 import com.example.apexhr.features.activities.domain.ActivitiesRepository
 import com.example.apexhr.features.auth.data.AuthRepositoryImpl
 import com.example.apexhr.features.auth.domain.AuthRepository
@@ -39,6 +43,8 @@ val repoModule = module {
     single<CartRepository> { CartRepositoryImpl(get(), get()) }
     single<HomeRepository> { HomeRepositoryImpl(get(), get()) }
     single<ActivitiesRepository> { ActivitiesRepositoryImpl(get()) }
+    single<ProofFileSource> { AndroidProofFileSource(androidContext().applicationContext) }
+    single<QuestProofRepository> { QuestProofRepositoryImpl(get(), get(), get(), get(), get()) }
     single<ThanksRepository> { ThanksRepositoryImpl(get()) }
     single<NotificationsRepository> { NotificationsRepositoryImpl(get()) }
     single<SupportRepository> { SupportRepositoryImpl(get()) }

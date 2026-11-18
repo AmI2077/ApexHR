@@ -152,6 +152,8 @@ fun QuestStepDto.toDomain(): QuestStep = QuestStep(
             else -> ProofStatus.Unknown
         }
     },
+    proofStoragePath = proofStoragePath.cleaned(),
+    proofComment = proofComment.cleaned(),
 )
 
 private fun String?.toParticipationStatus(): QuestParticipationStatus = when (normalized()) {
