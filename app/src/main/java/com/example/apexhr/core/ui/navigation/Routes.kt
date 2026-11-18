@@ -109,6 +109,14 @@ data class SupportTicketRoute(val ticketId: Long) : NavKey
 @Serializable
 data class QuestStepProofRoute(val questId: Long, val stepId: Long) : NavKey
 
+/** Лента новостей компании: открывается по «Все» в блоке новостей на главной. */
+@Serializable
+data object NewsRoute : NavKey
+
+/** Новость целиком: открывается с главной или из ленты новостей. */
+@Serializable
+data class NewsDetailsRoute(val newsId: Long) : NavKey
+
 /** «Моя активность»: открывается из карточки уровня активности на главной. */
 @Serializable
 data object MyActivityRoute : NavKey

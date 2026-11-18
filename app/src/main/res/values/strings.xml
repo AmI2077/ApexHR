@@ -435,4 +435,10 @@
     <string name="my_activity_achievements_empty">Открытых достижений пока нет</string>
     <string name="my_activity_all_activities">Перейти ко всем активностям</string>
     <string name="my_activity_untitled">Без названия</string>
+    <!-- Новости компании -->
+    <string name="news_title">Новости</string>
+    <string name="news_details_title">Новость</string>
+    <string name="news_empty">Новостей пока нет</string>
+    <string name="news_untitled">Новость</string>
+    <string name="news_all">Все</string>
 </resources>

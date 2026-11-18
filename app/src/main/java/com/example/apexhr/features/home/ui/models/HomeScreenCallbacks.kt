@@ -13,6 +13,10 @@ interface HomeScreenCallbacks {
     /** Ссылка «Моя активность» в карточке уровня: экран открывает навигация. */
     fun onMyActivityClick() = Unit
 
+    /** Блок новостей: «Все» открывает ленту, карточка — новость целиком. */
+    fun onAllNewsClick() = Unit
+    fun onNewsClick(newsId: Long) = Unit
+
     companion object {
         val Empty = object : HomeScreenCallbacks {
             override fun onPointsClick() = Unit

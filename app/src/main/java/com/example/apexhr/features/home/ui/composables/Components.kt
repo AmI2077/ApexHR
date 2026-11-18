@@ -419,6 +419,32 @@ fun HomeAchievementRow(
     }
 }
 
+/** Заголовок блока главной со ссылкой справа («Новости · Все», «Лента благодарностей · Поблагодарить»). */
+@Composable
+fun HomeSectionHeader(
+    title: String,
+    actionText: String,
+    onActionClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        SectionTitle(text = title, modifier = Modifier.weight(1f))
+        Text(
+            text = actionText,
+            color = primaryBlueColor,
+            fontSize = ApexDimens.text14.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier
+                .clip(RoundedCornerShape(ApexDimens.radius8.dp))
+                .clickable(onClick = onActionClick)
+                .padding(horizontal = ApexDimens.spacing4.dp, vertical = ApexDimens.spacing4.dp),
+        )
+    }
+}
+
 @Composable
 fun SectionTitle(
     text: String,

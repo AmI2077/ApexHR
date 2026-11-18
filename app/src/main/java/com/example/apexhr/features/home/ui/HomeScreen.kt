@@ -29,6 +29,8 @@ import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
 import com.example.apexhr.features.home.ui.models.HomeScreenState
 import com.example.apexhr.features.home.ui.models.HomeUiState
 import com.example.apexhr.features.engagement.ui.ActivityLevelCard
+import com.example.apexhr.features.home.ui.composables.HomeSectionHeader
+import com.example.apexhr.features.news.ui.composables.NewsCard
 import com.example.apexhr.ui.theme.ApexHRTheme
 
 @Preview(showBackground = true, widthDp = 360)
@@ -147,6 +149,19 @@ fun HomeScreenContent(
                 myEntry = uiState.myLeaderboardEntry,
                 onEntryClick = callbacks::onLeaderboardEntryClick,
             )
+        }
+        // Как в вебе: новости под лидербордом и только если они есть.
+        if (uiState.news.isNotEmpty()) {
+            item(key = "news_title") {
+                HomeSectionHeader(
+                    title = stringResource(R.string.news_title),
+                    actionText = stringResource(R.string.news_all),
+                    onActionClick = callbacks::onAllNewsClick,
+                )
+            }
+            items(uiState.news, key = { "news_${it.id}" }) { news ->
+                NewsCard(news = news, onClick = { callbacks.onNewsClick(news.id) })
+            }
         }
         item {
             SectionTitle(text = stringResource(R.string.home_achievements))

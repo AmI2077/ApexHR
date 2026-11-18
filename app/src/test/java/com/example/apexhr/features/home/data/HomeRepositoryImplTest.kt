@@ -10,6 +10,9 @@ import com.example.apexhr.features.home.data.dto.LeaderboardEntryDto
 import com.example.apexhr.features.home.data.dto.QuestListItemDto
 import com.example.apexhr.features.home.data.dto.QuestPageDto
 import com.example.apexhr.features.home.domain.HomeData
+import com.example.apexhr.features.news.FakeNewsApi
+import com.example.apexhr.features.news.data.dto.CompanyNewsDto
+import com.example.apexhr.features.news.data.dto.CompanyNewsPageDto
 import com.example.apexhr.features.profile.data.ProfileApi
 import com.example.apexhr.features.profile.data.dto.AchievementDto
 import com.example.apexhr.features.profile.data.dto.BalanceDto
@@ -27,7 +30,8 @@ class HomeRepositoryImplTest {
     private val homeApi = FakeHomeApi()
     private val profileApi = FakeProfileApi()
     private val engagementApi = FakeEngagementApi()
-    private val repository = HomeRepositoryImpl(homeApi, profileApi, engagementApi)
+    private val newsApi = FakeNewsApi()
+    private val repository = HomeRepositoryImpl(homeApi, profileApi, engagementApi, newsApi)
 
     @Test
     fun `home gets my activity level and works without it`() = runBlocking {
@@ -37,6 +41,17 @@ class HomeRepositoryImplTest {
         val result = repository.loadHome()
 
         assertEquals(null, (result as DataResult.Success).data.activityLevel)
+    }
+
+    @Test
+    fun `home shows four latest news and hides the block on error`() = runBlocking {
+        newsApi.pages[1] = CompanyNewsPageDto(items = listOf(CompanyNewsDto(id = 2, title = "Новость")))
+
+        assertEquals(listOf(2L), loadData().news.map { it.id })
+        assertEquals(1 to 4, newsApi.requested.last())
+
+        newsApi.error = UnknownHostException()
+        assertEquals(emptyList<Long>(), loadData().news.map { it.id })
     }
 
     private suspend fun loadData(): HomeData =

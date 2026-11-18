@@ -16,6 +16,8 @@ import com.example.apexhr.features.auth.ui.ChangePasswordViewModel
 import com.example.apexhr.features.auth.ui.LoginViewModel
 import com.example.apexhr.features.auth.ui.SessionViewModel
 import com.example.apexhr.features.home.ui.HomeViewModel
+import com.example.apexhr.features.news.ui.NewsDetailsViewModel
+import com.example.apexhr.features.news.ui.NewsViewModel
 import com.example.apexhr.features.profile.ui.ProfileViewModel
 import com.example.apexhr.features.settings.ui.SettingsViewModel
 import com.example.apexhr.features.shop.ui.ShopViewModel
@@ -101,6 +103,14 @@ val vmModule = module {
 
     viewModel {
         MyActivityViewModel(get(), get(), get())
+    }
+
+    viewModel {
+        NewsViewModel(get())
+    }
+
+    viewModel { (newsId: Long) ->
+        NewsDetailsViewModel(newsId, get())
     }
 
     viewModel { (eventId: Long) ->

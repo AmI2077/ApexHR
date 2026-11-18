@@ -2,6 +2,7 @@ package com.example.apexhr.features.home.ui.models
 
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.features.engagement.ui.ActivityLevelUiModel
+import com.example.apexhr.features.news.ui.models.NewsUiModel
 
 data class HomeUiState(
     val userName: String,
@@ -14,6 +15,8 @@ data class HomeUiState(
     val myLeaderboardEntry: LeaderboardEntryUiModel? = null,
     /** Карточка уровня активности; null — уровень не загрузился (карточка с текстом ошибки). */
     val activityLevel: ActivityLevelUiModel? = null,
+    /** Последние новости; пусто — блок новостей скрыт, как в вебе. */
+    val news: List<NewsUiModel> = emptyList(),
 ) {
     companion object {
         val Preview = HomeUiState(
@@ -46,6 +49,7 @@ data class HomeUiState(
                 ),
             ),
             activityLevel = ActivityLevelUiModel.Preview,
+            news = NewsUiModel.Preview,
         )
     }
 }

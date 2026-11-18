@@ -79,6 +79,10 @@ object NetworkConfig {
     const val NOTIFICATIONS_READ_ALL_URL = "$NOTIFICATIONS_URL/read-all"
     fun notificationReadUrl(id: Long) = "$NOTIFICATIONS_URL/$id/read"
 
+    // Новости компании
+    const val COMPANY_NEWS_URL = "$BASE_URL/api/company-news"
+    fun companyNewsUrl(id: Long) = "$COMPANY_NEWS_URL/$id"
+
     const val SUPPORT_TICKETS_URL = "$BASE_URL/api/support/tickets"
     fun supportTicketUrl(id: Long) = "$SUPPORT_TICKETS_URL/$id"
     fun supportTicketMessagesUrl(id: Long) = "${supportTicketUrl(id)}/messages"

@@ -2,6 +2,7 @@ package com.example.apexhr.features.home.ui.models
 
 import com.example.apexhr.core.ui.model.formatAmount
 import com.example.apexhr.features.engagement.ui.toUiModel
+import com.example.apexhr.features.news.ui.models.toUiModel
 import com.example.apexhr.features.home.domain.HomeData
 import com.example.apexhr.features.home.domain.LeaderboardEntry
 
@@ -52,6 +53,7 @@ fun HomeData.toUiState(): HomeUiState = HomeUiState(
     },
     myLeaderboardEntry = myLeaderboardEntry(),
     activityLevel = activityLevel?.toUiModel(),
+    news = news.map { it.toUiModel() },
     achievements = achievements.map { achievement ->
         AchievementUiModel(
             id = achievement.id.toString(),

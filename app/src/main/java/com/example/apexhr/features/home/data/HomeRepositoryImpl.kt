@@ -8,11 +8,16 @@ import com.example.apexhr.features.home.domain.HomeData
 import com.example.apexhr.features.home.domain.HomeRepository
 import com.example.apexhr.features.profile.data.ProfileApi
 import com.example.apexhr.features.profile.data.toDomain
+import com.example.apexhr.features.news.data.NewsApi
+import com.example.apexhr.features.news.data.toDomain
+import com.example.apexhr.features.news.domain.CompanyNews
+import com.example.apexhr.features.news.domain.NewsRepository
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 /**
- * Главная собирает данные из восьми запросов (восьмой — уровень активности, необязательный). Пользователь, баланс
+ * Главная собирает данные из девяти запросов (уровень активности и новости необязательные). Пользователь, баланс
  * и полученные достижения — те же запросы, что у профиля, поэтому берутся
  * из ProfileApi; каталог достижений, квесты, лидерборд и сотрудники — из HomeApi.
  */
@@ -20,6 +25,7 @@ class HomeRepositoryImpl(
     private val homeApi: HomeApi,
     private val profileApi: ProfileApi,
     private val engagementApi: EngagementApi,
+    private val newsApi: NewsApi,
 ) : HomeRepository {
 
     override suspend fun loadHome(): DataResult<HomeData> = safeApiCall {
@@ -37,6 +43,7 @@ class HomeRepositoryImpl(
             }
             val achievementsCatalog = async { homeApi.getAchievements() }
             val activityLevel = async { engagementApi.loadActivityLevelOrNull() }
+            val news = async { loadNewsOrEmpty() }
             // Полученным достижениям нужен id пользователя из профиля (GET /api/users/me).
             val user = profileApi.getCurrentUser().toDomain()
             val earnedAchievements = profileApi.getUserAchievements(user.id)
@@ -57,8 +64,18 @@ class HomeRepositoryImpl(
                     earned = earnedAchievements,
                 ),
                 activityLevel = activityLevel.await(),
+                news = news.await(),
             )
         }
+    }
+
+    /** Как в вебе: блок новостей необязательный, ошибка его просто скрывает. */
+    private suspend fun loadNewsOrEmpty(): List<CompanyNews> = try {
+        newsApi.getNews(page = 1, pageSize = NewsRepository.HOME_NEWS_COUNT).toDomain(requestedPage = 1).items
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        emptyList()
     }
 
     companion object {

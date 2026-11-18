@@ -20,6 +20,8 @@ import com.example.apexhr.features.engagement.data.EngagementRepositoryImpl
 import com.example.apexhr.features.engagement.domain.EngagementRepository
 import com.example.apexhr.features.home.data.HomeRepositoryImpl
 import com.example.apexhr.features.home.domain.HomeRepository
+import com.example.apexhr.features.news.data.NewsRepositoryImpl
+import com.example.apexhr.features.news.domain.NewsRepository
 import com.example.apexhr.features.profile.data.AndroidAvatarImageCompressor
 import com.example.apexhr.features.profile.data.AvatarRepositoryImpl
 import com.example.apexhr.features.profile.data.ProfileRepositoryImpl
@@ -45,7 +47,7 @@ val repoModule = module {
     single<TransactionHistoryRepository> { TransactionHistoryRepositoryImpl(get()) }
     single<ShopRepository> { ShopRepositoryImpl(get()) }
     single<CartRepository> { CartRepositoryImpl(get(), get()) }
-    single<HomeRepository> { HomeRepositoryImpl(get(), get(), get()) }
+    single<HomeRepository> { HomeRepositoryImpl(get(), get(), get(), get()) }
     single<ActivitiesRepository> { ActivitiesRepositoryImpl(get()) }
     single<AchievementsRepository> { AchievementsRepositoryImpl(get(), get(), get()) }
     single<ProofFileSource> { AndroidProofFileSource(androidContext().applicationContext) }
@@ -55,4 +57,5 @@ val repoModule = module {
     single<SupportRepository> { SupportRepositoryImpl(get()) }
     single<ColleagueRepository> { ColleagueRepositoryImpl(get(), get(), get(), get()) }
     single<EngagementRepository> { EngagementRepositoryImpl(get()) }
+    single<NewsRepository> { NewsRepositoryImpl(get()) }
 }

@@ -43,6 +43,12 @@ import com.example.apexhr.features.colleague.ui.models.ColleagueProfileScreenCal
 import com.example.apexhr.features.home.ui.HomeScreen
 import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
+import com.example.apexhr.features.news.ui.NewsDetailsScreen
+import com.example.apexhr.features.news.ui.NewsDetailsViewModel
+import com.example.apexhr.features.news.ui.NewsScreen
+import com.example.apexhr.features.news.ui.NewsViewModel
+import com.example.apexhr.features.news.ui.models.NewsDetailsScreenCallbacks
+import com.example.apexhr.features.news.ui.models.NewsScreenCallbacks
 import com.example.apexhr.features.notifications.ui.NotificationsBadgeViewModel
 import com.example.apexhr.features.notifications.ui.NotificationsScreen
 import com.example.apexhr.features.notifications.ui.NotificationsViewModel
@@ -117,6 +123,8 @@ fun AppNavigation(
 
                         override fun onNotificationsClick() = navigator.navigate(NotificationsRoute)
                         override fun onMyActivityClick() = navigator.navigate(MyActivityRoute)
+                        override fun onAllNewsClick() = navigator.navigate(NewsRoute)
+                        override fun onNewsClick(newsId: Long) = navigator.navigate(NewsDetailsRoute(newsId))
 
                         // Строка без userId (ключ «rank_…») профиль не открывает.
                         override fun onLeaderboardEntryClick(entryId: String) {
@@ -133,6 +141,28 @@ fun AppNavigation(
                     callbacks = homeCallbacks,
                     unreadNotifications = unreadNotifications,
                 )
+            }
+            entry<NewsRoute> {
+                val viewModel: NewsViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val newsCallbacks = remember(viewModel, navigator) {
+                    object : NewsScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                        override fun onNewsClick(id: Long) = navigator.navigate(NewsDetailsRoute(id))
+                    }
+                }
+                NewsScreen(screenState = screenState, callbacks = newsCallbacks)
+            }
+            entry<NewsDetailsRoute> { key ->
+                val viewModel: NewsDetailsViewModel =
+                    koinViewModel(parameters = { parametersOf(key.newsId) })
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val newsDetailsCallbacks = remember(viewModel, navigator) {
+                    object : NewsDetailsScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                NewsDetailsScreen(screenState = screenState, callbacks = newsDetailsCallbacks)
             }
             entry<MyActivityRoute> {
                 val viewModel: MyActivityViewModel = koinViewModel()
