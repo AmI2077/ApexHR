@@ -3,6 +3,9 @@ package com.example.apexhr.features.settings.data
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
+import com.example.apexhr.features.settings.domain.ThemeChoice
+import com.example.apexhr.features.settings.domain.toSavedDarkTheme
+import com.example.apexhr.features.settings.domain.toThemeChoice
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -49,6 +52,27 @@ class SettingsRepositoryImplTest {
         repository.setDarkTheme(false)
 
         assertEquals(false, repository.darkTheme.first())
+    }
+
+    @Test
+    fun `system choice clears saved theme`() = runBlocking {
+        val repository = SettingsRepositoryImpl(InMemoryPreferencesDataStore())
+
+        repository.setDarkTheme(true)
+        repository.setDarkTheme(null)
+
+        assertNull(repository.darkTheme.first())
+    }
+
+    @Test
+    fun `theme choice maps to saved value and back`() {
+        ThemeChoice.entries.forEach { choice ->
+            assertEquals(choice, choice.toSavedDarkTheme().toThemeChoice())
+        }
+        assertEquals(ThemeChoice.System, null.toThemeChoice())
+        assertNull(ThemeChoice.System.toSavedDarkTheme())
+        assertEquals(true, ThemeChoice.Dark.toSavedDarkTheme())
+        assertEquals(false, ThemeChoice.Light.toSavedDarkTheme())
     }
 
     @Test

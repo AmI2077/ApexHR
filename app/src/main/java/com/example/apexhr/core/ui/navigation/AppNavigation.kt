@@ -2,7 +2,6 @@ package com.example.apexhr.core.ui.navigation
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,7 +47,7 @@ import com.example.apexhr.features.notifications.ui.models.NotificationsScreenCa
 import com.example.apexhr.features.profile.ui.ProfileScreen
 import com.example.apexhr.features.profile.ui.ProfileViewModel
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
-import com.example.apexhr.features.settings.domain.resolveDarkTheme
+import com.example.apexhr.features.settings.domain.toThemeChoice
 import com.example.apexhr.features.settings.ui.SettingsScreen
 import com.example.apexhr.features.settings.ui.SettingsViewModel
 import com.example.apexhr.features.settings.ui.models.SettingsScreenCallbacks
@@ -173,7 +172,7 @@ fun AppNavigation(
                     }
                 }
                 SettingsScreen(
-                    darkTheme = resolveDarkTheme(savedDarkTheme, isSystemInDarkTheme()),
+                    themeChoice = savedDarkTheme.toThemeChoice(),
                     callbacks = settingsCallbacks,
                 )
             }

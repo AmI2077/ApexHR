@@ -1,8 +1,8 @@
 package com.example.apexhr.features.settings.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -24,7 +23,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,12 +41,21 @@ import com.example.apexhr.core.ui.theme.primaryTextColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.features.settings.ui.models.SettingsScreenCallbacks
 import com.example.apexhr.ui.theme.ApexHRTheme
+import com.example.apexhr.core.ui.composables.ApexPillTabs
+import com.example.apexhr.features.settings.domain.ThemeChoice
+
+@StringRes
+private fun ThemeChoice.labelRes(): Int = when (this) {
+    ThemeChoice.System -> R.string.settings_theme_system
+    ThemeChoice.Light -> R.string.settings_theme_light
+    ThemeChoice.Dark -> R.string.settings_theme_dark
+}
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
 fun SettingsScreenPreview() {
     ApexHRTheme(dynamicColor = false, darkTheme = false) {
-        SettingsScreen(darkTheme = false, callbacks = SettingsScreenCallbacks.Empty)
+        SettingsScreen(themeChoice = ThemeChoice.System, callbacks = SettingsScreenCallbacks.Empty)
     }
 }
 
@@ -56,18 +63,18 @@ fun SettingsScreenPreview() {
 @Composable
 fun SettingsScreenDarkPreview() {
     ApexHRTheme(dynamicColor = false, darkTheme = true) {
-        SettingsScreen(darkTheme = true, callbacks = SettingsScreenCallbacks.Empty)
+        SettingsScreen(themeChoice = ThemeChoice.Dark, callbacks = SettingsScreenCallbacks.Empty)
     }
 }
 
 /**
- * Настройки: переключатель тёмной темы, смена пароля, поддержка и выход из аккаунта.
+ * Настройки: выбор темы, смена пароля, поддержка и выход из аккаунта.
  *
- * @param darkTheme включена ли сейчас тёмная тема (с учётом системной, если выбора нет).
+ * @param themeChoice сохранённый выбор темы; без выбора — «Как в системе».
  */
 @Composable
 fun SettingsScreen(
-    darkTheme: Boolean,
+    themeChoice: ThemeChoice,
     callbacks: SettingsScreenCallbacks,
     modifier: Modifier = Modifier,
 ) {
@@ -99,27 +106,19 @@ fun SettingsScreen(
             modifier = Modifier.padding(horizontal = ApexDimens.spacing12.dp),
         ) {
             Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .toggleable(
-                        value = darkTheme,
-                        role = Role.Switch,
-                        onValueChange = callbacks::onDarkThemeChange,
-                    )
-                    .padding(vertical = ApexDimens.spacing12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(R.string.settings_dark_theme),
-                    color = primaryTextColor,
-                    fontSize = ApexDimens.text16.sp,
-                    modifier = Modifier.weight(1f),
-                )
-                // Нажатие обрабатывает вся строка, поэтому у самого переключателя обработчика нет.
-                Switch(checked = darkTheme, onCheckedChange = null)
-            }
+            Text(
+                text = stringResource(R.string.settings_theme),
+                color = primaryTextColor,
+                fontSize = ApexDimens.text16.sp,
+                modifier = Modifier.padding(vertical = ApexDimens.spacing8.dp),
+            )
+            val choices = ThemeChoice.entries
+            ApexPillTabs(
+                labels = choices.map { stringResource(it.labelRes()) },
+                selectedIndex = choices.indexOf(themeChoice),
+                onSelect = { index -> callbacks.onThemeChoiceClick(choices[index]) },
+            )
+            Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

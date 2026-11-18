@@ -10,7 +10,24 @@ interface SettingsRepository {
      */
     val darkTheme: Flow<Boolean?>
 
-    suspend fun setDarkTheme(enabled: Boolean)
+    /** @param enabled null — сбросить выбор и следовать системной теме. */
+    suspend fun setDarkTheme(enabled: Boolean?)
+}
+
+/** Выбор темы, как в вебе: «Как в системе» (по умолчанию), «Светлая», «Тёмная». */
+enum class ThemeChoice { System, Light, Dark }
+
+fun Boolean?.toThemeChoice(): ThemeChoice = when (this) {
+    null -> ThemeChoice.System
+    true -> ThemeChoice.Dark
+    false -> ThemeChoice.Light
+}
+
+/** Что сохранить в настройках: null — как в системе. */
+fun ThemeChoice.toSavedDarkTheme(): Boolean? = when (this) {
+    ThemeChoice.System -> null
+    ThemeChoice.Light -> false
+    ThemeChoice.Dark -> true
 }
 
 /** Тёмная ли тема сейчас: выбор пользователя, а если его нет — как в системе. */

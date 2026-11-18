@@ -18,8 +18,10 @@ class SettingsRepositoryImpl(
             .map { preferences -> preferences[DARK_THEME_KEY] }
             .distinctUntilChanged()
 
-    override suspend fun setDarkTheme(enabled: Boolean) {
-        dataStore.edit { preferences -> preferences[DARK_THEME_KEY] = enabled }
+    override suspend fun setDarkTheme(enabled: Boolean?) {
+        dataStore.edit { preferences ->
+            if (enabled == null) preferences.remove(DARK_THEME_KEY) else preferences[DARK_THEME_KEY] = enabled
+        }
     }
 
     private companion object {

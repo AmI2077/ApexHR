@@ -164,7 +164,10 @@
 
     <!-- Настройки -->
     <string name="settings_title">Настройки</string>
-    <string name="settings_dark_theme">Тёмная тема</string>
+    <string name="settings_theme">Тема</string>
+    <string name="settings_theme_system">Как в системе</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
     <string name="settings_change_password">Сменить пароль</string>
 
     <string name="activities_title">Активности</string>
