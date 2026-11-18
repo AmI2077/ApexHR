@@ -162,7 +162,9 @@ private fun OrderCard(
             OrderAmountRow(
                 label = stringResource(
                     R.string.orders_item,
-                    item.title.ifBlank { stringResource(R.string.shop_product_untitled) },
+                    item.title.ifBlank { stringResource(R.string.shop_product_untitled) }.let { title ->
+                        if (item.variantName == null) title else stringResource(R.string.shop_title_with_variant, title, item.variantName)
+                    },
                     item.quantity,
                 ),
                 amount = item.total,

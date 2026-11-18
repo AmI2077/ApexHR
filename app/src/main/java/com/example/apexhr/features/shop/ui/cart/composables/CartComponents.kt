@@ -130,6 +130,15 @@ fun CartItemCard(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
+            if (item.variantName != null) {
+                Text(
+                    text = stringResource(R.string.shop_variant_label, item.variantName),
+                    color = secondaryTextColor,
+                    fontSize = ApexDimens.text12.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
             Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 ApexAmount(

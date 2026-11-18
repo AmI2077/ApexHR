@@ -179,9 +179,12 @@ private class FakeCartApi : CartApi {
         return cart
     }
 
-    override suspend fun addItem(productId: Long, quantity: Int) {
+    var addedVariantId: Long? = null
+
+    override suspend fun addItem(productId: Long, quantity: Int, variantId: Long?) {
         actionError?.let { throw it }
         added = productId to quantity
+        addedVariantId = variantId
     }
 
     override suspend fun updateItem(itemId: Long, quantity: Int) {

@@ -1,5 +1,7 @@
 package com.example.apexhr.features.shop.ui.models
 
+import androidx.annotation.StringRes
+import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 
 data class ShopUiState(
@@ -11,6 +13,7 @@ data class ShopUiState(
     val isProductsLoading: Boolean = false,
     /** Ошибка загрузки товаров; категории при этом остаются на экране. */
     val productsError: DataError? = null,
+    val sort: ShopSort = ShopSort.Popular,
 ) {
     companion object {
         /** Вкладка «Все»: товары без фильтра по категории. */
@@ -86,9 +89,26 @@ data class ShopProductUiModel(
     val imageUrl: String? = null,
     /** false, если товар закончился: кнопка «В корзину» неактивна. */
     val isAvailable: Boolean = true,
+    /** Цена без скидки (зачёркнутая); null — скидки нет. */
+    val originalPrice: Long? = null,
+    val discountPercent: Int? = null,
+    val badges: List<ShopBadgeUiModel> = emptyList(),
     /** Товар добавляется в корзину: на кнопке индикатор, повторно нажать нельзя. */
     val isAddingToCart: Boolean = false,
 )
+
+/** Бейдж товара; [colorArgb] — цвет пилюли. */
+data class ShopBadgeUiModel(
+    val name: String,
+    val colorArgb: Long,
+)
+
+/** Сортировка каталога, как в вебе: «популярные» — порядок сервера. */
+enum class ShopSort(@StringRes val labelRes: Int) {
+    Popular(R.string.shop_sort_popular),
+    Cheaper(R.string.shop_sort_cheaper),
+    Expensive(R.string.shop_sort_expensive),
+}
 
 /** Состояние экрана каталога целиком. */
 sealed interface ShopScreenState {

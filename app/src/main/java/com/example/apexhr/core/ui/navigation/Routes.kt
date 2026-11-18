@@ -58,6 +58,9 @@ interface TopLevelRoute : NavKey {
 @Serializable
 data object CartRoute : NavKey
 
+@Serializable
+data class ProductDetailsRoute(val productId: Long) : NavKey
+
 /** «Мои заказы»: открываются из корзины. */
 @Serializable
 data object OrdersRoute : NavKey

@@ -24,7 +24,8 @@ import kotlinx.coroutines.CancellationException
  */
 interface CartApi {
     suspend fun getCart(): List<CartItemDto>
-    suspend fun addItem(productId: Long, quantity: Int)
+    /** @param variantId вариант товара; null — товар без вариантов. */
+    suspend fun addItem(productId: Long, quantity: Int, variantId: Long?)
     suspend fun updateItem(itemId: Long, quantity: Int)
     suspend fun removeItem(itemId: Long)
 
@@ -43,10 +44,10 @@ class KtorCartApi(
     override suspend fun getCart(): List<CartItemDto> =
         client.get(NetworkConfig.CART_URL).requireSuccess().body()
 
-    override suspend fun addItem(productId: Long, quantity: Int) {
+    override suspend fun addItem(productId: Long, quantity: Int, variantId: Long?) {
         client.post(NetworkConfig.CART_ITEMS_URL) {
             contentType(ContentType.Application.Json)
-            setBody(AddCartItemRequest(productId = productId, quantity = quantity))
+            setBody(AddCartItemRequest(productId = productId, quantity = quantity, variantId = variantId))
         }.requireActionSuccess()
     }
 

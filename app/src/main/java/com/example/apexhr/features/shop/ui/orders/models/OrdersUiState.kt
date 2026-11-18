@@ -45,6 +45,8 @@ data class OrderItemUiModel(
     val quantity: Int,
     /** Сумма строки (цена на момент покупки × количество) в апексах. */
     val total: Long,
+    /** Название варианта товара; null — без варианта. */
+    val variantName: String? = null,
 )
 
 sealed interface OrdersScreenState {

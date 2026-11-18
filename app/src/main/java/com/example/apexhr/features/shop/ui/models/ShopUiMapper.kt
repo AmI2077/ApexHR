@@ -3,6 +3,7 @@ package com.example.apexhr.features.shop.ui.models
 import com.example.apexhr.core.ui.model.takeIfHttpUrl
 import com.example.apexhr.features.shop.domain.Category
 import com.example.apexhr.features.shop.domain.Product
+import com.example.apexhr.features.shop.domain.ProductBadge
 
 /** Вкладки категорий: первой идёт «Все», дальше категории с сервера. */
 fun List<Category>.toCategoryTabs(): List<ShopCategoryUiModel> =
@@ -42,7 +43,20 @@ fun Product.toUiModel(
         imageUrl = image,
         isAvailable = isAvailable,
         isAddingToCart = isAddingToCart,
+        originalPrice = originalPrice,
+        discountPercent = discountPercent,
+        badges = badges.toUiModels(),
     )
+}
+
+fun List<ProductBadge>.toUiModels(): List<ShopBadgeUiModel> =
+    map { ShopBadgeUiModel(name = it.name, colorArgb = it.colorArgb) }
+
+/** Порядок по выбранной сортировке; при равной цене сохраняется порядок сервера. */
+fun List<Product>.sortedBy(sort: ShopSort): List<Product> = when (sort) {
+    ShopSort.Popular -> this
+    ShopSort.Cheaper -> sortedBy { it.price }
+    ShopSort.Expensive -> sortedByDescending { it.price }
 }
 
 /**

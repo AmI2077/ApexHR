@@ -26,6 +26,7 @@ fun OrderItem.toUiModel(): OrderItemUiModel =
         title = name.orEmpty(),
         quantity = quantity,
         total = price * quantity,
+        variantName = variantName,
     )
 
 @StringRes

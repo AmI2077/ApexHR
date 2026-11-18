@@ -11,6 +11,8 @@ data class CartItem(
     val unitPrice: Long,
     val quantity: Int,
     val total: Long,
+    val variantId: Long? = null,
+    val variantName: String? = null,
 )
 
 data class Cart(
@@ -49,6 +51,7 @@ data class OrderItem(
     val name: String?,
     val quantity: Int,
     val price: Long,
+    val variantName: String? = null,
 )
 
 /**

@@ -60,4 +60,5 @@ fun CartItem.toUiModel(isUpdating: Boolean = false): CartItemUiModel =
         quantity = quantity,
         canDecrease = quantity > 1,
         isUpdating = isUpdating,
+        variantName = variantName,
     )

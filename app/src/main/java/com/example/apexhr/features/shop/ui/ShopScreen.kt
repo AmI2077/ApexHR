@@ -34,6 +34,7 @@ import com.example.apexhr.features.shop.ui.models.ShopMessage
 import com.example.apexhr.features.shop.ui.models.ShopMessageAction
 import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import com.example.apexhr.features.shop.ui.models.ShopScreenState
+import com.example.apexhr.features.shop.ui.models.ShopSort
 import com.example.apexhr.features.shop.ui.models.ShopUiState
 import com.example.apexhr.ui.theme.ApexHRTheme
 import kotlinx.coroutines.flow.Flow
@@ -185,6 +186,14 @@ fun ShopScreenContent(
                 },
             )
         }
+        item {
+            val sorts = ShopSort.entries
+            ApexPillTabs(
+                labels = sorts.map { stringResource(it.labelRes) },
+                selectedIndex = sorts.indexOf(uiState.sort),
+                onSelect = { index -> sorts.getOrNull(index)?.let(callbacks::onSortClick) },
+            )
+        }
         when {
             uiState.isProductsLoading -> item { LoadingState() }
 
@@ -205,8 +214,11 @@ fun ShopScreenContent(
             }
 
             else -> {
-                item {
-                    ShopPopularTitle()
+                // «Популярное» — только при сортировке сервера, а не по цене.
+                if (uiState.sort == ShopSort.Popular) {
+                    item {
+                        ShopPopularTitle()
+                    }
                 }
                 items(uiState.products, key = { it.id }) { product ->
                     ShopProductCard(

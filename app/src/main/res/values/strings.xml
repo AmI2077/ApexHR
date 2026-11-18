@@ -63,6 +63,21 @@
     <string name="shop_products_empty">В этой категории пока нет товаров</string>
     <string name="shop_search_empty">По вашему запросу ничего не найдено</string>
     <string name="shop_added_to_cart">Товар добавлен в корзину</string>
+    <string name="shop_sort_popular">Популярные</string>
+    <string name="shop_sort_cheaper">Сначала дешевле</string>
+    <string name="shop_sort_expensive">Сначала дороже</string>
+    <string name="shop_discount_percent">−%1$d%%</string>
+    <string name="shop_variant_label">Вариант: %1$s</string>
+    <string name="shop_title_with_variant">%1$s (%2$s)</string>
+    <string name="product_details_title">Товар</string>
+    <string name="product_details_no_description">Описание пока не добавлено.</string>
+    <string name="product_details_variant">Вариант</string>
+    <string name="product_details_variant_untitled">Вариант</string>
+    <string name="product_details_stock">Наличие</string>
+    <string name="product_details_stock_count">%1$d шт.</string>
+    <string name="product_details_format">Формат</string>
+    <string name="product_details_format_digital">Цифровой</string>
+    <string name="product_details_format_physical">Физический</string>
 
     <string name="cart_error_insufficient_balance">Не хватает апексов на балансе</string>
     <string name="cart_error_out_of_stock">Товара нет в нужном количестве</string>

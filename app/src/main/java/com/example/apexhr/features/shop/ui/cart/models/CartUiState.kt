@@ -66,6 +66,8 @@ data class CartItemUiModel(
     val canDecrease: Boolean,
     /** По позиции идёт запрос: кнопки неактивны. */
     val isUpdating: Boolean = false,
+    /** Название выбранного варианта товара; null — без варианта. */
+    val variantName: String? = null,
 )
 
 sealed interface CartScreenState {

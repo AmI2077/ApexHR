@@ -12,6 +12,8 @@ import com.example.apexhr.features.shop.ui.models.ShopMessage
 import com.example.apexhr.features.shop.ui.models.ShopMessageAction
 import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import com.example.apexhr.features.shop.ui.models.ShopScreenState
+import com.example.apexhr.features.shop.ui.models.ShopSort
+import com.example.apexhr.features.shop.ui.models.sortedBy
 import com.example.apexhr.features.shop.ui.models.ShopUiState
 import com.example.apexhr.features.shop.ui.models.filterByQuery
 import com.example.apexhr.features.shop.ui.models.toCategoryIdOrNull
@@ -101,7 +103,7 @@ class ShopViewModel(
             is DataResult.Success -> {
                 loadedProducts = result.data
                 copy(
-                    products = visibleProducts(searchQuery),
+                    products = visibleProducts(searchQuery, sort),
                     isProductsLoading = false,
                     productsError = null,
                 )
@@ -117,13 +119,30 @@ class ShopViewModel(
             }
         }
 
-    private fun visibleProducts(query: String) =
-        loadedProducts.filterByQuery(query).map {
+    private fun visibleProducts(query: String, sort: ShopSort = currentSort()) =
+        loadedProducts.filterByQuery(query).sortedBy(sort).map {
             it.toUiModel(
                 categoryNames = categoryNames,
                 isAddingToCart = it.id.toString() in addingProductIds,
             )
         }
+
+    private fun currentSort(): ShopSort =
+        (_state.value as? ShopScreenState.Content)?.uiState?.sort ?: ShopSort.Popular
+
+    override fun onSortClick(sort: ShopSort) {
+        updateContent { uiState ->
+            if (uiState.sort == sort) return@updateContent uiState
+            uiState.copy(
+                sort = sort,
+                products = if (uiState.isProductsLoading || uiState.productsError != null) {
+                    uiState.products
+                } else {
+                    visibleProducts(uiState.searchQuery, sort)
+                },
+            )
+        }
+    }
 
     private fun refreshAddingState() {
         updateContent { uiState ->
@@ -196,6 +215,6 @@ class ShopViewModel(
     /** Переход в корзину задаёт навигация (AppNavigation). */
     override fun onCartClick() = Unit
 
-    // Карточки товара пока нет.
+    /** Карточку товара открывает навигация (AppNavigation). */
     override fun onProductClick(productId: String) = Unit
 }

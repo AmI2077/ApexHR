@@ -29,8 +29,8 @@ class CartRepositoryImpl(
         }
     }
 
-    override suspend fun addToCart(productId: Long, quantity: Int): CartActionResult =
-        action { cartApi.addItem(productId, quantity) }
+    override suspend fun addToCart(productId: Long, quantity: Int, variantId: Long?): CartActionResult =
+        action { cartApi.addItem(productId, quantity, variantId) }
 
     override suspend fun updateQuantity(itemId: Long, quantity: Int): CartActionResult =
         action { cartApi.updateItem(itemId, quantity) }

@@ -7,7 +7,8 @@ interface CartRepository {
     suspend fun loadCart(): DataResult<CartSummary>
 
     /** Добавляет товар; если он уже в корзине, сервер увеличивает количество. */
-    suspend fun addToCart(productId: Long, quantity: Int = 1): CartActionResult
+    /** @param variantId выбранный вариант товара; null — товар без вариантов. */
+    suspend fun addToCart(productId: Long, quantity: Int = 1, variantId: Long? = null): CartActionResult
 
     /** Новое количество позиции, больше 0. */
     suspend fun updateQuantity(itemId: Long, quantity: Int): CartActionResult

@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.apexhr.R
-import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
@@ -176,6 +175,10 @@ fun ShopProductCard(
         }
         Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
         Column(modifier = Modifier.weight(1f)) {
+            if (product.badges.isNotEmpty()) {
+                ShopBadges(badges = product.badges)
+                Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
+            }
             if (product.category != null) {
                 Text(
                     text = product.category,
@@ -206,10 +209,10 @@ fun ShopProductCard(
                 )
             }
             Spacer(modifier = Modifier.height(ApexDimens.spacing8.dp))
-            ApexAmount(
-                amount = product.price,
-                fontSize = ApexDimens.text16.sp,
-                fontWeight = FontWeight.Bold,
+            ShopPrice(
+                price = product.price,
+                originalPrice = product.originalPrice,
+                discountPercent = product.discountPercent,
             )
             Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
             Text(

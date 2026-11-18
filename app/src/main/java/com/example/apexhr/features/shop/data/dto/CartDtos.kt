@@ -18,6 +18,11 @@ data class CartItemDto(
     val quantity: Int = 0,
     /** Сумма позиции; если сервер её не прислал, считаем сами. */
     val total: Long? = null,
+    /** Вариант товара; поля как у позиции заказа (productVariantId, variantName, variantImageUrl). */
+    val productVariantId: Long? = null,
+    val variantId: Long? = null,
+    val variantName: String? = null,
+    val variantImageUrl: String? = null,
 )
 
 /** Тело POST /api/cart/items (AddCartItemRequest). Повторное добавление увеличивает количество. */
@@ -25,6 +30,8 @@ data class CartItemDto(
 data class AddCartItemRequest(
     val productId: Long,
     val quantity: Int,
+    /** Вариант товара; null не отправляется (explicitNulls = false). */
+    val variantId: Long? = null,
 )
 
 /** Тело PUT /api/cart/items/{id} (UpdateCartItemRequest). Количество должно быть больше 0. */
@@ -60,4 +67,6 @@ data class OrderItemDto(
     val productName: String? = null,
     val quantity: Int = 0,
     val priceAtPurchase: Long = 0,
+    val productVariantId: Long? = null,
+    val variantName: String? = null,
 )

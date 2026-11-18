@@ -17,10 +17,13 @@ fun CartItemDto.toDomain(): CartItem = CartItem(
     id = id,
     productId = productId,
     name = productName.trimToNull(),
-    imageUrl = imageUrl.trimToNull(),
+    // У варианта своя картинка (как в вебе), иначе — картинка товара.
+    imageUrl = variantImageUrl.trimToNull() ?: imageUrl.trimToNull(),
     unitPrice = unitPrice,
     quantity = quantity,
     total = total ?: (unitPrice * quantity),
+    variantId = productVariantId ?: variantId,
+    variantName = variantName.trimToNull(),
 )
 
 fun OrderDto.toDomain(): Order {
@@ -41,6 +44,7 @@ fun OrderItemDto.toDomain(): OrderItem = OrderItem(
     name = productName.trimToNull(),
     quantity = quantity,
     price = priceAtPurchase,
+    variantName = variantName.trimToNull(),
 )
 
 fun String?.toOrderStatus(): OrderStatus =

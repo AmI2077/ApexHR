@@ -61,6 +61,9 @@ import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import com.example.apexhr.features.shop.ui.orders.OrdersScreen
 import com.example.apexhr.features.shop.ui.orders.OrdersViewModel
 import com.example.apexhr.features.shop.ui.orders.models.OrdersScreenCallbacks
+import com.example.apexhr.features.shop.ui.product.ProductDetailsScreen
+import com.example.apexhr.features.shop.ui.product.ProductDetailsViewModel
+import com.example.apexhr.features.shop.ui.product.models.ProductDetailsScreenCallbacks
 import com.example.apexhr.features.support.ui.SupportListScreen
 import com.example.apexhr.features.support.ui.SupportListViewModel
 import com.example.apexhr.features.support.ui.SupportNewTicketScreen
@@ -392,11 +395,30 @@ fun AppNavigation(
                 val shopCallbacks = remember(viewModel, navigator) {
                     object : ShopScreenCallbacks by viewModel {
                         override fun onCartClick() = navigator.navigate(CartRoute)
+                        override fun onProductClick(productId: String) {
+                            productId.toLongOrNull()?.let { navigator.navigate(ProductDetailsRoute(it)) }
+                        }
                     }
                 }
                 ShopScreen(
                     screenState = screenState,
                     callbacks = shopCallbacks,
+                    messages = viewModel.messages,
+                )
+            }
+            entry<ProductDetailsRoute> { key ->
+                val viewModel: ProductDetailsViewModel =
+                    koinViewModel(parameters = { parametersOf(key.productId) })
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val productCallbacks = remember(viewModel, navigator) {
+                    object : ProductDetailsScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                        override fun onCartClick() = navigator.navigate(CartRoute)
+                    }
+                }
+                ProductDetailsScreen(
+                    screenState = screenState,
+                    callbacks = productCallbacks,
                     messages = viewModel.messages,
                 )
             }

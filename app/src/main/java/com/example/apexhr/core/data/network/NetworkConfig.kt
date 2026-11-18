@@ -42,6 +42,8 @@ object NetworkConfig {
     // Каталог
     const val CATEGORIES_URL = "$BASE_URL/api/categories"
     const val PRODUCTS_URL = "$BASE_URL/api/products"
+    fun productUrl(productId: Long) = "$PRODUCTS_URL/$productId"
+    fun productVariantsUrl(productId: Long) = "${productUrl(productId)}/variants"
 
     // Корзина и заказы
     const val CART_URL = "$BASE_URL/api/cart"
