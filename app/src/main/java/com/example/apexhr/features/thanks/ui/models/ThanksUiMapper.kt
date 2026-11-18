@@ -5,6 +5,7 @@ import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.model.messageRes
 import com.example.apexhr.features.profile.ui.models.userInfoLabels
 import com.example.apexhr.features.thanks.domain.Colleague
+import com.example.apexhr.features.thanks.domain.PEER_THANKS_AMOUNT
 import com.example.apexhr.features.thanks.domain.ThanksSendError
 
 /** Ограничение длины сообщения, как в веб-версии. */
@@ -22,11 +23,16 @@ data class ThanksForm(
     val notice: ThanksNotice? = null,
 )
 
-/** Форма отправки по списку коллег (активные сотрудники, кроме текущего пользователя). */
-fun List<Colleague>.toUiState(form: ThanksForm): ThanksUiState {
+/**
+ * Форма отправки по списку коллег (активные сотрудники, кроме текущего пользователя).
+ * @param thankedRecently кого уже благодарили на этой неделе: им кнопка отправки недоступна.
+ */
+fun List<Colleague>.toUiState(form: ThanksForm, thankedRecently: Set<String> = emptySet()): ThanksUiState {
     // Выбранного ищем среди всех коллег: поиск не должен сбрасывать получателя.
     val selected = firstOrNull { it.id == form.selectedColleagueId }
     return ThanksUiState(
+        amount = PEER_THANKS_AMOUNT,
+        isSelectedThankedRecently = selected != null && selected.id in thankedRecently,
         searchQuery = form.searchQuery,
         colleagues = search(form.searchQuery).map { it.toUiModel() },
         selectedColleagueId = selected?.id,

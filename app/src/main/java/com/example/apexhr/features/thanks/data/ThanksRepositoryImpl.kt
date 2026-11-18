@@ -4,6 +4,7 @@ import com.example.apexhr.core.data.network.safeApiCall
 import com.example.apexhr.core.domain.DataResult
 import com.example.apexhr.features.thanks.data.dto.CreateThankRequest
 import com.example.apexhr.features.thanks.domain.Colleague
+import com.example.apexhr.features.thanks.domain.PEER_THANKS_AMOUNT
 import com.example.apexhr.features.thanks.domain.ThanksHistory
 import com.example.apexhr.features.thanks.domain.ThanksRepository
 import com.example.apexhr.features.thanks.domain.ThanksSendResult
@@ -13,8 +14,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
-/** Сумма благодарности: в вебе она фиксированная и ничего не стоит отправителю. */
-const val THANKS_AMOUNT = 1L
 
 class ThanksRepositoryImpl(
     private val api: ThanksApi,
@@ -61,7 +60,7 @@ class ThanksRepositoryImpl(
         api.sendThanks(
             CreateThankRequest(
                 toUserId = toUserId,
-                amount = THANKS_AMOUNT,
+                amount = PEER_THANKS_AMOUNT,
                 message = message.trim().takeIf { it.isNotEmpty() },
                 isPublic = true,
             )

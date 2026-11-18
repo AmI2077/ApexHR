@@ -12,7 +12,7 @@ interface ThanksRepository {
 
     /**
      * Отправляет благодарность без трат, как в вебе: сумма всегда
-     * THANKS_AMOUNT, благодарность публичная.
+     * [PEER_THANKS_AMOUNT], благодарность публичная.
      */
     suspend fun sendThanks(toUserId: String, message: String): ThanksSendResult
 

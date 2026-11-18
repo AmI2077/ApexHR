@@ -1,6 +1,27 @@
 package com.example.apexhr.features.thanks.domain
 
+import java.time.Duration
 import java.time.Instant
+
+/**
+ * Сколько апексов получает коллега за благодарность, как PEER_THANKS_AMOUNT в вебе.
+ * Отправителю благодарность ничего не стоит.
+ */
+const val PEER_THANKS_AMOUNT = 25L
+
+/** Одному коллеге — не чаще раза в неделю: веб считает последние 7 суток. */
+val PEER_THANKS_PERIOD: Duration = Duration.ofDays(7)
+
+/**
+ * Кого текущий пользователь уже благодарил за последние [PEER_THANKS_PERIOD] к моменту [now]
+ * (по отправленным благодарностям, как thankedThisWeek в вебе).
+ */
+fun List<Thank>.recipientsThankedRecently(now: Instant): Set<String> {
+    val from = now.minus(PEER_THANKS_PERIOD)
+    return filter { thank -> thank.createdAt?.let { it >= from } == true }
+        .mapNotNull { it.counterpartId }
+        .toSet()
+}
 
 /** Коллега, которому можно отправить благодарность. */
 data class Colleague(

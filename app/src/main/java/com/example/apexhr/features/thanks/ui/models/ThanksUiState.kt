@@ -12,6 +12,10 @@ sealed interface ThanksScreenState {
 }
 
 data class ThanksUiState(
+    /** Сколько апексов получит коллега. */
+    val amount: Long,
+    /** Выбранному коллеге уже отправлена благодарность на этой неделе. */
+    val isSelectedThankedRecently: Boolean,
     val searchQuery: String,
     /** Коллеги, подходящие под поиск. */
     val colleagues: List<ColleagueUiModel>,
@@ -27,7 +31,8 @@ data class ThanksUiState(
     val notice: ThanksNotice?,
 ) {
     val canSend: Boolean
-        get() = selectedColleagueId != null && !isSending && message.trim().length >= messageMinLength
+        get() = selectedColleagueId != null && !isSelectedThankedRecently && !isSending &&
+            message.trim().length >= messageMinLength
 
     /** Список пуст из-за поиска, а не потому, что коллег нет. */
     val isNothingFound: Boolean
@@ -35,6 +40,8 @@ data class ThanksUiState(
 
     companion object {
         val Preview = ThanksUiState(
+            amount = 25,
+            isSelectedThankedRecently = false,
             searchQuery = "",
             colleagues = listOf(
                 ColleagueUiModel(
@@ -66,7 +73,7 @@ data class ThanksUiState(
             isSending = false,
             notice = ThanksNotice(
                 textRes = R.string.thanks_error_server_message,
-                args = listOf("Weekly thanks limit exceeded"),
+                args = listOf("Этому коллеге благодарность уже отправлена на этой неделе"),
                 isError = true,
             ),
         )

@@ -98,7 +98,7 @@ class ThanksRepositoryImplTest {
 
         assertEquals(ThanksSendResult.Success, result)
         assertEquals(
-            CreateThankRequest(toUserId = ANNA, amount = 1, message = "Спасибо!", isPublic = true),
+            CreateThankRequest(toUserId = ANNA, amount = 25, message = "Спасибо!", isPublic = true),
             api.sentRequest,
         )
     }

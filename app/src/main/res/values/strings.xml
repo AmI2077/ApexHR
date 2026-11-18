@@ -298,6 +298,10 @@
     <string name="thanks_no_colleagues">Пока некого благодарить</string>
     <string name="thanks_message_counter">%1$d / %2$d</string>
     <string name="thanks_sent">Благодарность отправлена</string>
+    <!-- %1$s — сумма благодарности: apexAmountText(PEER_THANKS_AMOUNT), «25 апексов». Тексты как в вебе. -->
+    <string name="thanks_rules">Благодарность не списывает ваши апексы: коллега получает %1$s. Одному человеку — только раз в неделю.</string>
+    <string name="thanks_amount_hint">Коллега получит %1$s.</string>
+    <string name="thanks_weekly_limit_reached">Этому коллеге на этой неделе уже отправлена благодарность.</string>
     <string name="thanks_error_server_message">%1$s</string>
     <string name="thanks_error_send">Не удалось отправить благодарность. Попробуйте ещё раз</string>
     <string name="thanks_error_not_found">Коллега не найден: возможно, его учётная запись отключена</string>

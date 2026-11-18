@@ -24,7 +24,10 @@ import com.example.apexhr.R
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadingState
+import com.example.apexhr.core.ui.composables.apexAmountText
 import com.example.apexhr.core.ui.theme.ApexDimens
+import com.example.apexhr.core.ui.theme.negativeRedColor
+import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.core.ui.theme.backgroundColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
 import com.example.apexhr.core.ui.theme.primaryTextColor
@@ -86,6 +89,11 @@ fun ThanksScreenContent(
     modifier: Modifier = Modifier,
 ) {
     ThanksScreenFrame(callbacks, modifier) {
+        Text(
+            text = stringResource(R.string.thanks_rules, apexAmountText(uiState.amount)),
+            color = secondaryTextColor,
+            fontSize = ApexDimens.text13.sp,
+        )
         ThanksSectionLabel(text = stringResource(R.string.thanks_colleagues))
         ThanksSearchField(
             query = uiState.searchQuery,
@@ -123,6 +131,17 @@ fun ThanksScreenContent(
                     color = primaryBlueColor,
                     fontSize = ApexDimens.text14.sp,
                     fontWeight = FontWeight.Medium,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                )
+                Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
+                Text(
+                    text = if (uiState.isSelectedThankedRecently) {
+                        stringResource(R.string.thanks_weekly_limit_reached)
+                    } else {
+                        stringResource(R.string.thanks_amount_hint, apexAmountText(uiState.amount))
+                    },
+                    color = if (uiState.isSelectedThankedRecently) negativeRedColor else secondaryTextColor,
+                    fontSize = ApexDimens.text14.sp,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                 )
             }
