@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -36,6 +35,7 @@ import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
+import com.example.apexhr.core.ui.composables.LoadMoreFooter
 import com.example.apexhr.core.ui.composables.LoadingState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
@@ -166,25 +166,9 @@ private fun NotificationsList(
                 onClick = { callbacks.onNotificationClick(notification.id) },
             )
         }
-        if (uiState.hasNextPage) {
-            item(key = "load_more") {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    if (uiState.isLoadingMore) {
-                        CircularProgressIndicator(color = primaryBlueColor)
-                    } else {
-                        TextButton(onClick = callbacks::onLoadMoreClick) {
-                            Text(
-                                text = stringResource(R.string.notifications_load_more),
-                                color = primaryBlueColor,
-                                fontSize = ApexDimens.text14.sp,
-                            )
-                        }
-                    }
-                }
-            }
+        // Бесконечная прокрутка: следующая страница грузится у конца списка.
+        item(key = "load_more") {
+            LoadMoreFooter(state = uiState.loadMore, onLoadMore = callbacks::onLoadMoreClick)
         }
     }
 }

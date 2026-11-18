@@ -1,6 +1,8 @@
 package com.example.apexhr.features.support.ui.models
 
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.model.LoadMoreState
+import com.example.apexhr.core.ui.model.loadMoreStateOf
 import com.example.apexhr.features.support.domain.SupportRepository
 import com.example.apexhr.features.support.domain.SupportTicketStatus
 
@@ -17,7 +19,12 @@ data class SupportListUiState(
     val items: List<SupportTicketItemUiModel>,
     val hasNextPage: Boolean,
     val isLoadingMore: Boolean = false,
+    /** Следующая страница не загрузилась: в конце списка «Повторить». */
+    val loadMoreError: DataError? = null,
 ) {
+    val loadMore: LoadMoreState
+        get() = loadMoreStateOf(hasMore = hasNextPage, isLoading = isLoadingMore, error = loadMoreError)
+
     companion object {
         val Preview = SupportListUiState(
             items = listOf(

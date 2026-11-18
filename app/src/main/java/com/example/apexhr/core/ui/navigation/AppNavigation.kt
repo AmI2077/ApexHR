@@ -218,7 +218,6 @@ fun AppNavigation(
                 SupportListScreen(
                     screenState = screenState,
                     callbacks = supportCallbacks,
-                    messages = viewModel.messages,
                 )
             }
             entry<SupportNewTicketRoute> {

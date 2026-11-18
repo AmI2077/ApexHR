@@ -4,10 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,8 +19,6 @@ import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
 import com.example.apexhr.core.ui.composables.ApexAmount
 import com.example.apexhr.core.ui.composables.ApexPillTabs
-import com.example.apexhr.core.ui.composables.ErrorState
-import com.example.apexhr.core.ui.composables.LoadingState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.negativeRedColor
 import com.example.apexhr.core.ui.theme.primaryBlueColor
@@ -31,7 +27,6 @@ import com.example.apexhr.core.ui.theme.secondaryBlueColor
 import com.example.apexhr.core.ui.theme.secondaryTextColor
 import com.example.apexhr.features.profile.domain.TransactionFilter
 import com.example.apexhr.features.profile.ui.history.models.HistoryTransactionUiModel
-import com.example.apexhr.features.profile.ui.history.models.LoadMoreState
 import com.example.apexhr.features.profile.ui.history.models.labelRes
 
 /** Таблетки-фильтры по виду операции на вкладке «Операции». */
@@ -96,33 +91,4 @@ fun ProfileOperationRow(
     }
 }
 
-/** Низ списка операций: «Показать ещё», индикатор подгрузки или ошибка с повтором. */
-@Composable
-fun ProfileOperationsLoadMore(
-    state: LoadMoreState,
-    onLoadMoreClick: () -> Unit,
-) {
-    when (state) {
-        LoadMoreState.Hidden -> Unit
 
-        LoadMoreState.Available -> OutlinedButton(
-            onClick = onLoadMoreClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(ApexDimens.buttonHeight.dp),
-        ) {
-            Text(
-                text = stringResource(R.string.profile_history_load_more),
-                color = primaryBlueColor,
-                fontSize = ApexDimens.text14.sp,
-            )
-        }
-
-        LoadMoreState.Loading -> LoadingState()
-
-        is LoadMoreState.Error -> ErrorState(
-            error = state.error,
-            onRetry = onLoadMoreClick,
-        )
-    }
-}

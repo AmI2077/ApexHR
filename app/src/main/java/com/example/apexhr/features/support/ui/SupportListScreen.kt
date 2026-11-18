@@ -1,10 +1,8 @@
 package com.example.apexhr.features.support.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,15 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +26,7 @@ import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
+import com.example.apexhr.core.ui.composables.LoadMoreFooter
 import com.example.apexhr.core.ui.composables.LoadingState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
@@ -47,8 +42,6 @@ import com.example.apexhr.features.support.ui.models.SupportListScreenState
 import com.example.apexhr.features.support.ui.models.SupportListUiState
 import com.example.apexhr.features.support.ui.models.SupportTicketItemUiModel
 import com.example.apexhr.ui.theme.ApexHRTheme
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
@@ -85,20 +78,14 @@ fun SupportListScreenErrorPreview() {
 
 /**
  * «Поддержка»: кнопка нового обращения и список своих обращений.
- * @param messages ошибки действий (id строки), показываются тостом.
+ * Ошибка догрузки следующей страницы показывается в конце списка.
  */
 @Composable
 fun SupportListScreen(
     screenState: SupportListScreenState,
     callbacks: SupportListScreenCallbacks,
     modifier: Modifier = Modifier,
-    messages: Flow<Int> = emptyFlow(),
 ) {
-    val context = LocalContext.current
-    LaunchedEffect(messages) {
-        messages.collect { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
-    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -162,22 +149,9 @@ private fun SupportTicketsList(
         items(uiState.items, key = { it.id }) { ticket ->
             SupportTicketCard(ticket = ticket, onClick = { callbacks.onTicketClick(ticket.id) })
         }
-        if (uiState.hasNextPage) {
-            item(key = "load_more") {
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    if (uiState.isLoadingMore) {
-                        CircularProgressIndicator(color = primaryBlueColor)
-                    } else {
-                        TextButton(onClick = callbacks::onLoadMoreClick) {
-                            Text(
-                                text = stringResource(R.string.support_load_more),
-                                color = primaryBlueColor,
-                                fontSize = ApexDimens.text14.sp,
-                            )
-                        }
-                    }
-                }
-            }
+        // Бесконечная прокрутка: следующая страница грузится у конца списка.
+        item(key = "load_more") {
+            LoadMoreFooter(state = uiState.loadMore, onLoadMore = callbacks::onLoadMoreClick)
         }
     }
 }

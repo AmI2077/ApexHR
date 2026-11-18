@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataResult
-import com.example.apexhr.core.ui.model.messageRes
 import com.example.apexhr.features.notifications.domain.NotificationsRepository
 import com.example.apexhr.features.notifications.ui.models.NotificationsScreenCallbacks
 import com.example.apexhr.features.notifications.ui.models.NotificationsScreenState
@@ -76,7 +75,7 @@ class NotificationsViewModel(
     override fun onLoadMoreClick() {
         val current = content() ?: return
         if (!current.hasNextPage || current.isLoadingMore) return
-        updateContent { it.copy(isLoadingMore = true) }
+        updateContent { it.copy(isLoadingMore = true, loadMoreError = null) }
         viewModelScope.launch {
             when (val result = repository.getNotifications(page = loadedPage + 1)) {
                 is DataResult.Success -> {
@@ -90,9 +89,9 @@ class NotificationsViewModel(
                     }
                 }
 
-                is DataResult.Failure -> {
-                    updateContent { it.copy(isLoadingMore = false) }
-                    _messages.send(result.error.messageRes())
+                // Ошибка показывается в конце списка с кнопкой «Повторить».
+                is DataResult.Failure -> updateContent {
+                    it.copy(isLoadingMore = false, loadMoreError = result.error)
                 }
             }
         }

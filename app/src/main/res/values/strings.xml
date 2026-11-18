@@ -156,7 +156,6 @@
     <string name="profile_history_empty">История пока пуста</string>
     <string name="profile_history_filter_empty">В истории нет записей с таким фильтром</string>
     <string name="profile_history_filter_empty_loaded">Среди загруженных записей истории таких нет</string>
-    <string name="profile_history_load_more">Показать ещё</string>
     <string name="profile_send_thanks">Поблагодарить коллегу</string>
     <string name="profile_activity_level">Уровень активности: %1$s</string>
 
@@ -359,7 +358,6 @@
     <string name="notifications_empty">Уведомлений пока нет</string>
     <string name="notifications_untitled">Уведомление</string>
     <string name="notifications_unread">Не прочитано</string>
-    <string name="notifications_load_more">Показать ещё</string>
     <string name="notifications_error_read">Не удалось отметить прочитанным. Попробуйте ещё раз</string>
 
     <!-- Поддержка -->
@@ -368,7 +366,6 @@
     <string name="support_new_ticket">Новое обращение</string>
     <string name="support_empty">Обращений пока нет</string>
     <string name="support_untitled">Обращение</string>
-    <string name="support_load_more">Показать ещё</string>
     <string name="support_messages_count">Сообщений: %1$d</string>
     <string name="support_status_open">Открыто</string>
     <string name="support_status_in_progress">В работе</string>

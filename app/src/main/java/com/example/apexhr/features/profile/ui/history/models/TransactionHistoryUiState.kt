@@ -3,6 +3,7 @@ package com.example.apexhr.features.profile.ui.history.models
 import androidx.annotation.StringRes
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.model.LoadMoreState
 import com.example.apexhr.features.profile.domain.TransactionFilter
 
 data class TransactionHistoryUiState(
@@ -55,15 +56,6 @@ data class HistoryTransactionUiModel(
     val amount: Long,
 )
 
-/** Кнопка «Показать ещё» под списком. */
-sealed interface LoadMoreState {
-    /** Загружено всё. */
-    data object Hidden : LoadMoreState
-    data object Available : LoadMoreState
-    data object Loading : LoadMoreState
-    /** Следующая страница не загрузилась; уже загруженное остаётся на экране. */
-    data class Error(val error: DataError) : LoadMoreState
-}
 
 /** Состояние вкладки «Операции» с учётом загрузки первой страницы. */
 sealed interface TransactionHistoryState {

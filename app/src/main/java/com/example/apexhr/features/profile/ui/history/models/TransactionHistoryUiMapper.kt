@@ -3,6 +3,7 @@ package com.example.apexhr.features.profile.ui.history.models
 import androidx.annotation.StringRes
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.model.loadMoreStateOf
 import com.example.apexhr.features.profile.domain.HistoryTransaction
 import com.example.apexhr.features.profile.domain.TransactionFilter
 import com.example.apexhr.features.profile.domain.TransactionType
@@ -31,12 +32,7 @@ fun LoadedTransactions.toUiState(
         hasMore -> R.string.profile_history_filter_empty_loaded
         else -> R.string.profile_history_filter_empty
     },
-    loadMore = when {
-        isLoadingMore -> LoadMoreState.Loading
-        !hasMore -> LoadMoreState.Hidden
-        loadMoreError != null -> LoadMoreState.Error(loadMoreError)
-        else -> LoadMoreState.Available
-    },
+    loadMore = loadMoreStateOf(hasMore = hasMore, isLoading = isLoadingMore, error = loadMoreError),
 )
 
 fun HistoryTransaction.toUiModel(zone: ZoneId = ZoneId.systemDefault()) = HistoryTransactionUiModel(

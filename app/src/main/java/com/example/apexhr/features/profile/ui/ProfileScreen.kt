@@ -20,6 +20,7 @@ import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
+import com.example.apexhr.core.ui.composables.LoadMoreFooter
 import com.example.apexhr.core.ui.composables.LoadingState
 import com.example.apexhr.core.ui.theme.ApexDimens
 import com.example.apexhr.core.ui.theme.backgroundColor
@@ -28,7 +29,6 @@ import com.example.apexhr.features.profile.ui.composables.ProfileBalanceBlock
 import com.example.apexhr.features.profile.ui.composables.ProfileHeader
 import com.example.apexhr.features.profile.ui.composables.ProfileOperationRow
 import com.example.apexhr.features.profile.ui.composables.ProfileOperationsFilters
-import com.example.apexhr.features.profile.ui.composables.ProfileOperationsLoadMore
 import com.example.apexhr.features.profile.ui.composables.ProfileSendThanksButton
 import com.example.apexhr.features.profile.ui.composables.ProfileTabs
 import com.example.apexhr.features.profile.ui.composables.ProfileUserInfo
@@ -235,10 +235,11 @@ private fun LazyListScope.operationsTab(
             items(uiState.transactions, key = { "operation_${it.id}" }) { transaction ->
                 ProfileOperationRow(transaction = transaction)
             }
+            // Бесконечная прокрутка: следующая страница (по 50 операций) грузится у конца списка.
             item(key = "operations_load_more") {
-                ProfileOperationsLoadMore(
+                LoadMoreFooter(
                     state = uiState.loadMore,
-                    onLoadMoreClick = callbacks::onOperationsLoadMoreClick,
+                    onLoadMore = callbacks::onOperationsLoadMoreClick,
                 )
             }
         }

@@ -2,6 +2,7 @@ package com.example.apexhr.features.support.ui
 
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.model.LoadMoreState
 import com.example.apexhr.core.domain.DataResult
 import com.example.apexhr.features.support.domain.SupportTicketStatus
 import com.example.apexhr.features.support.ui.models.SupportListScreenState
@@ -94,6 +95,24 @@ class SupportViewModelsTest {
         assertEquals(listOf(1L, 2L, 3L), viewModel.content().items.map { it.id })
         assertFalse(viewModel.content().hasNextPage)
         assertEquals(listOf(1, 2), repository.requestedPages)
+    }
+
+    @Test
+    fun `load more error stays in footer and repeated trigger during loading is ignored`() {
+        repository.pages[1] = ticketsPage(1, hasNext = true, summary(1))
+        val viewModel = SupportListViewModel(repository)
+        viewModel.refresh()
+
+        viewModel.onLoadMoreClick()
+        assertEquals(LoadMoreState.Error(DataError.Network), viewModel.content().loadMore)
+        assertEquals(listOf(1L), viewModel.content().items.map { it.id })
+
+        repository.pages[2] = ticketsPage(2, hasNext = false, summary(2))
+        viewModel.onLoadMoreClick()
+        assertEquals(LoadMoreState.Hidden, viewModel.content().loadMore)
+
+        viewModel.onLoadMoreClick()
+        assertEquals(listOf(1, 2, 2), repository.requestedPages)
     }
 
     // Новое обращение

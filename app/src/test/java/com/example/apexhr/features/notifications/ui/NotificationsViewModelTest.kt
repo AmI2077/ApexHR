@@ -3,6 +3,7 @@ package com.example.apexhr.features.notifications.ui
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.domain.DataResult
+import com.example.apexhr.core.ui.model.LoadMoreState
 import com.example.apexhr.features.notifications.domain.AppNotification
 import com.example.apexhr.features.notifications.domain.NotificationsPage
 import com.example.apexhr.features.notifications.domain.NotificationsRepository
@@ -78,7 +79,7 @@ class NotificationsViewModelTest {
     }
 
     @Test
-    fun `load more error keeps list and reports message`() = runTest {
+    fun `load more error stays in list footer and retry loads the page`() = runTest {
         repository.pages[1] = page(1, hasNext = true, notification(1))
         val viewModel = NotificationsViewModel(repository)
 
@@ -86,7 +87,13 @@ class NotificationsViewModelTest {
 
         assertEquals(listOf(1L), viewModel.content().items.map { it.id })
         assertTrue(viewModel.content().hasNextPage)
-        assertEquals(R.string.data_error_network, viewModel.messages.first())
+        assertEquals(LoadMoreState.Error(DataError.Network), viewModel.content().loadMore)
+
+        repository.pages[2] = page(2, hasNext = false, notification(2))
+        viewModel.onLoadMoreClick()
+
+        assertEquals(listOf(1L, 2L), viewModel.content().items.map { it.id })
+        assertEquals(LoadMoreState.Hidden, viewModel.content().loadMore)
     }
 
     @Test

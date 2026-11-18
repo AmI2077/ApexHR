@@ -7,7 +7,7 @@ import com.example.apexhr.features.profile.domain.TransactionFilter
 import com.example.apexhr.features.profile.domain.TransactionPage
 import com.example.apexhr.features.profile.domain.TransactionType
 import com.example.apexhr.features.profile.ui.history.models.HistoryTransactionUiModel
-import com.example.apexhr.features.profile.ui.history.models.LoadMoreState
+import com.example.apexhr.core.ui.model.LoadMoreState
 import com.example.apexhr.features.profile.ui.history.models.LoadedTransactions
 import com.example.apexhr.features.profile.ui.history.models.labelRes
 import com.example.apexhr.features.profile.ui.history.models.toUiModel

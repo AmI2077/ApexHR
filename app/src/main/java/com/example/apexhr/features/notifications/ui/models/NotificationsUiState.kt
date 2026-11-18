@@ -1,6 +1,8 @@
 package com.example.apexhr.features.notifications.ui.models
 
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.model.LoadMoreState
+import com.example.apexhr.core.ui.model.loadMoreStateOf
 
 /**
  * @param createdAt дата и время в часовом поясе устройства; null, если сервер не прислал.
@@ -14,16 +16,21 @@ data class NotificationUiModel(
 )
 
 /**
- * @param hasNextPage на сервере есть ещё страницы: показываем «Показать ещё».
+ * @param hasNextPage на сервере есть ещё страницы: следующая загрузится у конца списка.
  * @param isLoadingMore догружается следующая страница.
+ * @param loadMoreError следующая страница не загрузилась: в конце списка «Повторить».
  * @param isMarkingAll выполняется «Прочитать все».
  */
 data class NotificationsUiState(
     val items: List<NotificationUiModel>,
     val hasNextPage: Boolean,
     val isLoadingMore: Boolean = false,
+    val loadMoreError: DataError? = null,
     val isMarkingAll: Boolean = false,
 ) {
+    val loadMore: LoadMoreState
+        get() = loadMoreStateOf(hasMore = hasNextPage, isLoading = isLoadingMore, error = loadMoreError)
+
     val hasUnread: Boolean
         get() = items.any { !it.isRead }
 

@@ -3,7 +3,6 @@ package com.example.apexhr.features.support.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apexhr.core.domain.DataResult
-import com.example.apexhr.core.ui.model.messageRes
 import com.example.apexhr.features.support.domain.SupportRepository
 import com.example.apexhr.features.support.ui.models.SupportListScreenCallbacks
 import com.example.apexhr.features.support.ui.models.SupportListScreenState
@@ -11,12 +10,9 @@ import com.example.apexhr.features.support.ui.models.SupportListUiState
 import com.example.apexhr.features.support.ui.models.appendPage
 import com.example.apexhr.features.support.ui.models.toUiModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -33,10 +29,6 @@ class SupportListViewModel(
     private val _state = MutableStateFlow<SupportListScreenState>(SupportListScreenState.Loading)
     val state: StateFlow<SupportListScreenState> = _state.asStateFlow()
 
-    private val _messages = Channel<Int>(Channel.BUFFERED)
-
-    /** Разовые сообщения об ошибках (id строки). */
-    val messages: Flow<Int> = _messages.receiveAsFlow()
 
     private var loadJob: Job? = null
     private var loadedPage = 0
@@ -71,7 +63,7 @@ class SupportListViewModel(
     override fun onLoadMoreClick() {
         val current = content() ?: return
         if (!current.hasNextPage || current.isLoadingMore) return
-        updateContent { it.copy(isLoadingMore = true) }
+        updateContent { it.copy(isLoadingMore = true, loadMoreError = null) }
         loadJob = viewModelScope.launch {
             when (val result = repository.getTickets(page = loadedPage + 1)) {
                 is DataResult.Success -> {
@@ -85,9 +77,9 @@ class SupportListViewModel(
                     }
                 }
 
-                is DataResult.Failure -> {
-                    updateContent { it.copy(isLoadingMore = false) }
-                    _messages.send(result.error.messageRes())
+                // Ошибка показывается в конце списка с кнопкой «Повторить».
+                is DataResult.Failure -> updateContent {
+                    it.copy(isLoadingMore = false, loadMoreError = result.error)
                 }
             }
         }
