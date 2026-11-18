@@ -19,6 +19,8 @@ import com.example.apexhr.features.shop.data.KtorShopApi
 import com.example.apexhr.features.shop.data.ShopApi
 import com.example.apexhr.features.thanks.data.KtorThanksApi
 import com.example.apexhr.features.thanks.data.ThanksApi
+import com.example.apexhr.features.notifications.data.KtorNotificationsApi
+import com.example.apexhr.features.notifications.data.NotificationsApi
 import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -69,4 +71,5 @@ val networkModule = module {
     single<HomeApi> { KtorHomeApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<ActivitiesApi> { KtorActivitiesApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<ThanksApi> { KtorThanksApi(get(AUTHORIZED_HTTP_CLIENT)) }
+    single<NotificationsApi> { KtorNotificationsApi(get(AUTHORIZED_HTTP_CLIENT)) }
 }

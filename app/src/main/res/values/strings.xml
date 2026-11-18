@@ -301,6 +301,16 @@
     <string name="change_password_error_mismatch">Пароли не совпадают</string>
     <string name="change_password_error_rejected">Сервер не принял новый пароль</string>
 
+    <!-- Уведомления -->
+    <string name="notifications_title">Уведомления</string>
+    <string name="notifications_bell_unread">Уведомления, непрочитанных: %1$d</string>
+    <string name="notifications_read_all">Прочитать все</string>
+    <string name="notifications_empty">Уведомлений пока нет</string>
+    <string name="notifications_untitled">Уведомление</string>
+    <string name="notifications_unread">Не прочитано</string>
+    <string name="notifications_load_more">Показать ещё</string>
+    <string name="notifications_error_read">Не удалось отметить прочитанным. Попробуйте ещё раз</string>
+
     <!-- Загрузка данных -->
     <string name="retry">Повторить</string>
     <string name="data_error_timeout">Сервер долго не отвечает. Возможно, он просыпается — попробуйте ещё раз через минуту</string>

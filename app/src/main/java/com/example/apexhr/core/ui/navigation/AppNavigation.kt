@@ -35,6 +35,10 @@ import com.example.apexhr.features.auth.ui.model.ChangePasswordUiActions
 import com.example.apexhr.features.home.ui.HomeScreen
 import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
+import com.example.apexhr.features.notifications.ui.NotificationsBadgeViewModel
+import com.example.apexhr.features.notifications.ui.NotificationsScreen
+import com.example.apexhr.features.notifications.ui.NotificationsViewModel
+import com.example.apexhr.features.notifications.ui.models.NotificationsScreenCallbacks
 import com.example.apexhr.features.profile.ui.ProfileScreen
 import com.example.apexhr.features.profile.ui.ProfileViewModel
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
@@ -89,11 +93,32 @@ fun AppNavigation(
                         override fun onChallengeClick(challengeId: String) {
                             challengeId.toLongOrNull()?.let { navigator.navigate(QuestDetailsRoute(it)) }
                         }
+
+                        override fun onNotificationsClick() = navigator.navigate(NotificationsRoute)
                     }
                 }
+                // Бейдж обновляется каждый раз, когда главная снова на экране.
+                val badgeViewModel: NotificationsBadgeViewModel = koinViewModel()
+                val unreadNotifications by badgeViewModel.unreadCount.collectAsStateWithLifecycle()
+                LaunchedEffect(badgeViewModel) { badgeViewModel.refresh() }
                 HomeScreen(
                     screenState = screenState,
                     callbacks = homeCallbacks,
+                    unreadNotifications = unreadNotifications,
+                )
+            }
+            entry<NotificationsRoute> {
+                val viewModel: NotificationsViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val notificationsCallbacks = remember(viewModel, navigator) {
+                    object : NotificationsScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                NotificationsScreen(
+                    screenState = screenState,
+                    callbacks = notificationsCallbacks,
+                    messages = viewModel.messages,
                 )
             }
             entry<TopLevelRoute.Profile> {

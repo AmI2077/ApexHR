@@ -61,6 +61,12 @@ object NetworkConfig {
     fun eventRegistrationUrl(eventId: Long) = "${eventUrl(eventId)}/registration"
     fun eventRewardUrl(eventId: Long) = "${eventUrl(eventId)}/reward"
 
+    // Уведомления
+    const val NOTIFICATIONS_URL = "$BASE_URL/api/notifications"
+    const val NOTIFICATIONS_UNREAD_COUNT_URL = "$NOTIFICATIONS_URL/unread-count"
+    const val NOTIFICATIONS_READ_ALL_URL = "$NOTIFICATIONS_URL/read-all"
+    fun notificationReadUrl(id: Long) = "$NOTIFICATIONS_URL/$id/read"
+
     // Бэкенд крутится на Render: после простоя «холодный старт» может
     // занимать десятки секунд, поэтому таймауты заметно больше обычных.
     const val REQUEST_TIMEOUT_MILLIS = 60_000L

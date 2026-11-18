@@ -1,5 +1,7 @@
 package com.example.apexhr.core.di
 
+import com.example.apexhr.features.notifications.ui.NotificationsBadgeViewModel
+import com.example.apexhr.features.notifications.ui.NotificationsViewModel
 import com.example.apexhr.features.activities.ui.ActivitiesViewModel
 import com.example.apexhr.features.activities.ui.event.EventDetailsViewModel
 import com.example.apexhr.features.activities.ui.quest.QuestDetailsViewModel
@@ -52,6 +54,14 @@ val vmModule = module {
 
     viewModel {
         OrdersViewModel(get())
+    }
+
+    viewModel {
+        NotificationsViewModel(get())
+    }
+
+    viewModel {
+        NotificationsBadgeViewModel(get())
     }
 
     viewModel {

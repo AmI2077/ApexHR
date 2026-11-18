@@ -20,7 +20,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -52,6 +56,8 @@ fun HomeHeader(
     balance: Long?,
     onPointsClick: () -> Unit,
     modifier: Modifier = Modifier,
+    unreadNotifications: Int = 0,
+    onNotificationsClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -75,17 +81,54 @@ fun HomeHeader(
                 fontWeight = FontWeight.Bold,
             )
         }
-        // Пока баланс не загружен, блок апексов не показываем.
-        if (balance != null) {
-            ApexAmount(
-                amount = balance,
-                modifier = Modifier.clickable(
-                    onClick = onPointsClick,
-                    onClickLabel = stringResource(R.string.home_balance_content_description),
-                ),
-                color = primaryTextColor,
-                fontSize = ApexDimens.text16.sp,
-                fontWeight = FontWeight.Medium,
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            NotificationsBell(
+                unreadCount = unreadNotifications,
+                onClick = onNotificationsClick,
+            )
+            // Пока баланс не загружен, блок апексов не показываем.
+            if (balance != null) {
+                ApexAmount(
+                    amount = balance,
+                    modifier = Modifier.clickable(
+                        onClick = onPointsClick,
+                        onClickLabel = stringResource(R.string.home_balance_content_description),
+                    ),
+                    color = primaryTextColor,
+                    fontSize = ApexDimens.text16.sp,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+        }
+    }
+}
+
+/** Колокольчик уведомлений с бейджем непрочитанных (больше 99 — «99+»). */
+@Composable
+fun NotificationsBell(
+    unreadCount: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val description = if (unreadCount > 0) {
+        stringResource(R.string.notifications_bell_unread, unreadCount)
+    } else {
+        stringResource(R.string.notifications_title)
+    }
+    IconButton(onClick = onClick, modifier = modifier) {
+        BadgedBox(
+            badge = {
+                if (unreadCount > 0) {
+                    Badge(containerColor = primaryBlueColor, contentColor = backgroundColor) {
+                        Text(text = if (unreadCount > 99) "99+" else unreadCount.toString())
+                    }
+                }
+            },
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Notifications,
+                contentDescription = description,
+                tint = primaryTextColor,
             )
         }
     }

@@ -72,19 +72,21 @@ fun HomeScreen(
     screenState: HomeScreenState,
     callbacks: HomeScreenCallbacks,
     modifier: Modifier = Modifier,
+    unreadNotifications: Int = 0,
 ) {
     when (screenState) {
         is HomeScreenState.Content -> HomeScreenContent(
             uiState = screenState.uiState,
             callbacks = callbacks,
             modifier = modifier,
+            unreadNotifications = unreadNotifications,
         )
 
-        HomeScreenState.Loading -> HomeScreenFrame(balance = null, callbacks, modifier) {
+        HomeScreenState.Loading -> HomeScreenFrame(balance = null, unreadNotifications, callbacks, modifier) {
             item { LoadingState() }
         }
 
-        is HomeScreenState.Error -> HomeScreenFrame(balance = null, callbacks, modifier) {
+        is HomeScreenState.Error -> HomeScreenFrame(balance = null, unreadNotifications, callbacks, modifier) {
             item {
                 ErrorState(
                     error = screenState.error,
@@ -113,8 +115,9 @@ fun HomeScreenContent(
     uiState: HomeUiState,
     callbacks: HomeScreenCallbacks,
     modifier: Modifier = Modifier,
+    unreadNotifications: Int = 0,
 ) {
-    HomeScreenFrame(balance = uiState.balance, callbacks, modifier) {
+    HomeScreenFrame(balance = uiState.balance, unreadNotifications, callbacks, modifier) {
         item {
             HomeGreeting(userName = uiState.userName)
         }
@@ -152,10 +155,14 @@ fun HomeScreenContent(
     }
 }
 
-/** Общий каркас: фон, отступы и шапка с логотипом и балансом (если он уже загружен). */
+/**
+ * Общий каркас: фон, отступы и шапка с логотипом, колокольчиком уведомлений
+ * и балансом (если он уже загружен).
+ */
 @Composable
 private fun HomeScreenFrame(
     balance: Long?,
+    unreadNotifications: Int,
     callbacks: HomeScreenCallbacks,
     modifier: Modifier = Modifier,
     content: LazyListScope.() -> Unit,
@@ -174,6 +181,8 @@ private fun HomeScreenFrame(
             HomeHeader(
                 balance = balance,
                 onPointsClick = callbacks::onPointsClick,
+                unreadNotifications = unreadNotifications,
+                onNotificationsClick = callbacks::onNotificationsClick,
             )
         }
         content()

@@ -86,6 +86,10 @@ data object SettingsRoute : NavKey
 @Serializable
 data object SettingsChangePasswordRoute : NavKey
 
+/** Уведомления: открываются колокольчиком на главной. */
+@Serializable
+data object NotificationsRoute : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {

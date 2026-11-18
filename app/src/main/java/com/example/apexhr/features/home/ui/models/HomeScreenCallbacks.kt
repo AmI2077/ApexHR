@@ -7,6 +7,9 @@ interface HomeScreenCallbacks {
     fun onAchievementClick(achievementId: String)
     fun onRetryClick() = Unit
 
+    /** Колокольчик в шапке: экран уведомлений открывает навигация. */
+    fun onNotificationsClick() = Unit
+
     companion object {
         val Empty = object : HomeScreenCallbacks {
             override fun onPointsClick() = Unit

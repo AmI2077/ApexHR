@@ -1,5 +1,7 @@
 package com.example.apexhr.core.di
 
+import com.example.apexhr.features.notifications.data.NotificationsRepositoryImpl
+import com.example.apexhr.features.notifications.domain.NotificationsRepository
 import com.example.apexhr.features.activities.data.ActivitiesRepositoryImpl
 import com.example.apexhr.features.activities.domain.ActivitiesRepository
 import com.example.apexhr.features.auth.data.AuthRepositoryImpl
@@ -34,4 +36,5 @@ val repoModule = module {
     single<HomeRepository> { HomeRepositoryImpl(get(), get()) }
     single<ActivitiesRepository> { ActivitiesRepositoryImpl(get()) }
     single<ThanksRepository> { ThanksRepositoryImpl(get()) }
+    single<NotificationsRepository> { NotificationsRepositoryImpl(get()) }
 }
