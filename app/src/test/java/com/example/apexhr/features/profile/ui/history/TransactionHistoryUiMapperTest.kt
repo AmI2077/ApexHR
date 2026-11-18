@@ -88,8 +88,12 @@ class TransactionHistoryUiMapperTest {
         )
 
         assertEquals(
-            listOf("4", "2"),
+            listOf("4"),
             loaded.toUiState(TransactionFilter.Purchases).transactions.map { it.id },
+        )
+        assertEquals(
+            listOf("2"),
+            loaded.toUiState(TransactionFilter.Refunds).transactions.map { it.id },
         )
         assertEquals(
             listOf("3"),

@@ -57,6 +57,7 @@ fun TransactionFilter.labelRes(): Int = when (this) {
     TransactionFilter.Thanks -> R.string.profile_history_filter_thanks
     TransactionFilter.Bonuses -> R.string.profile_history_filter_bonuses
     TransactionFilter.Purchases -> R.string.profile_history_filter_purchases
+    TransactionFilter.Refunds -> R.string.profile_history_filter_refunds
     TransactionFilter.Adjustments -> R.string.profile_history_filter_adjustments
 }
 

@@ -148,6 +148,7 @@
     <string name="profile_history_filter_thanks">Благодарности</string>
     <string name="profile_history_filter_bonuses">Поощрения</string>
     <string name="profile_history_filter_purchases">Покупки</string>
+    <string name="profile_history_filter_refunds">Возвраты</string>
     <string name="profile_history_filter_adjustments">Корректировки</string>
     <string name="profile_history_type_activity">Активность</string>
     <string name="profile_history_type_thanks">Благодарность</string>

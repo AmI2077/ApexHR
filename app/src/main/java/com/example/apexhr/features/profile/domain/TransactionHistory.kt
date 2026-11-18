@@ -27,8 +27,8 @@ enum class TransactionType {
 
 /**
  * Фильтр истории, как на вебе: все / активности / благодарности / поощрения /
- * покупки / корректировки. Фильтра по типу в API нет, поэтому фильтруем уже
- * загруженные операции.
+ * покупки / возвраты / корректировки. Фильтра по типу в API нет, поэтому
+ * фильтруем уже загруженные операции.
  */
 enum class TransactionFilter {
     All,
@@ -36,6 +36,7 @@ enum class TransactionFilter {
     Thanks,
     Bonuses,
     Purchases,
+    Refunds,
     Adjustments,
     ;
 
@@ -45,7 +46,8 @@ enum class TransactionFilter {
         Activities -> type == TransactionType.Activity
         Thanks -> type == TransactionType.Thanks
         Bonuses -> type == TransactionType.Bonus
-        Purchases -> type == TransactionType.Purchase || type == TransactionType.Refund
+        Purchases -> type == TransactionType.Purchase
+        Refunds -> type == TransactionType.Refund
         Adjustments -> type == TransactionType.Adjustment
     }
 }

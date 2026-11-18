@@ -21,10 +21,20 @@ class TransactionFilterTest {
     }
 
     @Test
-    fun `purchases include refunds`() {
+    fun `refunds have their own filter like on the web`() {
+        assertEquals(listOf(TransactionType.Purchase), TransactionFilter.Purchases.matching())
+        assertEquals(listOf(TransactionType.Refund), TransactionFilter.Refunds.matching())
+    }
+
+    @Test
+    fun `filters go in web order`() {
         assertEquals(
-            listOf(TransactionType.Purchase, TransactionType.Refund),
-            TransactionFilter.Purchases.matching(),
+            listOf(
+                TransactionFilter.All, TransactionFilter.Activities, TransactionFilter.Thanks,
+                TransactionFilter.Bonuses, TransactionFilter.Purchases, TransactionFilter.Refunds,
+                TransactionFilter.Adjustments,
+            ),
+            TransactionFilter.entries,
         )
     }
 
