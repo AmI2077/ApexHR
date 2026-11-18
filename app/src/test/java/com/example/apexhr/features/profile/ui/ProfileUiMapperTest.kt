@@ -152,7 +152,7 @@ class ProfileUiMapperTest {
 
         assertEquals(
             listOf(
-                UserLabel.Resource(R.string.profile_position_employee),
+                UserLabel.Resource(R.string.role_employee),
                 UserLabel.Resource(R.string.profile_department_unassigned),
             ),
             state.department,

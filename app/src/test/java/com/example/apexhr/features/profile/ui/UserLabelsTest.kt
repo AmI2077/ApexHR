@@ -14,16 +14,34 @@ class UserLabelsTest {
 
     @Test
     fun `employee position is translated`() {
-        assertEquals(listOf(UserLabel.Resource(R.string.profile_position_employee)), position("Employee"))
+        assertEquals(listOf(UserLabel.Resource(R.string.role_employee)), position("Employee"))
     }
 
     @Test
     fun `role codes are translated ignoring case and separators`() {
-        assertEquals(listOf(UserLabel.Resource(R.string.profile_position_manager)), position("MANAGER"))
-        assertEquals(listOf(UserLabel.Resource(R.string.profile_position_admin)), position("admin"))
-        assertEquals(listOf(UserLabel.Resource(R.string.profile_position_admin)), position("Administrator"))
-        assertEquals(listOf(UserLabel.Resource(R.string.profile_position_superadmin)), position("super_admin"))
-        assertEquals(listOf(UserLabel.Resource(R.string.profile_position_superadmin)), position("Super Admin"))
+        assertEquals(listOf(UserLabel.Resource(R.string.role_manager)), position("MANAGER"))
+        assertEquals(listOf(UserLabel.Resource(R.string.role_admin)), position("admin"))
+        assertEquals(listOf(UserLabel.Resource(R.string.role_admin)), position("Administrator"))
+        assertEquals(listOf(UserLabel.Resource(R.string.role_chief)), position("super_admin"))
+        assertEquals(listOf(UserLabel.Resource(R.string.role_chief)), position("Super Admin"))
+    }
+
+    @Test
+    fun `all web roles have russian names`() {
+        val expected = mapOf(
+            "HR" to R.string.role_hr,
+            "HumanResources" to R.string.role_hr,
+            "Merchandiser" to R.string.role_merchandiser,
+            "support_operator" to R.string.role_support,
+            "Support" to R.string.role_support,
+            "helpdesk" to R.string.role_support,
+            "Manager" to R.string.role_manager,
+            "SuperAdmin" to R.string.role_chief,
+            "chief" to R.string.role_chief,
+        )
+        expected.forEach { (code, res) ->
+            assertEquals(code, listOf(UserLabel.Resource(res)), position(code))
+        }
     }
 
     @Test
@@ -49,7 +67,7 @@ class UserLabelsTest {
         assertEquals(emptyList<UserLabel>(), userInfoLabels(position = " ", department = null))
         assertEquals(
             listOf(
-                UserLabel.Resource(R.string.profile_position_employee),
+                UserLabel.Resource(R.string.role_employee),
                 UserLabel.Resource(R.string.profile_department_unassigned),
             ),
             userInfoLabels(position = "Employee", department = "Unassigned"),

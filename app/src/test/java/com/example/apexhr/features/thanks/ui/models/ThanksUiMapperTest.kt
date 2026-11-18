@@ -106,7 +106,7 @@ class ThanksUiMapperTest {
             ColleagueUiModel(
                 id = "x",
                 name = null,
-                position = listOf(UserLabel.Resource(R.string.profile_position_employee)),
+                position = listOf(UserLabel.Resource(R.string.role_employee)),
             ),
             noName.toUiModel(),
         )

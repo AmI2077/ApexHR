@@ -17,17 +17,30 @@ sealed interface UserLabel {
 
 /**
  * Должность и отдел — свободный текст, но сервер подставляет английские значения
- * по умолчанию: position = "Employee", department = "Unassigned". Коды ролей
- * из Swagger и /api/users (employee, manager, admin, superadmin) переводим так же,
- * если они попадут в должность. Сравниваем без регистра, пробелов, «_» и «-».
+ * по умолчанию: position = "Employee", department = "Unassigned". Коды ролей,
+ * если они попадут в должность, переводим теми же названиями, что и веб
+ * (ROLE_LABEL / roleCodeLabel в lib/labels.ts): сотрудник, руководитель, HR,
+ * мерчендайзер, оператор поддержки, администратор, главный администратор.
+ * Сравниваем без регистра, пробелов, «_» и «-».
  */
 private val POSITION_LABELS: Map<String, Int> = mapOf(
-    "employee" to R.string.profile_position_employee,
-    "manager" to R.string.profile_position_manager,
-    "admin" to R.string.profile_position_admin,
-    "administrator" to R.string.profile_position_admin,
-    "superadmin" to R.string.profile_position_superadmin,
-    "superadministrator" to R.string.profile_position_superadmin,
+    "employee" to R.string.role_employee,
+    "user" to R.string.role_employee,
+    "manager" to R.string.role_manager,
+    "hr" to R.string.role_hr,
+    "humanresources" to R.string.role_hr,
+    "merchandiser" to R.string.role_merchandiser,
+    "merch" to R.string.role_merchandiser,
+    "support" to R.string.role_support,
+    "supportoperator" to R.string.role_support,
+    "operator" to R.string.role_support,
+    "helpdesk" to R.string.role_support,
+    "admin" to R.string.role_admin,
+    "administrator" to R.string.role_admin,
+    "superadmin" to R.string.role_chief,
+    "superadministrator" to R.string.role_chief,
+    "chief" to R.string.role_chief,
+    "owner" to R.string.role_chief,
     "unassigned" to R.string.profile_position_unassigned,
 )
 

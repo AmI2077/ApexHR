@@ -34,7 +34,7 @@ data class ProfileUiState(
         val Preview = ProfileUiState(
             name = "Olivia Martinez",
             department = listOf(
-                UserLabel.Resource(R.string.profile_position_employee),
+                UserLabel.Resource(R.string.role_employee),
                 UserLabel.Text("Marketing Department"),
             ),
             balance = 1_250,
