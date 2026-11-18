@@ -336,6 +336,26 @@
     <string name="support_resolved_note">Обращение решено. Новые сообщения не принимаются.</string>
     <string name="support_closed_note">Обращение закрыто. Новые сообщения не принимаются.</string>
 
+    <!-- Профиль коллеги -->
+    <string name="colleague_title">Профиль коллеги</string>
+    <string name="colleague_open_profile">Профиль коллеги</string>
+    <string name="colleague_score">Благодарности в рейтинге: %1$d</string>
+    <string name="colleague_blocked">Аккаунт заблокирован</string>
+    <string name="colleague_open_own_profile">Открыть свой профиль</string>
+    <string name="colleague_thanks_title">Полученные благодарности</string>
+    <string name="colleague_thanks_hint">Видны только ваши благодарности этому коллеге</string>
+    <string name="colleague_thanks_empty">В вашей ленте таких благодарностей нет</string>
+    <string name="colleague_from_me">Вы</string>
+    <string name="colleague_achievements_title">Достижения</string>
+    <string name="colleague_achievements_empty">Пока нет открытых достижений</string>
+    <string name="role_employee">Сотрудник</string>
+    <string name="role_manager">Руководитель</string>
+    <string name="role_hr">HR</string>
+    <string name="role_merchandiser">Мерчендайзер</string>
+    <string name="role_support">Оператор поддержки</string>
+    <string name="role_admin">Администратор</string>
+    <string name="role_chief">Главный администратор</string>
+
     <!-- Загрузка данных -->
     <string name="retry">Повторить</string>
     <string name="data_error_timeout">Сервер долго не отвечает. Возможно, он просыпается — попробуйте ещё раз через минуту</string>

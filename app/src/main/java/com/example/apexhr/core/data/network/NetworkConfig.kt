@@ -28,6 +28,7 @@ object NetworkConfig {
 
     // Благодарности (текущий пользователь — тот же USER_PROFILE_URL, что у профиля)
     const val USERS_URL = "$BASE_URL/api/users"
+    fun userUrl(userId: String) = "$USERS_URL/$userId"
     const val THANKS_URL = "$BASE_URL/api/thanks"
     const val THANKS_FOR_ME_URL = "$THANKS_URL/for-me"
     const val THANKS_FROM_ME_URL = "$THANKS_URL/from-me"

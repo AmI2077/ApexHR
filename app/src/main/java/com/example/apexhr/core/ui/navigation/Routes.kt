@@ -102,6 +102,10 @@ data object SupportNewTicketRoute : NavKey
 @Serializable
 data class SupportTicketRoute(val ticketId: Long) : NavKey
 
+/** Профиль коллеги: открывается из лидерборда на главной и из списка коллег в «Благодарностях». */
+@Serializable
+data class ColleagueProfileRoute(val userId: String) : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {

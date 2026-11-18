@@ -2,6 +2,8 @@ package com.example.apexhr.core.di
 
 import com.example.apexhr.features.notifications.data.NotificationsRepositoryImpl
 import com.example.apexhr.features.notifications.domain.NotificationsRepository
+import com.example.apexhr.features.colleague.data.ColleagueRepositoryImpl
+import com.example.apexhr.features.colleague.domain.ColleagueRepository
 import com.example.apexhr.features.support.data.SupportRepositoryImpl
 import com.example.apexhr.features.support.domain.SupportRepository
 import com.example.apexhr.features.activities.data.ActivitiesRepositoryImpl
@@ -40,4 +42,5 @@ val repoModule = module {
     single<ThanksRepository> { ThanksRepositoryImpl(get()) }
     single<NotificationsRepository> { NotificationsRepositoryImpl(get()) }
     single<SupportRepository> { SupportRepositoryImpl(get()) }
+    single<ColleagueRepository> { ColleagueRepositoryImpl(get(), get(), get(), get()) }
 }

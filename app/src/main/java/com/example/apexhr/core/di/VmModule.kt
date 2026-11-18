@@ -2,6 +2,7 @@ package com.example.apexhr.core.di
 
 import com.example.apexhr.features.notifications.ui.NotificationsBadgeViewModel
 import com.example.apexhr.features.notifications.ui.NotificationsViewModel
+import com.example.apexhr.features.colleague.ui.ColleagueProfileViewModel
 import com.example.apexhr.features.support.ui.SupportListViewModel
 import com.example.apexhr.features.support.ui.SupportNewTicketViewModel
 import com.example.apexhr.features.support.ui.SupportTicketViewModel
@@ -77,6 +78,10 @@ val vmModule = module {
 
     viewModel { (ticketId: Long) ->
         SupportTicketViewModel(ticketId, get())
+    }
+
+    viewModel { (userId: String) ->
+        ColleagueProfileViewModel(userId, get())
     }
 
     viewModel {

@@ -104,6 +104,7 @@ fun ThanksScreenContent(
                 selected = colleague.id == uiState.selectedColleagueId,
                 onClick = { callbacks.onColleagueClick(colleague.id) },
                 onQuickThanksClick = { callbacks.onQuickThanksClick(colleague.id) },
+                onProfileClick = { callbacks.onColleagueProfileClick(colleague.id) },
             )
         }
         Column(modifier = Modifier.fillMaxWidth()) {

@@ -32,6 +32,9 @@ import com.example.apexhr.R
 import com.example.apexhr.features.auth.ui.ChangePasswordViewModel
 import com.example.apexhr.features.auth.ui.composables.ChangePasswordScreen
 import com.example.apexhr.features.auth.ui.model.ChangePasswordUiActions
+import com.example.apexhr.features.colleague.ui.ColleagueProfileScreen
+import com.example.apexhr.features.colleague.ui.ColleagueProfileViewModel
+import com.example.apexhr.features.colleague.ui.models.ColleagueProfileScreenCallbacks
 import com.example.apexhr.features.home.ui.HomeScreen
 import com.example.apexhr.features.home.ui.HomeViewModel
 import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
@@ -67,6 +70,7 @@ import com.example.apexhr.features.support.ui.models.SupportTicketScreenCallback
 import com.example.apexhr.features.thanks.ui.ThanksScreen
 import com.example.apexhr.features.thanks.ui.ThanksViewModel
 import com.example.apexhr.features.thanks.ui.models.ThanksScreenCallbacks
+import java.util.UUID
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -104,6 +108,11 @@ fun AppNavigation(
                         }
 
                         override fun onNotificationsClick() = navigator.navigate(NotificationsRoute)
+
+                        // Строка без userId (ключ «rank_…») профиль не открывает.
+                        override fun onLeaderboardEntryClick(entryId: String) {
+                            if (entryId.isUserId()) navigator.navigate(ColleagueProfileRoute(entryId))
+                        }
                     }
                 }
                 // Бейдж обновляется каждый раз, когда главная снова на экране.
@@ -251,11 +260,39 @@ fun AppNavigation(
                 val thanksCallbacks = remember(viewModel, navigator) {
                     object : ThanksScreenCallbacks by viewModel {
                         override fun onBackClick() = navigator.goBack()
+                        override fun onColleagueProfileClick(colleagueId: String) =
+                            navigator.navigate(ColleagueProfileRoute(colleagueId))
                     }
                 }
                 ThanksScreen(
                     screenState = screenState,
                     callbacks = thanksCallbacks,
+                )
+            }
+            entry<ColleagueProfileRoute> { key ->
+                val viewModel: ColleagueProfileViewModel =
+                    koinViewModel(parameters = { parametersOf(key.userId) })
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val colleagueCallbacks = remember(viewModel, navigator) {
+                    object : ColleagueProfileScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+
+                        // Из «Благодарностей» возвращаемся туда же, а не открываем экран второй раз.
+                        override fun onThankClick(colleagueId: String) {
+                            val stack = navigator.backStack
+                            if (stack.size > 1 && stack[stack.lastIndex - 1] == ThanksRoute) {
+                                navigator.goBack()
+                            } else {
+                                navigator.navigate(ThanksRoute)
+                            }
+                        }
+
+                        override fun onOpenOwnProfileClick() = navigator.navigate(TopLevelRoute.Profile)
+                    }
+                }
+                ColleagueProfileScreen(
+                    screenState = screenState,
+                    callbacks = colleagueCallbacks,
                 )
             }
             entry<TopLevelRoute.Activities> {
@@ -367,6 +404,9 @@ fun AppNavigation(
         }
     )
 }
+
+/** id пользователя — UUID; у строк лидерборда без userId ключ вида «rank_…». */
+private fun String.isUserId(): Boolean = runCatching { UUID.fromString(this) }.isSuccess
 
 /** Открывает детали активности из списка. */
 private fun Navigator.openActivity(activity: ActivityUiModel) {

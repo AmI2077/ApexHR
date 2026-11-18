@@ -21,6 +21,8 @@ import com.example.apexhr.features.thanks.data.KtorThanksApi
 import com.example.apexhr.features.thanks.data.ThanksApi
 import com.example.apexhr.features.notifications.data.KtorNotificationsApi
 import com.example.apexhr.features.notifications.data.NotificationsApi
+import com.example.apexhr.features.colleague.data.ColleagueApi
+import com.example.apexhr.features.colleague.data.KtorColleagueApi
 import com.example.apexhr.features.support.data.KtorSupportApi
 import com.example.apexhr.features.support.data.SupportApi
 import kotlinx.serialization.json.Json
@@ -75,4 +77,5 @@ val networkModule = module {
     single<ThanksApi> { KtorThanksApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<NotificationsApi> { KtorNotificationsApi(get(AUTHORIZED_HTTP_CLIENT)) }
     single<SupportApi> { KtorSupportApi(get(AUTHORIZED_HTTP_CLIENT)) }
+    single<ColleagueApi> { KtorColleagueApi(get(AUTHORIZED_HTTP_CLIENT)) }
 }

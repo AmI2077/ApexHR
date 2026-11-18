@@ -9,6 +9,9 @@ interface ThanksScreenCallbacks {
     fun onSendClick()
     fun onRetryClick()
 
+    /** Профиль коллеги из списка: экран открывает навигация. */
+    fun onColleagueProfileClick(colleagueId: String) = Unit
+
     companion object {
         val Empty = object : ThanksScreenCallbacks {
             override fun onBackClick() = Unit

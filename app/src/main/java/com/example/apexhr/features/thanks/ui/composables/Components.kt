@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -120,6 +122,7 @@ fun ColleagueRow(
     onClick: () -> Unit,
     onQuickThanksClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onProfileClick: (() -> Unit)? = null,
 ) {
     Row(
         modifier = modifier
@@ -152,6 +155,15 @@ fun ColleagueRow(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
+        }
+        if (onProfileClick != null) {
+            IconButton(onClick = onProfileClick) {
+                Icon(
+                    imageVector = Icons.Outlined.AccountCircle,
+                    contentDescription = stringResource(R.string.colleague_open_profile),
+                    tint = primaryBlueColor,
+                )
+            }
         }
         Row(
             modifier = Modifier.clickable(onClick = onQuickThanksClick),
