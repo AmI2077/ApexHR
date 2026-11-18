@@ -59,6 +59,15 @@ class HomeRepositoryImplTest {
     }
 
     @Test
+    fun `leaderboard limit stays within server maximum`() = runBlocking {
+        homeApi.users = (1..150).map { HomeUserDto(id = "u-$it") }
+
+        repository.loadHome()
+
+        assertEquals(HomeRepositoryImpl.LEADERBOARD_MAX_LIMIT, homeApi.leaderboardLimit)
+    }
+
+    @Test
     fun `finished quests are skipped and list is limited`() = runBlocking {
         homeApi.quests = listOf(
             QuestListItemDto(id = 1, participationStatus = "completed"),

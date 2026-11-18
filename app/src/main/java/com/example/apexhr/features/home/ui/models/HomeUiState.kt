@@ -9,6 +9,8 @@ data class HomeUiState(
     val challenges: List<ChallengeUiModel>,
     val leaderboard: List<LeaderboardEntryUiModel>,
     val achievements: List<AchievementUiModel>,
+    /** Моё место отдельной строкой под списком, если меня нет в топе; null — я в топе. */
+    val myLeaderboardEntry: LeaderboardEntryUiModel? = null,
 ) {
     companion object {
         val Preview = HomeUiState(
@@ -57,6 +59,8 @@ data class LeaderboardEntryUiModel(
     val rank: Int,
     val name: String,
     val thanksCount: String,
+    /** Строка текущего пользователя: выделяется рамкой, как в вебе. */
+    val isMine: Boolean = false,
 )
 
 /**

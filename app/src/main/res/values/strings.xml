@@ -44,6 +44,7 @@
     <string name="home_achievement_untitled">Достижение</string>
     <string name="home_challenges_empty">Сейчас нет активных вызовов</string>
     <string name="home_leaderboard_empty">В рейтинге пока никого нет</string>
+    <string name="home_leaderboard_my_place">Ваше место</string>
     <string name="home_achievements_empty">Достижений пока нет</string>
     <string name="home_achievement_earned">Открыто</string>
 

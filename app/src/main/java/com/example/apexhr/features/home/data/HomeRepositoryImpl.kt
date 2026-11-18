@@ -28,7 +28,8 @@ class HomeRepositoryImpl(
                 // У лидерборда на сервере есть только limit (по умолчанию 10), поэтому
                 // просим не меньше, чем всего сотрудников, — иначе сотрудник с
                 // благодарностями за пределами топа попал бы в список с нулём.
-                val limit = maxOf(users.await().size, LEADERBOARD_MIN_LIMIT)
+                // Сервер принимает limit только от 1 до 100, на большее отвечает 400.
+                val limit = maxOf(users.await().size, LEADERBOARD_MIN_LIMIT).coerceAtMost(LEADERBOARD_MAX_LIMIT)
                 homeApi.getLeaderboard(days = LEADERBOARD_DAYS, limit = limit)
             }
             val achievementsCatalog = async { homeApi.getAchievements() }
@@ -65,6 +66,9 @@ class HomeRepositoryImpl(
 
         /** Нижняя граница limit для лидерборда (значение по умолчанию на сервере). */
         const val LEADERBOARD_MIN_LIMIT = 10
+
+        /** Верхняя граница limit на сервере (на 101 и больше — 400). */
+        const val LEADERBOARD_MAX_LIMIT = 100
 
     }
 }

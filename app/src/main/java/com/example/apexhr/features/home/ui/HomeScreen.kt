@@ -136,6 +136,7 @@ fun HomeScreenContent(
         item(key = "leaderboard") {
             HomeLeaderboardCard(
                 entries = uiState.leaderboard,
+                myEntry = uiState.myLeaderboardEntry,
                 onEntryClick = callbacks::onLeaderboardEntryClick,
             )
         }

@@ -1,6 +1,7 @@
 package com.example.apexhr.features.home.ui.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -225,6 +226,7 @@ fun HomeLeaderboardCard(
     entries: List<LeaderboardEntryUiModel>,
     onEntryClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    myEntry: LeaderboardEntryUiModel? = null,
 ) {
     Column(
         modifier = modifier
@@ -264,6 +266,20 @@ fun HomeLeaderboardCard(
                 }
             }
         }
+        if (myEntry != null) {
+            // Как в вебе: моё место под списком, если меня нет в топе.
+            Spacer(modifier = Modifier.height(ApexDimens.spacing12.dp))
+            Text(
+                text = stringResource(R.string.home_leaderboard_my_place),
+                color = secondaryTextColor,
+                fontSize = ApexDimens.text12.sp,
+            )
+            Spacer(modifier = Modifier.height(ApexDimens.spacing4.dp))
+            LeaderboardRow(
+                entry = myEntry,
+                onClick = { onEntryClick(myEntry.id) },
+            )
+        }
     }
 }
 
@@ -278,6 +294,13 @@ fun LeaderboardRow(
             .fillMaxWidth()
             .clip(RoundedCornerShape(ApexDimens.radius16.dp))
             .background(backgroundColor)
+            .then(
+                if (entry.isMine) {
+                    Modifier.border(1.dp, primaryBlueColor, RoundedCornerShape(ApexDimens.radius16.dp))
+                } else {
+                    Modifier
+                },
+            )
             .clickable(onClick = onClick)
             .padding(
                 horizontal = ApexDimens.spacing12.dp,
