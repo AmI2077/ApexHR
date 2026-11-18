@@ -31,6 +31,8 @@ fun Survey.toUiModel(): ActivityUiModel =
         subtitle = ActivitySubtitle.Questions(questionsCount),
         reward = null,
         statusRes = if (hasResponded) R.string.activities_status_survey_answered else null,
+        // Как в вебе: «Пройти» только пока ответ можно отправить.
+        canParticipate = canRespond,
     )
 
 fun Quest.toUiModel(): ActivityUiModel =
@@ -41,6 +43,9 @@ fun Quest.toUiModel(): ActivityUiModel =
         subtitle = ActivitySubtitle.Steps(stepsCount),
         reward = rewardAmount.toRewardOrNull(),
         statusRes = participationStatus?.labelRes(),
+        // Как в вебе: «Участвовать», пока пользователь не в квесте (не в процессе и не завершил).
+        canParticipate = participationStatus != QuestParticipationStatus.InProgress &&
+            participationStatus != QuestParticipationStatus.Completed,
     )
 
 fun Event.toUiModel(zone: ZoneId = ZoneId.systemDefault()): ActivityUiModel =
@@ -54,6 +59,8 @@ fun Event.toUiModel(zone: ZoneId = ZoneId.systemDefault()): ActivityUiModel =
         ).takeIf { it.startAt != null || it.location != null },
         reward = rewardAmount.toRewardOrNull(),
         statusRes = registrationStatus?.labelRes(),
+        // Как в вебе: записаться можно, если записи нет или она отменена.
+        canParticipate = registrationStatus == null || registrationStatus == EventRegistrationStatus.Cancelled,
     )
 
 /** Достижение в общем списке: награда, «Получено» и условие, как в карточке веба. */

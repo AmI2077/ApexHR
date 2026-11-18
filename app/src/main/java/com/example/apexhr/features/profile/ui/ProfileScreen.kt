@@ -284,7 +284,6 @@ private fun ProfileScreenFrame(
     ) {
         item {
             ProfileHeader(
-                onBackClick = callbacks::onBackClick,
                 onSettingsClick = callbacks::onSettingsClick,
             )
         }

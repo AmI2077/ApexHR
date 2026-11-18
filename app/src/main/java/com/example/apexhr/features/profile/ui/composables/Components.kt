@@ -57,9 +57,11 @@ import com.example.apexhr.features.profile.ui.models.ProfileAchievementUiModel
 import com.example.apexhr.features.profile.ui.models.ProfileTab
 import com.example.apexhr.features.profile.ui.models.ThankUiModel
 
+/** Размер IconButton в Material 3 (минимальная зона нажатия). */
+private const val PROFILE_HEADER_ACTION_SIZE = 48
+
 @Composable
 fun ProfileHeader(
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     onSettingsClick: () -> Unit = {},
 ) {
@@ -68,13 +70,9 @@ fun ProfileHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(onClick = onBackClick) {
-//            Icon(
-//                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-//                contentDescription = stringResource(R.string.back),
-//                tint = primaryTextColor,
-//            )
-        }
+        // Профиль — вкладка нижнего меню, возвращаться с него некуда, поэтому кнопки «Назад»
+        // нет. Пустое место шириной с кнопку настроек держит заголовок по центру.
+        Spacer(modifier = Modifier.size(PROFILE_HEADER_ACTION_SIZE.dp))
         Text(
             text = stringResource(R.string.profile_title),
             color = primaryTextColor,

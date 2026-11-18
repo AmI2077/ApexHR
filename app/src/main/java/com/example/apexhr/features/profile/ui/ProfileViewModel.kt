@@ -192,8 +192,7 @@ class ProfileViewModel(
         }
     }
 
-    // Экранов назад и деталей достижений пока нет.
-    override fun onBackClick() = Unit
+    // Экрана деталей достижения пока нет.
     override fun onAchievementClick(achievementId: String) = Unit
 
     private fun publishOperations() {

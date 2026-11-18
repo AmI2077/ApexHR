@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -49,12 +50,13 @@ fun ThanksHeader(
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            // Экран открывается поверх профиля (своего или коллеги), поэтому «Назад» виден.
             IconButton(onClick = onBackClick) {
-//                Icon(
-//                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-//                    contentDescription = stringResource(R.string.back),
-//                    tint = primaryTextColor,
-//                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back),
+                    tint = primaryTextColor,
+                )
             }
             Text(
                 text = stringResource(R.string.thanks_title),

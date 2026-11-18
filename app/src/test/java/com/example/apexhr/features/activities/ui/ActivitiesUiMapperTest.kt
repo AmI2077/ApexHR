@@ -51,6 +51,7 @@ class ActivitiesUiMapperTest {
                 subtitle = ActivitySubtitle.Questions(4),
                 reward = null,
                 statusRes = R.string.activities_status_survey_answered,
+                canParticipate = false,
             ),
             survey.toUiModel(),
         )
@@ -76,6 +77,7 @@ class ActivitiesUiMapperTest {
                 subtitle = ActivitySubtitle.Steps(2),
                 reward = 1500L,
                 statusRes = R.string.activities_status_quest_in_progress,
+                canParticipate = false,
             ),
             quest.toUiModel(),
         )

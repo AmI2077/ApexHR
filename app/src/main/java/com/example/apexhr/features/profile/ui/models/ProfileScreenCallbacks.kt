@@ -3,7 +3,6 @@ package com.example.apexhr.features.profile.ui.models
 import com.example.apexhr.features.profile.domain.TransactionFilter
 
 interface ProfileScreenCallbacks {
-    fun onBackClick()
     fun onTabClick(tab: ProfileTab)
     fun onAchievementClick(achievementId: String)
 
@@ -30,7 +29,6 @@ interface ProfileScreenCallbacks {
 
     companion object {
         val Empty = object : ProfileScreenCallbacks {
-            override fun onBackClick() = Unit
             override fun onTabClick(tab: ProfileTab) = Unit
             override fun onAchievementClick(achievementId: String) = Unit
         }

@@ -282,10 +282,10 @@
     <string name="survey_message_fix_errors">Ответьте на обязательные вопросы</string>
     <string name="survey_message_submitted">Спасибо, ответы отправлены</string>
 
-    <string name="thanks_title">Поблагодарить коллег</string>
+    <string name="thanks_title">Поблагодарить коллегу</string>
     <string name="thanks_subtitle">Выберите коллегу и отправьте благодарность</string>
     <string name="thanks_colleagues">КОЛЛЕГИ</string>
-    <string name="thanks_search_placeholder">Поиск по коллегам..</string>
+    <string name="thanks_search_placeholder">Поиск по коллегам…</string>
     <string name="thanks_action">Спасибо</string>
     <string name="thanks_send_section">Отправить благодарность</string>
     <string name="thanks_recipient">Кому: %1$s</string>
