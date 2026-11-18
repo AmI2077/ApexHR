@@ -90,6 +90,18 @@ data object SettingsChangePasswordRoute : NavKey
 @Serializable
 data object NotificationsRoute : NavKey
 
+/** «Поддержка» (мои обращения): открывается из настроек. */
+@Serializable
+data object SupportRoute : NavKey
+
+/** Новое обращение в поддержку: открывается из списка обращений. */
+@Serializable
+data object SupportNewTicketRoute : NavKey
+
+/** Обращение в поддержку с перепиской. */
+@Serializable
+data class SupportTicketRoute(val ticketId: Long) : NavKey
+
 @Composable
 fun TopLevelRoute.toComposableIcon(): @Composable (() -> Unit) {
     return {

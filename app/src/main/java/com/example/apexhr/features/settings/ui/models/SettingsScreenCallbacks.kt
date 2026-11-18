@@ -10,6 +10,9 @@ interface SettingsScreenCallbacks {
     /** Переход к смене пароля. По умолчанию ничего не делает. */
     fun onChangePasswordClick() = Unit
 
+    /** Переход в поддержку. По умолчанию ничего не делает. */
+    fun onSupportClick() = Unit
+
     companion object {
         val Empty = object : SettingsScreenCallbacks {
             override fun onBackClick() = Unit

@@ -67,6 +67,10 @@ object NetworkConfig {
     const val NOTIFICATIONS_READ_ALL_URL = "$NOTIFICATIONS_URL/read-all"
     fun notificationReadUrl(id: Long) = "$NOTIFICATIONS_URL/$id/read"
 
+    const val SUPPORT_TICKETS_URL = "$BASE_URL/api/support/tickets"
+    fun supportTicketUrl(id: Long) = "$SUPPORT_TICKETS_URL/$id"
+    fun supportTicketMessagesUrl(id: Long) = "${supportTicketUrl(id)}/messages"
+
     // Бэкенд крутится на Render: после простоя «холодный старт» может
     // занимать десятки секунд, поэтому таймауты заметно больше обычных.
     const val REQUEST_TIMEOUT_MILLIS = 60_000L

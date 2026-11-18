@@ -311,6 +311,31 @@
     <string name="notifications_load_more">Показать ещё</string>
     <string name="notifications_error_read">Не удалось отметить прочитанным. Попробуйте ещё раз</string>
 
+    <!-- Поддержка -->
+    <string name="support_title">Поддержка</string>
+    <string name="support_hint">Напишите вопрос. Ответ придёт в это же обращение.</string>
+    <string name="support_new_ticket">Новое обращение</string>
+    <string name="support_empty">Обращений пока нет</string>
+    <string name="support_untitled">Обращение</string>
+    <string name="support_load_more">Показать ещё</string>
+    <string name="support_messages_count">Сообщений: %1$d</string>
+    <string name="support_status_open">Открыто</string>
+    <string name="support_status_in_progress">В работе</string>
+    <string name="support_status_resolved">Решено</string>
+    <string name="support_status_closed">Закрыто</string>
+    <string name="support_subject_label">Тема</string>
+    <string name="support_subject_placeholder">Коротко, о чём речь</string>
+    <string name="support_message_label">Описание</string>
+    <string name="support_message_placeholder">Что произошло и чем помочь</string>
+    <string name="support_send_ticket">Отправить обращение</string>
+    <string name="support_ticket_created">Обращение создано</string>
+    <string name="support_no_messages">Сообщений пока нет</string>
+    <string name="support_author_fallback">Сотрудник</string>
+    <string name="support_reply_placeholder">Сообщение</string>
+    <string name="support_send">Отправить</string>
+    <string name="support_resolved_note">Обращение решено. Новые сообщения не принимаются.</string>
+    <string name="support_closed_note">Обращение закрыто. Новые сообщения не принимаются.</string>
+
     <!-- Загрузка данных -->
     <string name="retry">Повторить</string>
     <string name="data_error_timeout">Сервер долго не отвечает. Возможно, он просыпается — попробуйте ещё раз через минуту</string>

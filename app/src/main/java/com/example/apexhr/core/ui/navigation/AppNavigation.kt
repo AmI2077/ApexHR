@@ -55,6 +55,15 @@ import com.example.apexhr.features.shop.ui.models.ShopScreenCallbacks
 import com.example.apexhr.features.shop.ui.orders.OrdersScreen
 import com.example.apexhr.features.shop.ui.orders.OrdersViewModel
 import com.example.apexhr.features.shop.ui.orders.models.OrdersScreenCallbacks
+import com.example.apexhr.features.support.ui.SupportListScreen
+import com.example.apexhr.features.support.ui.SupportListViewModel
+import com.example.apexhr.features.support.ui.SupportNewTicketScreen
+import com.example.apexhr.features.support.ui.SupportNewTicketViewModel
+import com.example.apexhr.features.support.ui.SupportTicketScreen
+import com.example.apexhr.features.support.ui.SupportTicketViewModel
+import com.example.apexhr.features.support.ui.models.SupportListScreenCallbacks
+import com.example.apexhr.features.support.ui.models.SupportNewTicketScreenCallbacks
+import com.example.apexhr.features.support.ui.models.SupportTicketScreenCallbacks
 import com.example.apexhr.features.thanks.ui.ThanksScreen
 import com.example.apexhr.features.thanks.ui.ThanksViewModel
 import com.example.apexhr.features.thanks.ui.models.ThanksScreenCallbacks
@@ -144,6 +153,8 @@ fun AppNavigation(
                         override fun onLogoutClick() = onLogout()
                         override fun onChangePasswordClick() =
                             navigator.navigate(SettingsChangePasswordRoute)
+
+                        override fun onSupportClick() = navigator.navigate(SupportRoute)
                     }
                 }
                 SettingsScreen(
@@ -175,6 +186,63 @@ fun AppNavigation(
                     state = state,
                     callbacks = viewModel,
                     onBackClick = { navigator.goBack() },
+                )
+            }
+            entry<SupportRoute> {
+                val viewModel: SupportListViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                // Список обновляется каждый раз, когда экран снова виден
+                // (после нового обращения или ответа в переписке).
+                LaunchedEffect(viewModel) { viewModel.refresh() }
+                val supportCallbacks = remember(viewModel, navigator) {
+                    object : SupportListScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                        override fun onNewTicketClick() = navigator.navigate(SupportNewTicketRoute)
+                        override fun onTicketClick(id: Long) = navigator.navigate(SupportTicketRoute(id))
+                    }
+                }
+                SupportListScreen(
+                    screenState = screenState,
+                    callbacks = supportCallbacks,
+                    messages = viewModel.messages,
+                )
+            }
+            entry<SupportNewTicketRoute> {
+                val viewModel: SupportNewTicketViewModel = koinViewModel()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+                val context = LocalContext.current
+                LaunchedEffect(viewModel) {
+                    viewModel.createdTicketId.collect { ticketId ->
+                        Toast.makeText(context, R.string.support_ticket_created, Toast.LENGTH_SHORT).show()
+                        // Форму закрываем и сразу открываем созданное обращение.
+                        navigator.goBack()
+                        navigator.navigate(SupportTicketRoute(ticketId))
+                    }
+                }
+                val newTicketCallbacks = remember(viewModel, navigator) {
+                    object : SupportNewTicketScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                SupportNewTicketScreen(
+                    state = state,
+                    callbacks = newTicketCallbacks,
+                    messages = viewModel.messages,
+                )
+            }
+            entry<SupportTicketRoute> { key ->
+                val viewModel: SupportTicketViewModel =
+                    koinViewModel(parameters = { parametersOf(key.ticketId) })
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val ticketCallbacks = remember(viewModel, navigator) {
+                    object : SupportTicketScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                    }
+                }
+                SupportTicketScreen(
+                    screenState = screenState,
+                    callbacks = ticketCallbacks,
+                    messages = viewModel.messages,
                 )
             }
             entry<ThanksRoute> {

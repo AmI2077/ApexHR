@@ -19,6 +19,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.SupportAgent
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -60,7 +61,7 @@ fun SettingsScreenDarkPreview() {
 }
 
 /**
- * Настройки: переключатель тёмной темы, смена пароля и выход из аккаунта.
+ * Настройки: переключатель тёмной темы, смена пароля, поддержка и выход из аккаунта.
  *
  * @param darkTheme включена ли сейчас тёмная тема (с учётом системной, если выбора нет).
  */
@@ -138,6 +139,35 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
                 Text(
                     text = stringResource(R.string.settings_change_password),
+                    color = primaryTextColor,
+                    fontSize = ApexDimens.text16.sp,
+                    modifier = Modifier.weight(1f),
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = secondaryTextColor,
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        role = Role.Button,
+                        onClick = callbacks::onSupportClick,
+                    )
+                    .padding(vertical = ApexDimens.spacing12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.SupportAgent,
+                    contentDescription = null,
+                    tint = secondaryTextColor,
+                    modifier = Modifier.size(ApexDimens.icon20.dp),
+                )
+                Spacer(modifier = Modifier.width(ApexDimens.spacing12.dp))
+                Text(
+                    text = stringResource(R.string.support_title),
                     color = primaryTextColor,
                     fontSize = ApexDimens.text16.sp,
                     modifier = Modifier.weight(1f),
