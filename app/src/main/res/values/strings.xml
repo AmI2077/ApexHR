@@ -410,4 +410,29 @@
     <string name="data_error_network">Нет подключения к интернету или сервер недоступен</string>
     <string name="data_error_server">Ошибка на сервере. Попробуйте позже</string>
     <string name="data_error_unknown">Не удалось загрузить данные. Попробуйте ещё раз</string>
+    <!-- Уровень активности и «Моя активность» -->
+    <string name="activity_level_caption">УРОВЕНЬ АКТИВНОСТИ</string>
+    <string name="activity_level_unavailable">Не удалось загрузить уровень активности</string>
+    <string name="activity_level_untitled">Уровень</string>
+    <string name="activity_level_score">%1$s/%2$s</string>
+    <string name="activity_level_to_next">До «%1$s» ещё %2$s</string>
+    <string name="activity_level_top">Высший уровень</string>
+    <string name="activity_level_source_untitled">Источник</string>
+    <string name="my_activity_title">Моя активность</string>
+    <string name="my_activity_subtitle">Квесты, опросы, мероприятия и достижения, в которых вы уже участвуете.</string>
+    <string name="my_activity_quests">Квесты</string>
+    <string name="my_activity_quests_empty">Вы ещё не вступали в квесты</string>
+    <string name="my_activity_quest_completed">Завершён</string>
+    <string name="my_activity_quest_in_progress">В процессе</string>
+    <string name="my_activity_surveys">Опросы</string>
+    <string name="my_activity_surveys_empty">Ответов пока нет</string>
+    <string name="my_activity_survey_answered">Ответ отправлен</string>
+    <string name="my_activity_events">Мероприятия</string>
+    <string name="my_activity_events_empty">Записей пока нет</string>
+    <string name="my_activity_event_attended">Посещение подтверждено</string>
+    <string name="my_activity_event_registered">Вы записаны</string>
+    <string name="my_activity_achievements">Достижения</string>
+    <string name="my_activity_achievements_empty">Открытых достижений пока нет</string>
+    <string name="my_activity_all_activities">Перейти ко всем активностям</string>
+    <string name="my_activity_untitled">Без названия</string>
 </resources>

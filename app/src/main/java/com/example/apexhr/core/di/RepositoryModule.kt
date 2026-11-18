@@ -16,6 +16,8 @@ import com.example.apexhr.features.activities.domain.QuestProofRepository
 import com.example.apexhr.features.activities.domain.ActivitiesRepository
 import com.example.apexhr.features.auth.data.AuthRepositoryImpl
 import com.example.apexhr.features.auth.domain.AuthRepository
+import com.example.apexhr.features.engagement.data.EngagementRepositoryImpl
+import com.example.apexhr.features.engagement.domain.EngagementRepository
 import com.example.apexhr.features.home.data.HomeRepositoryImpl
 import com.example.apexhr.features.home.domain.HomeRepository
 import com.example.apexhr.features.profile.data.AndroidAvatarImageCompressor
@@ -52,4 +54,5 @@ val repoModule = module {
     single<NotificationsRepository> { NotificationsRepositoryImpl(get()) }
     single<SupportRepository> { SupportRepositoryImpl(get()) }
     single<ColleagueRepository> { ColleagueRepositoryImpl(get(), get(), get(), get()) }
+    single<EngagementRepository> { EngagementRepositoryImpl(get()) }
 }

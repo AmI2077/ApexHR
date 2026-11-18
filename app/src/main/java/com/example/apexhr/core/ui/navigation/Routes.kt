@@ -109,6 +109,10 @@ data class SupportTicketRoute(val ticketId: Long) : NavKey
 @Serializable
 data class QuestStepProofRoute(val questId: Long, val stepId: Long) : NavKey
 
+/** «Моя активность»: открывается из карточки уровня активности на главной. */
+@Serializable
+data object MyActivityRoute : NavKey
+
 /** Профиль коллеги: открывается из лидерборда на главной и из списка коллег в «Благодарностях». */
 @Serializable
 data class ColleagueProfileRoute(val userId: String) : NavKey

@@ -18,6 +18,8 @@ data class Survey(
     val questionsCount: Int,
     val hasResponded: Boolean,
     val canRespond: Boolean,
+    /** Награда за ответ в апексах; 0 — без награды. */
+    val rewardAmount: Long = 0,
 )
 
 data class SurveyDetails(

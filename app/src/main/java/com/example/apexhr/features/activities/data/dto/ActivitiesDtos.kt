@@ -30,6 +30,7 @@ data class SurveyListItemDto(
     val questionsCount: Int = 0,
     val hasResponded: Boolean = false,
     val canRespond: Boolean = true,
+    val rewardAmount: Long = 0,
     val lastSubmittedAt: String? = null,
 )
 

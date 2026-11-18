@@ -28,6 +28,7 @@ import com.example.apexhr.features.home.ui.composables.SectionTitle
 import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
 import com.example.apexhr.features.home.ui.models.HomeScreenState
 import com.example.apexhr.features.home.ui.models.HomeUiState
+import com.example.apexhr.features.engagement.ui.ActivityLevelCard
 import com.example.apexhr.ui.theme.ApexHRTheme
 
 @Preview(showBackground = true, widthDp = 360)
@@ -120,6 +121,13 @@ fun HomeScreenContent(
     HomeScreenFrame(balance = uiState.balance, unreadNotifications, callbacks, modifier) {
         item {
             HomeGreeting(userName = uiState.userName)
+        }
+        // Как в мобильной вёрстке веба: карточка уровня сразу под приветствием.
+        item(key = "activity_level") {
+            ActivityLevelCard(
+                level = uiState.activityLevel,
+                onMyActivityClick = callbacks::onMyActivityClick,
+            )
         }
         item {
             SectionTitle(text = stringResource(R.string.home_active_challenges))

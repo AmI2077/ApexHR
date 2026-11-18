@@ -10,6 +10,9 @@ interface HomeScreenCallbacks {
     /** Колокольчик в шапке: экран уведомлений открывает навигация. */
     fun onNotificationsClick() = Unit
 
+    /** Ссылка «Моя активность» в карточке уровня: экран открывает навигация. */
+    fun onMyActivityClick() = Unit
+
     companion object {
         val Empty = object : HomeScreenCallbacks {
             override fun onPointsClick() = Unit

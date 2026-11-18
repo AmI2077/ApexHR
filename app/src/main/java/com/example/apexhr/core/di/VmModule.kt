@@ -7,6 +7,7 @@ import com.example.apexhr.features.support.ui.SupportListViewModel
 import com.example.apexhr.features.support.ui.SupportNewTicketViewModel
 import com.example.apexhr.features.support.ui.SupportTicketViewModel
 import com.example.apexhr.features.activities.ui.ActivitiesViewModel
+import com.example.apexhr.features.activities.ui.my.MyActivityViewModel
 import com.example.apexhr.features.activities.ui.event.EventDetailsViewModel
 import com.example.apexhr.features.activities.ui.quest.QuestDetailsViewModel
 import com.example.apexhr.features.activities.ui.quest.proof.QuestStepProofViewModel
@@ -96,6 +97,10 @@ val vmModule = module {
 
     viewModel {
         ActivitiesViewModel(get(), get())
+    }
+
+    viewModel {
+        MyActivityViewModel(get(), get(), get())
     }
 
     viewModel { (eventId: Long) ->

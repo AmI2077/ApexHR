@@ -1,6 +1,7 @@
 package com.example.apexhr.features.home.ui.models
 
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.features.engagement.ui.ActivityLevelUiModel
 
 data class HomeUiState(
     val userName: String,
@@ -11,6 +12,8 @@ data class HomeUiState(
     val achievements: List<AchievementUiModel>,
     /** Моё место отдельной строкой под списком, если меня нет в топе; null — я в топе. */
     val myLeaderboardEntry: LeaderboardEntryUiModel? = null,
+    /** Карточка уровня активности; null — уровень не загрузился (карточка с текстом ошибки). */
+    val activityLevel: ActivityLevelUiModel? = null,
 ) {
     companion object {
         val Preview = HomeUiState(
@@ -42,6 +45,7 @@ data class HomeUiState(
                     isEarned = false,
                 ),
             ),
+            activityLevel = ActivityLevelUiModel.Preview,
         )
     }
 }

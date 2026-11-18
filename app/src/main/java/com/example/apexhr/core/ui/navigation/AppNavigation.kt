@@ -21,6 +21,9 @@ import com.example.apexhr.features.activities.ui.event.models.EventDetailsScreen
 import com.example.apexhr.features.activities.ui.models.ActivitiesScreenCallbacks
 import com.example.apexhr.features.activities.ui.models.ActivityKind
 import com.example.apexhr.features.activities.ui.models.ActivityUiModel
+import com.example.apexhr.features.activities.ui.my.MyActivityScreen
+import com.example.apexhr.features.activities.ui.my.MyActivityViewModel
+import com.example.apexhr.features.activities.ui.my.models.MyActivityScreenCallbacks
 import com.example.apexhr.features.activities.ui.quest.QuestDetailsScreen
 import com.example.apexhr.features.activities.ui.quest.QuestDetailsViewModel
 import com.example.apexhr.features.activities.ui.quest.models.QuestDetailsScreenCallbacks
@@ -113,6 +116,7 @@ fun AppNavigation(
                         }
 
                         override fun onNotificationsClick() = navigator.navigate(NotificationsRoute)
+                        override fun onMyActivityClick() = navigator.navigate(MyActivityRoute)
 
                         // Строка без userId (ключ «rank_…») профиль не открывает.
                         override fun onLeaderboardEntryClick(entryId: String) {
@@ -128,6 +132,23 @@ fun AppNavigation(
                     screenState = screenState,
                     callbacks = homeCallbacks,
                     unreadNotifications = unreadNotifications,
+                )
+            }
+            entry<MyActivityRoute> {
+                val viewModel: MyActivityViewModel = koinViewModel()
+                val screenState by viewModel.state.collectAsStateWithLifecycle()
+                val myActivityCallbacks = remember(viewModel, navigator) {
+                    object : MyActivityScreenCallbacks by viewModel {
+                        override fun onBackClick() = navigator.goBack()
+                        override fun onQuestClick(questId: Long) = navigator.navigate(QuestDetailsRoute(questId))
+                        override fun onSurveyClick(surveyId: Long) = navigator.navigate(SurveyDetailsRoute(surveyId))
+                        override fun onEventClick(eventId: Long) = navigator.navigate(EventDetailsRoute(eventId))
+                        override fun onAllActivitiesClick() = navigator.navigate(TopLevelRoute.Activities)
+                    }
+                }
+                MyActivityScreen(
+                    screenState = screenState,
+                    callbacks = myActivityCallbacks,
                 )
             }
             entry<NotificationsRoute> {

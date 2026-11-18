@@ -45,6 +45,7 @@ fun SurveyListItemDto.toDomain(): Survey = Survey(
     questionsCount = questionsCount.coerceAtLeast(0),
     hasResponded = hasResponded,
     canRespond = canRespond,
+    rewardAmount = rewardAmount.coerceAtLeast(0),
 )
 
 fun SurveyDetailsDto.toDomain(): SurveyDetails {
