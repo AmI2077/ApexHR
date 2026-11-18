@@ -17,6 +17,9 @@ interface HomeScreenCallbacks {
     fun onAllNewsClick() = Unit
     fun onNewsClick(newsId: Long) = Unit
 
+    /** «Поблагодарить» в ленте благодарностей: экран благодарности открывает навигация. */
+    fun onSendThanksClick() = Unit
+
     companion object {
         val Empty = object : HomeScreenCallbacks {
             override fun onPointsClick() = Unit

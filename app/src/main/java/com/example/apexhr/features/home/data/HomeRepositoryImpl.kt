@@ -10,14 +10,15 @@ import com.example.apexhr.features.profile.data.ProfileApi
 import com.example.apexhr.features.profile.data.toDomain
 import com.example.apexhr.features.news.data.NewsApi
 import com.example.apexhr.features.news.data.toDomain
-import com.example.apexhr.features.news.domain.CompanyNews
+import com.example.apexhr.features.thanks.data.ThanksApi
 import com.example.apexhr.features.news.domain.NewsRepository
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 /**
- * Главная собирает данные из девяти запросов (уровень активности и новости необязательные). Пользователь, баланс
+ * Главная собирает данные из двенадцати запросов (уровень активности, новости и лента
+ * благодарностей необязательные). Пользователь, баланс
  * и полученные достижения — те же запросы, что у профиля, поэтому берутся
  * из ProfileApi; каталог достижений, квесты, лидерборд и сотрудники — из HomeApi.
  */
@@ -26,6 +27,7 @@ class HomeRepositoryImpl(
     private val profileApi: ProfileApi,
     private val engagementApi: EngagementApi,
     private val newsApi: NewsApi,
+    private val thanksApi: ThanksApi,
 ) : HomeRepository {
 
     override suspend fun loadHome(): DataResult<HomeData> = safeApiCall {
@@ -43,7 +45,16 @@ class HomeRepositoryImpl(
             }
             val achievementsCatalog = async { homeApi.getAchievements() }
             val activityLevel = async { engagementApi.loadActivityLevelOrNull() }
-            val news = async { loadNewsOrEmpty() }
+            val news = async {
+                optionalList {
+                    newsApi.getNews(page = 1, pageSize = NewsRepository.HOME_NEWS_COUNT).toDomain(requestedPage = 1).items
+                }
+            }
+            // Лента благодарностей необязательная, как в вебе: источник, который не
+            // загрузился, просто не попадает в ленту.
+            val received = async { optionalList { thanksApi.getThanksForMe() } }
+            val sent = async { optionalList { thanksApi.getThanksFromMe() } }
+            val transactions = async { optionalList { profileApi.getTransactions(skip = 0, take = FEED_TRANSACTIONS_TAKE) } }
             // Полученным достижениям нужен id пользователя из профиля (GET /api/users/me).
             val user = profileApi.getCurrentUser().toDomain()
             val earnedAchievements = profileApi.getUserAchievements(user.id)
@@ -65,13 +76,20 @@ class HomeRepositoryImpl(
                 ),
                 activityLevel = activityLevel.await(),
                 news = news.await(),
+                feed = buildHomeFeed(
+                    me = user,
+                    users = users.await(),
+                    received = received.await(),
+                    sent = sent.await(),
+                    transactions = transactions.await(),
+                ),
             )
         }
     }
 
-    /** Как в вебе: блок новостей необязательный, ошибка его просто скрывает. */
-    private suspend fun loadNewsOrEmpty(): List<CompanyNews> = try {
-        newsApi.getNews(page = 1, pageSize = NewsRepository.HOME_NEWS_COUNT).toDomain(requestedPage = 1).items
+    /** Необязательный блок главной (новости, лента): ошибка его просто скрывает. */
+    private suspend fun <T> optionalList(block: suspend () -> List<T>): List<T> = try {
+        block()
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
@@ -82,6 +100,9 @@ class HomeRepositoryImpl(
         /** Берём с запасом: завершённые квесты отфильтровываются. */
         const val QUESTS_PAGE_SIZE = 20
         const val HOME_QUESTS_LIMIT = 3
+
+        /** Поощрения руководителя для ленты ищутся в последних 50 операциях, как в вебе. */
+        const val FEED_TRANSACTIONS_TAKE = 50
 
         /** Период рейтинга (как значение по умолчанию на сервере). */
         const val LEADERBOARD_DAYS = 30

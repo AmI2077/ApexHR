@@ -441,4 +441,10 @@
     <string name="news_empty">Новостей пока нет</string>
     <string name="news_untitled">Новость</string>
     <string name="news_all">Все</string>
+    <!-- Лента благодарностей на главной -->
+    <string name="home_feed_title">Лента благодарностей</string>
+    <string name="home_feed_send_thanks">Поблагодарить</string>
+    <string name="home_feed_empty">Пока нет благодарностей с вашим участием.</string>
+    <string name="home_feed_no_message">без сообщения</string>
+    <string name="home_feed_manager_bonus">поощрение</string>
 </resources>

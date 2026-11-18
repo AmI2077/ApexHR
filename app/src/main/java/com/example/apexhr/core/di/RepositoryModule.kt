@@ -47,7 +47,7 @@ val repoModule = module {
     single<TransactionHistoryRepository> { TransactionHistoryRepositoryImpl(get()) }
     single<ShopRepository> { ShopRepositoryImpl(get()) }
     single<CartRepository> { CartRepositoryImpl(get(), get()) }
-    single<HomeRepository> { HomeRepositoryImpl(get(), get(), get(), get()) }
+    single<HomeRepository> { HomeRepositoryImpl(get(), get(), get(), get(), get()) }
     single<ActivitiesRepository> { ActivitiesRepositoryImpl(get()) }
     single<AchievementsRepository> { AchievementsRepositoryImpl(get(), get(), get()) }
     single<ProofFileSource> { AndroidProofFileSource(androidContext().applicationContext) }

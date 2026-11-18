@@ -11,6 +11,10 @@ import com.example.apexhr.features.home.data.dto.QuestListItemDto
 import com.example.apexhr.features.home.data.dto.QuestPageDto
 import com.example.apexhr.features.home.domain.HomeData
 import com.example.apexhr.features.news.FakeNewsApi
+import com.example.apexhr.features.thanks.data.ThanksApi
+import com.example.apexhr.features.thanks.data.dto.CreateThankRequest
+import com.example.apexhr.features.thanks.data.dto.ThankDto
+import com.example.apexhr.features.thanks.data.dto.ThanksUserDto
 import com.example.apexhr.features.news.data.dto.CompanyNewsDto
 import com.example.apexhr.features.news.data.dto.CompanyNewsPageDto
 import com.example.apexhr.features.profile.data.ProfileApi
@@ -31,7 +35,8 @@ class HomeRepositoryImplTest {
     private val profileApi = FakeProfileApi()
     private val engagementApi = FakeEngagementApi()
     private val newsApi = FakeNewsApi()
-    private val repository = HomeRepositoryImpl(homeApi, profileApi, engagementApi, newsApi)
+    private val thanksApi = HomeFakeThanksApi()
+    private val repository = HomeRepositoryImpl(homeApi, profileApi, engagementApi, newsApi, thanksApi)
 
     @Test
     fun `home gets my activity level and works without it`() = runBlocking {
@@ -52,6 +57,50 @@ class HomeRepositoryImplTest {
 
         newsApi.error = UnknownHostException()
         assertEquals(emptyList<Long>(), loadData().news.map { it.id })
+    }
+
+    @Test
+    fun `feed merges thanks and manager bonuses, newest first, with names`() = runBlocking {
+        homeApi.users = listOf(
+            HomeUserDto(id = "boss", firstName = "Валерия", lastName = "Лапшина"),
+            HomeUserDto(id = "colleague", firstName = "Иван", lastName = "Петров"),
+        )
+        // Сервер кладёт в fromUserName id, а не имя.
+        thanksApi.received = listOf(
+            ThankDto(id = 10, fromUserId = "boss", fromUserName = "boss", toUserId = "user-1", amount = 25,
+                message = "спасибо", createdAt = "2026-10-28T20:55:58.816159Z"),
+        )
+        thanksApi.sent = listOf(
+            ThankDto(id = 15, fromUserId = "user-1", toUserId = "colleague", amount = 1,
+                message = " ", createdAt = "2026-10-29T19:22:14.25835Z"),
+        )
+        profileApi.transactions = listOf(
+            TransactionDto(id = 76, amount = 50, description = "спасибо", relatedUserId = "boss",
+                relatedEntityType = "manager_bonus", createdAt = "2026-10-29T18:35:17.254932Z"),
+            TransactionDto(id = 77, amount = -100, relatedUserId = "colleague",
+                relatedEntityType = "ManagerBonus", createdAt = "2026-10-30T10:00:00Z"),
+            TransactionDto(id = 73, amount = 25, relatedUserId = "colleague", relatedEntityType = "thank",
+                createdAt = "2026-10-29T18:34:48Z"),
+        )
+
+        val feed = loadData().feed
+
+        assertEquals(listOf("bonus_77", "thank_15", "bonus_76", "thank_10"), feed.map { it.id })
+        val sentBonus = feed[0]
+        assertEquals("Анна Иванова" to "Иван Петров", sentBonus.fromName to sentBonus.toName)
+        assertEquals(100L, sentBonus.amount)
+        assertEquals(true, sentBonus.isManagerBonus)
+        assertEquals(null, feed[1].message)
+        assertEquals("Валерия Лапшина" to "Анна Иванова", feed[2].fromName to feed[2].toName)
+        assertEquals(false, feed[3].isManagerBonus)
+        assertEquals(0 to 50, profileApi.transactionsRequest)
+    }
+
+    @Test
+    fun `feed is optional`() = runBlocking {
+        thanksApi.error = UnknownHostException()
+
+        assertEquals(emptyList<String>(), loadData().feed.map { it.id })
     }
 
     private suspend fun loadData(): HomeData =
@@ -238,7 +287,13 @@ private class FakeProfileApi : ProfileApi {
 
     override suspend fun getBalance(): BalanceDto = BalanceDto(amount = 120)
 
-    override suspend fun getTransactions(skip: Int, take: Int): List<TransactionDto> = emptyList()
+    var transactions = emptyList<TransactionDto>()
+    var transactionsRequest: Pair<Int, Int>? = null
+
+    override suspend fun getTransactions(skip: Int, take: Int): List<TransactionDto> {
+        transactionsRequest = skip to take
+        return transactions
+    }
 
     override suspend fun updateOwnProfile(request: UpdateOwnProfileRequest) = error("not used")
 
@@ -246,4 +301,16 @@ private class FakeProfileApi : ProfileApi {
         achievementsUserId = userId
         return achievements
     }
+}
+
+private class HomeFakeThanksApi : ThanksApi {
+    var received = emptyList<ThankDto>()
+    var sent = emptyList<ThankDto>()
+    var error: Throwable? = null
+
+    override suspend fun getCurrentUser(): ThanksUserDto = error("not used")
+    override suspend fun getUsers(): List<ThanksUserDto> = error("not used")
+    override suspend fun getThanksForMe(): List<ThankDto> = error?.let { throw it } ?: received
+    override suspend fun getThanksFromMe(): List<ThankDto> = error?.let { throw it } ?: sent
+    override suspend fun sendThanks(request: CreateThankRequest) = error("not used")
 }

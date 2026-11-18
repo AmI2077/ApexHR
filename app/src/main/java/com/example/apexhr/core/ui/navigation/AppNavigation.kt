@@ -125,6 +125,7 @@ fun AppNavigation(
                         override fun onMyActivityClick() = navigator.navigate(MyActivityRoute)
                         override fun onAllNewsClick() = navigator.navigate(NewsRoute)
                         override fun onNewsClick(newsId: Long) = navigator.navigate(NewsDetailsRoute(newsId))
+                        override fun onSendThanksClick() = navigator.navigate(ThanksRoute)
 
                         // Строка без userId (ключ «rank_…») профиль не открывает.
                         override fun onLeaderboardEntryClick(entryId: String) {

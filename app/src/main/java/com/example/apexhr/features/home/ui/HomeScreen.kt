@@ -29,6 +29,7 @@ import com.example.apexhr.features.home.ui.models.HomeScreenCallbacks
 import com.example.apexhr.features.home.ui.models.HomeScreenState
 import com.example.apexhr.features.home.ui.models.HomeUiState
 import com.example.apexhr.features.engagement.ui.ActivityLevelCard
+import com.example.apexhr.features.home.ui.composables.HomeFeedList
 import com.example.apexhr.features.home.ui.composables.HomeSectionHeader
 import com.example.apexhr.features.news.ui.composables.NewsCard
 import com.example.apexhr.ui.theme.ApexHRTheme
@@ -174,6 +175,21 @@ fun HomeScreenContent(
                     achievements = uiState.achievements,
                     onAchievementClick = callbacks::onAchievementClick,
                 )
+            }
+        }
+        // Как в мобильной вёрстке веба: лента благодарностей после достижений.
+        item(key = "feed_title") {
+            HomeSectionHeader(
+                title = stringResource(R.string.home_feed_title),
+                actionText = stringResource(R.string.home_feed_send_thanks),
+                onActionClick = callbacks::onSendThanksClick,
+            )
+        }
+        item(key = "feed") {
+            if (uiState.feed.isEmpty()) {
+                EmptyState(text = stringResource(R.string.home_feed_empty))
+            } else {
+                HomeFeedList(items = uiState.feed)
             }
         }
     }

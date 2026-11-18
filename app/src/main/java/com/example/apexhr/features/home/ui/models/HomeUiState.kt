@@ -17,6 +17,8 @@ data class HomeUiState(
     val activityLevel: ActivityLevelUiModel? = null,
     /** Последние новости; пусто — блок новостей скрыт, как в вебе. */
     val news: List<NewsUiModel> = emptyList(),
+    /** Лента благодарностей: последние записи с моим участием. */
+    val feed: List<FeedItemUiModel> = emptyList(),
 ) {
     companion object {
         val Preview = HomeUiState(
@@ -50,9 +52,27 @@ data class HomeUiState(
             ),
             activityLevel = ActivityLevelUiModel.Preview,
             news = NewsUiModel.Preview,
+            feed = listOf(
+                FeedItemUiModel("thank_10", "Валерия Лапшина", "Дмитрий Новохатский", "спасибо", 25, isManagerBonus = false),
+                FeedItemUiModel("bonus_76", "Валерия Лапшина", "Дмитрий Новохатский", null, 50, isManagerBonus = true),
+            ),
         )
     }
 }
+
+/**
+ * Строка ленты благодарностей, как в вебе: «Кто → Кому — сообщение +сумма»,
+ * у поощрения руководителя — пометка «поощрение».
+ * @param fromName null — UI подставит «Сотрудник»; @param message null — «без сообщения».
+ */
+data class FeedItemUiModel(
+    val id: String,
+    val fromName: String?,
+    val toName: String?,
+    val message: String?,
+    val amount: Long,
+    val isManagerBonus: Boolean,
+)
 
 data class ChallengeUiModel(
     val id: String,

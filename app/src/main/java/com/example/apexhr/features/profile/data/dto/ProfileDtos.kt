@@ -38,6 +38,8 @@ data class TransactionDto(
     val id: Long,
     val amount: Long = 0,
     val description: String? = null,
+    /** Второй участник операции (кто поблагодарил или поощрил); для заказов и наград null. */
+    val relatedUserId: String? = null,
     val relatedEntityType: String? = null,
     val createdAt: String? = null,
 )

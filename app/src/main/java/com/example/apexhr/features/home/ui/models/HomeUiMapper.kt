@@ -9,6 +9,9 @@ import com.example.apexhr.features.home.domain.LeaderboardEntry
 /** Сколько первых мест видно в карточке лидерборда без прокрутки (как топ-5 в вебе). */
 const val LEADERBOARD_TOP_SIZE = 5
 
+/** В ленте благодарностей на главной — пять последних записей, как в вебе. */
+const val HOME_FEED_SIZE = 5
+
 private fun LeaderboardEntry.isUser(userId: String): Boolean = this.userId.equals(userId, ignoreCase = true)
 
 /**
@@ -54,6 +57,16 @@ fun HomeData.toUiState(): HomeUiState = HomeUiState(
     myLeaderboardEntry = myLeaderboardEntry(),
     activityLevel = activityLevel?.toUiModel(),
     news = news.map { it.toUiModel() },
+    feed = feed.take(HOME_FEED_SIZE).map {
+        FeedItemUiModel(
+            id = it.id,
+            fromName = it.fromName,
+            toName = it.toName,
+            message = it.message,
+            amount = it.amount,
+            isManagerBonus = it.isManagerBonus,
+        )
+    },
     achievements = achievements.map { achievement ->
         AchievementUiModel(
             id = achievement.id.toString(),
