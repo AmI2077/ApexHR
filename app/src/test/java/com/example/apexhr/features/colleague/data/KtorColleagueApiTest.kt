@@ -28,9 +28,9 @@ class KtorColleagueApiTest {
     fun `leaderboard is requested with days and limit`() = runBlocking {
         val http = JsonRecordingHttpClient(body = """[{"rank":1,"userId":"u-1","name":"u-1","thanksCount":4}]""")
 
-        val entries = KtorColleagueApi(http.client).getLeaderboard(days = 30, limit = 200)
+        val entries = KtorColleagueApi(http.client).getLeaderboard(days = 30, limit = 100)
 
-        assertEquals("${NetworkConfig.BASE_URL}/api/leaderboard?days=30&limit=200", http.requests.single().url.toString())
+        assertEquals("${NetworkConfig.BASE_URL}/api/leaderboard?days=30&limit=100", http.requests.single().url.toString())
         assertEquals(4L, entries.single().thanksCount)
     }
 }

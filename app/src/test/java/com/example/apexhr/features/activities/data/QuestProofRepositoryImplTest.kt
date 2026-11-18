@@ -120,6 +120,16 @@ class QuestProofRepositoryImplTest {
     }
 
     @Test
+    fun `storage rls refusal with http 400 is upload rejected`() {
+        // Так Supabase отвечает на запрет записи политикой бакета: HTTP 400, в теле statusCode "403".
+        files["content://photo"] = jpeg()
+        storage.error = ApiStatusException(400)
+
+        assertEquals(QuestProofResult.Failure(QuestProofError.UploadRejected), submit("content://photo"))
+        assertTrue(api.calls.isEmpty())
+    }
+
+    @Test
     fun `pending proof is updated without new file`() {
         val result = submit(fileUri = null, existing = "https://x/old.jpg", comment = "", update = true)
 

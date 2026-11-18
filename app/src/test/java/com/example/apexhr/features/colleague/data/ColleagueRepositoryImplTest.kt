@@ -67,7 +67,7 @@ class ColleagueRepositoryImplTest {
         assertEquals(listOf(3L, 1L), profile.receivedThanks.map { it.id })
         assertTrue(profile.receivedThanks.all { it.fromMe })
         assertEquals(listOf("Первая благодарность"), profile.achievements.map { it.title })
-        assertEquals(listOf(30 to 200), api.leaderboardRequests)
+        assertEquals(listOf(30 to 100), api.leaderboardRequests)
     }
 
     @Test

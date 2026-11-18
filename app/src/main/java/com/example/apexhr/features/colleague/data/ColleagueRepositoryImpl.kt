@@ -75,8 +75,11 @@ class ColleagueRepositoryImpl(
     }
 
     companion object {
-        /** Сколько строк рейтинга запрашиваем, чтобы найти в нём коллегу. */
-        const val LEADERBOARD_LIMIT = 200
+        /**
+         * Сколько строк рейтинга запрашиваем, чтобы найти в нём коллегу:
+         * сервер принимает limit от 1 до 100, на большее отвечает 400.
+         */
+        const val LEADERBOARD_LIMIT = 100
 
         /** Сколько благодарностей показываем, как в вебе. */
         const val RECEIVED_THANKS_LIMIT = 8
