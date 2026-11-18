@@ -14,6 +14,8 @@ data class CompanyNewsDto(
     val title: String? = null,
     val summary: String? = null,
     val content: String? = null,
+    /** Обложка; у живых новостей пока null — тогда показывается заглушка. */
+    val imageUrl: String? = null,
     val authorName: String? = null,
     val createdAt: String? = null,
 )

@@ -14,6 +14,7 @@ fun CompanyNewsDto.toDomain(): CompanyNews = CompanyNews(
     content = content.cleaned(),
     authorName = authorName.cleaned(),
     createdAt = createdAt.toNewsInstantOrNull(),
+    imageUrl = imageUrl.cleaned(),
 )
 
 /** Как в вебе, новости без заголовка не показываются. */

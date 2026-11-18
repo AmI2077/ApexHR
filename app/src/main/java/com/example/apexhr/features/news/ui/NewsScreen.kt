@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -78,10 +79,15 @@ fun NewsScreen(
                         end = ApexDimens.spacing20.dp,
                         bottom = ApexDimens.spacing16.dp,
                     ),
-                    verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing12.dp),
+                    verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing16.dp),
                 ) {
                     items(screenState.uiState.items, key = { it.id }) { news ->
-                        NewsCard(news = news, onClick = { callbacks.onNewsClick(news.id) }, showMeta = true)
+                        NewsCard(
+                            news = news,
+                            onClick = { callbacks.onNewsClick(news.id) },
+                            modifier = Modifier.fillMaxWidth(),
+                            showMeta = true,
+                        )
                     }
                     // Бесконечная прокрутка: следующие 20 новостей грузятся у конца списка.
                     item(key = "load_more") {

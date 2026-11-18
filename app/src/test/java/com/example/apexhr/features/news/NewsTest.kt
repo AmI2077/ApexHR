@@ -12,6 +12,7 @@ import com.example.apexhr.features.news.ui.NewsDetailsViewModel
 import com.example.apexhr.features.news.ui.NewsViewModel
 import com.example.apexhr.features.news.ui.models.NewsDetailsScreenState
 import com.example.apexhr.features.news.ui.models.NewsScreenState
+import com.example.apexhr.features.news.ui.models.toNewsDate
 import com.example.apexhr.features.news.ui.models.toUiModel
 import java.time.Instant
 import java.time.ZoneOffset
@@ -69,8 +70,26 @@ class NewsTest {
         assertEquals(Instant.parse("2026-11-15T21:32:12.127907Z"), news.createdAt)
         assertEquals(true, page.hasNextPage)
         val ui = news.toUiModel(ZoneOffset.ofHours(3))
-        assertEquals("16.11.2026", ui.date)
+        // Формат веба: «18 ноя 2026, 01:59» в часовом поясе пользователя.
+        assertEquals("16 ноя 2026, 00:32", ui.date)
         assertEquals("Текст", ui.content)
+        assertEquals(null, ui.imageUrl)
+    }
+
+    @Test
+    fun `cover url and web date format`() {
+        val dto = CompanyNewsDto(
+            id = 2, title = "Тестовая новость для UI", summary = "краткое описание",
+            imageUrl = " https://cdn.example.com/news/2.jpg ", createdAt = "2026-11-17T22:59:45.096685+00:00",
+        )
+
+        val ui = dto.toDomain().toUiModel(ZoneOffset.ofHours(3))
+
+        assertEquals("https://cdn.example.com/news/2.jpg", ui.imageUrl)
+        assertEquals("18 ноя 2026, 01:59", ui.date)
+        // Не http(s) — обложки нет, будет заглушка.
+        assertEquals(null, dto.copy(imageUrl = "ftp://x/1.jpg").toDomain().toUiModel().imageUrl)
+        assertEquals("1 мая 2026, 09:05", Instant.parse("2026-05-01T06:05:00Z").toNewsDate(ZoneOffset.ofHours(3)))
     }
 
     @Test

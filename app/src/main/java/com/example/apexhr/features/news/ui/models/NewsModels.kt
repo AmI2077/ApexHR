@@ -3,16 +3,28 @@ package com.example.apexhr.features.news.ui.models
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.model.LoadMoreState
 import com.example.apexhr.core.ui.model.loadMoreStateOf
+import com.example.apexhr.core.ui.model.takeIfHttpUrl
 import com.example.apexhr.features.news.domain.CompanyNews
+import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-private val NEWS_DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+/** Короткие месяцы, как в вебе: «18 ноя 2026, 01:59». */
+private val NEWS_MONTHS = listOf("янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек")
+
+private val NEWS_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm")
+
+/** «18 ноя 2026, 01:59» в часовом поясе [zone]. */
+fun Instant.toNewsDate(zone: ZoneId): String {
+    val local = atZone(zone)
+    return "${local.dayOfMonth} ${NEWS_MONTHS[local.monthValue - 1]} ${local.year}, ${local.format(NEWS_TIME_FORMAT)}"
+}
 
 /**
  * Новость в списке и на главной: заголовок и краткое описание, как в вебе.
- * @param author автор, если сервер его прислал; @param date «15.11.2026».
+ * @param author автор, если сервер его прислал; @param date «18 ноя 2026, 01:59».
  * @param content полный текст — только на экране новости.
+ * @param imageUrl обложка (только http/https); null — заглушка.
  */
 data class NewsUiModel(
     val id: Long,
@@ -21,11 +33,12 @@ data class NewsUiModel(
     val author: String?,
     val date: String?,
     val content: String? = null,
+    val imageUrl: String? = null,
 ) {
     companion object {
         val Preview = listOf(
-            NewsUiModel(2, "Тестовая новость для UI", "краткое описание", "Валерия Лапшина", "18.11.2026"),
-            NewsUiModel(1, "Новость", "Новость Новость", "Валерия Лапшина", "16.11.2026"),
+            NewsUiModel(2, "Тестовая новость для UI", "краткое описание", "Валерия Лапшина", "18 ноя 2026, 01:59"),
+            NewsUiModel(1, "Новость", "Новость Новость", "Валерия Лапшина", "16 ноя 2026, 00:32"),
         )
     }
 }
@@ -36,8 +49,9 @@ fun CompanyNews.toUiModel(zone: ZoneId = ZoneId.systemDefault()): NewsUiModel = 
     title = title.orEmpty(),
     summary = summary,
     author = authorName,
-    date = createdAt?.atZone(zone)?.format(NEWS_DATE_FORMAT),
+    date = createdAt?.toNewsDate(zone),
     content = content,
+    imageUrl = imageUrl.takeIfHttpUrl(),
 )
 
 sealed interface NewsScreenState {

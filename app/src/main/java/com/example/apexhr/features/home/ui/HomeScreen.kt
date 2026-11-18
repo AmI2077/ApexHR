@@ -31,7 +31,7 @@ import com.example.apexhr.features.home.ui.models.HomeUiState
 import com.example.apexhr.features.engagement.ui.ActivityLevelCard
 import com.example.apexhr.features.home.ui.composables.HomeFeedList
 import com.example.apexhr.features.home.ui.composables.HomeSectionHeader
-import com.example.apexhr.features.news.ui.composables.NewsCard
+import com.example.apexhr.features.news.ui.composables.NewsCarousel
 import com.example.apexhr.ui.theme.ApexHRTheme
 
 @Preview(showBackground = true, widthDp = 360)
@@ -160,8 +160,14 @@ fun HomeScreenContent(
                     onActionClick = callbacks::onAllNewsClick,
                 )
             }
-            items(uiState.news, key = { "news_${it.id}" }) { news ->
-                NewsCard(news = news, onClick = { callbacks.onNewsClick(news.id) })
+            // В вебе карточки стоят по две в ряд; на телефоне — горизонтальная лента
+            // карточек на 85% ширины, одна новость — во всю ширину.
+            item(key = "news") {
+                NewsCarousel(
+                    news = uiState.news,
+                    onNewsClick = callbacks::onNewsClick,
+                    edgePadding = ApexDimens.spacing20.dp,
+                )
             }
         }
         item {

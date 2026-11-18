@@ -15,6 +15,8 @@ data class CompanyNews(
     val content: String?,
     val authorName: String?,
     val createdAt: Instant?,
+    /** Адрес обложки; null — обложки нет. */
+    val imageUrl: String? = null,
 )
 
 data class CompanyNewsPage(
