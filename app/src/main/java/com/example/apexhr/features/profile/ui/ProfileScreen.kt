@@ -18,7 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.composables.ApexPager
 import com.example.apexhr.core.ui.composables.EmptyState
+import com.example.apexhr.core.ui.model.PageSlice
 import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadMoreFooter
 import com.example.apexhr.core.ui.composables.LoadingState
@@ -176,15 +178,17 @@ fun ProfileScreenContent(
                 key = "received",
                 titleRes = R.string.thanks_received_section,
                 emptyTextRes = R.string.thanks_received_empty,
-                thanks = uiState.received,
+                thanks = uiState.receivedSlice,
                 received = true,
+                onPageChange = { callbacks.onThanksPageChange(received = true, page = it) },
             )
             thanksSection(
                 key = "sent",
                 titleRes = R.string.thanks_sent_section,
                 emptyTextRes = R.string.thanks_sent_empty,
-                thanks = uiState.sent,
+                thanks = uiState.sentSlice,
                 received = false,
+                onPageChange = { callbacks.onThanksPageChange(received = false, page = it) },
             )
         } else if (uiState.selectedTab == ProfileTab.Achievements) {
             if (uiState.achievements.isEmpty()) {
@@ -251,19 +255,26 @@ private fun LazyListScope.thanksSection(
     key: String,
     @StringRes titleRes: Int,
     @StringRes emptyTextRes: Int,
-    thanks: List<ThankUiModel>,
+    thanks: PageSlice<ThankUiModel>,
     received: Boolean,
+    onPageChange: (Int) -> Unit,
 ) {
     item(key = "${key}_title") {
         ProfileSectionTitle(text = stringResource(titleRes))
     }
-    if (thanks.isEmpty()) {
+    if (thanks.total == 0) {
         item(key = "${key}_empty") {
             EmptyState(text = stringResource(emptyTextRes))
         }
     }
-    items(thanks, key = { "${key}_${it.id}" }) { thank ->
+    items(thanks.items, key = { "${key}_${it.id}" }) { thank ->
         ProfileThankRow(thank = thank, received = received)
+    }
+    // Как в вебе: по 5 на странице, у полученных и отправленных своя листалка.
+    if (thanks.isPagerVisible) {
+        item(key = "${key}_pager") {
+            ApexPager(slice = thanks, onPageChange = onPageChange)
+        }
     }
 }
 

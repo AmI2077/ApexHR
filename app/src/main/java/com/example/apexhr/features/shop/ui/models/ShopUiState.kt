@@ -3,6 +3,8 @@ package com.example.apexhr.features.shop.ui.models
 import androidx.annotation.StringRes
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.model.PageSlice
+import com.example.apexhr.core.ui.model.pageSlice
 
 data class ShopUiState(
     val searchQuery: String,
@@ -14,8 +16,16 @@ data class ShopUiState(
     /** Ошибка загрузки товаров; категории при этом остаются на экране. */
     val productsError: DataError? = null,
     val sort: ShopSort = ShopSort.Popular,
+    /** Страница каталога, как в вебе: по [PAGE_SIZE] товаров; сбрасывается при смене фильтра. */
+    val page: Int = 1,
 ) {
+    /** Товары текущей страницы. */
+    val pageSlice: PageSlice<ShopProductUiModel> get() = products.pageSlice(page, PAGE_SIZE)
+
     companion object {
+        /** Товаров на странице каталога, как в вебе. */
+        const val PAGE_SIZE = 6
+
         /** Вкладка «Все»: товары без фильтра по категории. */
         const val CATEGORY_ALL = "all"
 

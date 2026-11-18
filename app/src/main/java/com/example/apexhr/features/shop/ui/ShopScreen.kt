@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.composables.ApexPillTabs
+import com.example.apexhr.core.ui.composables.ApexPager
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadingState
@@ -220,12 +221,16 @@ fun ShopScreenContent(
                         ShopPopularTitle()
                     }
                 }
-                items(uiState.products, key = { it.id }) { product ->
+                val slice = uiState.pageSlice
+                items(slice.items, key = { it.id }) { product ->
                     ShopProductCard(
                         product = product,
                         onClick = { callbacks.onProductClick(product.id) },
                         onGetClick = { callbacks.onGetProductClick(product.id) },
                     )
+                }
+                item(key = "pager") {
+                    ApexPager(slice = slice, onPageChange = callbacks::onPageChange)
                 }
             }
         }

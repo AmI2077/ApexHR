@@ -3,6 +3,8 @@ package com.example.apexhr.features.shop.ui.orders.models
 import androidx.annotation.StringRes
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.model.PageSlice
+import com.example.apexhr.core.ui.model.pageSlice
 
 data class OrderUiModel(
     val id: Long,
@@ -52,5 +54,17 @@ data class OrderItemUiModel(
 sealed interface OrdersScreenState {
     data object Loading : OrdersScreenState
     data class Error(val error: DataError) : OrdersScreenState
-    data class Content(val orders: List<OrderUiModel>) : OrdersScreenState
+    /**
+     * @param orders все заказы, новые сверху.
+     * @param page страница, как в вебе: по [ORDERS_PAGE_SIZE] заказов.
+     */
+    data class Content(
+        val orders: List<OrderUiModel>,
+        val page: Int = 1,
+    ) : OrdersScreenState {
+        val pageSlice: PageSlice<OrderUiModel> get() = orders.pageSlice(page, ORDERS_PAGE_SIZE)
+    }
 }
+
+/** Заказов на странице, как в вебе. */
+const val ORDERS_PAGE_SIZE = 6

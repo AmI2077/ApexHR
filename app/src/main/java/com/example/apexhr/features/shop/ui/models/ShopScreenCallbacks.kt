@@ -9,6 +9,9 @@ interface ShopScreenCallbacks {
     fun onGetProductClick(productId: String)
     fun onRetryClick() = Unit
 
+    /** «Назад» / «Дальше» под списком товаров. */
+    fun onPageChange(page: Int) = Unit
+
     companion object {
         val Empty = object : ShopScreenCallbacks {
             override fun onCartClick() = Unit

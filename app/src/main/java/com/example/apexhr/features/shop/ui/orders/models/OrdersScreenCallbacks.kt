@@ -4,6 +4,9 @@ interface OrdersScreenCallbacks {
     fun onBackClick()
     fun onRetryClick()
 
+    /** «Назад» / «Дальше» под списком заказов. */
+    fun onPageChange(page: Int) = Unit
+
     companion object {
         val Empty = object : OrdersScreenCallbacks {
             override fun onBackClick() = Unit

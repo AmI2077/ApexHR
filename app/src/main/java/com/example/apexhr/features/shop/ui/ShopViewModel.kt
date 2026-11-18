@@ -21,6 +21,7 @@ import com.example.apexhr.features.shop.ui.models.toCategoryNames
 import com.example.apexhr.features.shop.ui.models.toCategoryTabs
 import com.example.apexhr.features.shop.ui.models.toShopMessage
 import com.example.apexhr.features.shop.ui.models.toUiModel
+import com.example.apexhr.core.ui.model.pageSlice
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -91,7 +92,7 @@ class ShopViewModel(
 
     private fun loadProducts(categoryId: String) {
         loadJob?.cancel()
-        updateContent { it.copy(isProductsLoading = true, productsError = null, products = emptyList()) }
+        updateContent { it.copy(isProductsLoading = true, productsError = null, products = emptyList(), page = 1) }
         loadJob = viewModelScope.launch {
             val result = repository.getProducts(categoryId.toCategoryIdOrNull())
             updateContent { it.withProducts(result) }
@@ -135,6 +136,7 @@ class ShopViewModel(
             if (uiState.sort == sort) return@updateContent uiState
             uiState.copy(
                 sort = sort,
+                page = 1,
                 products = if (uiState.isProductsLoading || uiState.productsError != null) {
                     uiState.products
                 } else {
@@ -177,6 +179,8 @@ class ShopViewModel(
         updateContent { uiState ->
             uiState.copy(
                 searchQuery = query,
+                // Как в вебе: страница сбрасывается при смене фильтра, сортировки или поиска.
+                page = if (query == uiState.searchQuery) uiState.page else 1,
                 products = if (uiState.isProductsLoading || uiState.productsError != null) {
                     uiState.products
                 } else {
@@ -184,6 +188,10 @@ class ShopViewModel(
                 },
             )
         }
+    }
+
+    override fun onPageChange(page: Int) {
+        updateContent { uiState -> uiState.copy(page = uiState.products.pageSlice(page, ShopUiState.PAGE_SIZE).page) }
     }
 
     override fun onCategoryClick(categoryId: String) {

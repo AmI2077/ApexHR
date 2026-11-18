@@ -24,6 +24,12 @@ interface ProfileScreenCallbacks {
     /** Повтор загрузки вкладки «Операции» после ошибки. По умолчанию ничего не делает. */
     fun onOperationsRetryClick() = Unit
 
+    /**
+     * «Назад» / «Дальше» под полученными ([received] = true) или отправленными
+     * благодарностями. По умолчанию ничего не делает.
+     */
+    fun onThanksPageChange(received: Boolean, page: Int) = Unit
+
     /** Выбрано новое фото профиля (content:// адрес). По умолчанию ничего не делает. */
     fun onAvatarPicked(imageUri: String) = Unit
 

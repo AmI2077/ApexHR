@@ -456,4 +456,8 @@
     <string name="thanks_send_bonus">Отправить поощрение</string>
     <string name="thanks_bonus_sent">Поощрение отправлено</string>
     <string name="thanks_error_bonus_amount">Выберите сумму поощрения</string>
+    <!-- Перелистывание страниц, как Pager в вебе -->
+    <string name="pager_previous">Назад</string>
+    <string name="pager_next">Дальше</string>
+    <string name="pager_position">%1$d / %2$d</string>
 </resources>

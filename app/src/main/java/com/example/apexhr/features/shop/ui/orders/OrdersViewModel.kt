@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apexhr.core.domain.DataResult
 import com.example.apexhr.features.shop.domain.CartRepository
+import com.example.apexhr.core.ui.model.pageSlice
+import com.example.apexhr.features.shop.ui.orders.models.ORDERS_PAGE_SIZE
 import com.example.apexhr.features.shop.ui.orders.models.OrdersScreenCallbacks
 import com.example.apexhr.features.shop.ui.orders.models.OrdersScreenState
 import com.example.apexhr.features.shop.ui.orders.models.toUiModel
@@ -41,4 +43,10 @@ class OrdersViewModel(
     override fun onBackClick() = Unit
 
     override fun onRetryClick() = load()
+
+    override fun onPageChange(page: Int) {
+        val current = _state.value as? OrdersScreenState.Content ?: return
+        val slice = current.orders.pageSlice(page, ORDERS_PAGE_SIZE)
+        _state.value = current.copy(page = slice.page)
+    }
 }

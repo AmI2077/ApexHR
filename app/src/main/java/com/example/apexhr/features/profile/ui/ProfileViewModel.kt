@@ -17,6 +17,8 @@ import com.example.apexhr.features.profile.ui.history.models.toUiState
 import com.example.apexhr.features.profile.ui.models.ProfileScreenCallbacks
 import com.example.apexhr.features.profile.ui.models.ProfileScreenState
 import com.example.apexhr.features.profile.ui.models.ProfileTab
+import com.example.apexhr.features.profile.ui.models.ProfileUiState
+import com.example.apexhr.core.ui.model.pageSlice
 import com.example.apexhr.features.profile.ui.models.messageRes
 import com.example.apexhr.features.profile.ui.models.toUiState
 import com.example.apexhr.features.thanks.domain.ThanksHistory
@@ -50,6 +52,8 @@ class ProfileViewModel(
     val state: StateFlow<ProfileScreenState> = _state.asStateFlow()
 
     private var selectedTab = ProfileTab.Thanks
+    private var receivedPage = 1
+    private var sentPage = 1
     private var data: Pair<Profile, ThanksHistory>? = null
     private var loadJob: Job? = null
 
@@ -195,6 +199,14 @@ class ProfileViewModel(
     // Экрана деталей достижения пока нет.
     override fun onAchievementClick(achievementId: String) = Unit
 
+    override fun onThanksPageChange(received: Boolean, page: Int) {
+        val (_, thanks) = data ?: return
+        val list = if (received) thanks.received else thanks.sent
+        val safePage = list.pageSlice(page, ProfileUiState.THANKS_PAGE_SIZE).page
+        if (received) receivedPage = safePage else sentPage = safePage
+        publish()
+    }
+
     private fun publishOperations() {
         operations = TransactionHistoryState.Content(
             loaded.toUiState(
@@ -214,6 +226,8 @@ class ProfileViewModel(
                 operations = operations,
                 isAvatarUploading = isAvatarUploading,
                 avatarErrorRes = avatarErrorRes,
+                receivedPage = receivedPage,
+                sentPage = sentPage,
             )
         )
     }

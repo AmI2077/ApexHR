@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
 import com.example.apexhr.core.ui.composables.ApexAmount
+import com.example.apexhr.core.ui.composables.ApexPager
 import com.example.apexhr.core.ui.composables.EmptyState
 import com.example.apexhr.core.ui.composables.ErrorState
 import com.example.apexhr.core.ui.composables.LoadingState
@@ -109,8 +110,12 @@ fun OrdersScreen(
                     ),
                     verticalArrangement = Arrangement.spacedBy(ApexDimens.spacing12.dp),
                 ) {
-                    items(screenState.orders, key = { it.id }) { order ->
+                    val slice = screenState.pageSlice
+                    items(slice.items, key = { it.id }) { order ->
                         OrderCard(order = order)
+                    }
+                    item(key = "pager") {
+                        ApexPager(slice = slice, onPageChange = callbacks::onPageChange)
                     }
                 }
             }

@@ -3,6 +3,8 @@ package com.example.apexhr.features.profile.ui.models
 import androidx.annotation.StringRes
 import com.example.apexhr.R
 import com.example.apexhr.core.domain.DataError
+import com.example.apexhr.core.ui.model.PageSlice
+import com.example.apexhr.core.ui.model.pageSlice
 import com.example.apexhr.features.profile.ui.history.models.TransactionHistoryState
 
 enum class ProfileTab {
@@ -31,8 +33,17 @@ data class ProfileUiState(
     @StringRes val avatarErrorRes: Int? = null,
     /** Название уровня активности («Искра»…); null — уровень не загрузился. */
     val activityLevel: String? = null,
+    /** Страницы благодарностей, как в вебе: по [THANKS_PAGE_SIZE], у каждого списка своя. */
+    val receivedPage: Int = 1,
+    val sentPage: Int = 1,
 ) {
+    val receivedSlice: PageSlice<ThankUiModel> get() = received.pageSlice(receivedPage, THANKS_PAGE_SIZE)
+    val sentSlice: PageSlice<ThankUiModel> get() = sent.pageSlice(sentPage, THANKS_PAGE_SIZE)
+
     companion object {
+        /** Благодарностей на странице профиля, как в вебе. */
+        const val THANKS_PAGE_SIZE = 5
+
         val Preview = ProfileUiState(
             name = "Olivia Martinez",
             department = listOf(
